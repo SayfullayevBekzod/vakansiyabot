@@ -8,21 +8,20 @@ load_dotenv()
 # Bot sozlamalari
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 DATABASE_URL = os.getenv('DATABASE_URL')
-# DB_HOST = os.getenv('DB_HOST', 'localhost')
-# DB_PORT = int(os.getenv('DB_PORT', 5432))
-# DB_NAME = os.getenv('DB_NAME', 'vacancy_bot')
-# DB_USER = os.getenv('DB_USER', 'postgres')
-# DB_PASSWORD = os.getenv('DB_PASSWORD')
+DB_HOST = os.getenv('DB_HOST', 'localhost')
+DB_PORT = int(os.getenv('DB_PORT', 5432))
+DB_NAME = os.getenv('DB_NAME', 'vacancybot')
+DB_USER = os.getenv('DB_USER', 'postgres')
+DB_PASSWORD = os.getenv('DB_PASSWORD')
 if not BOT_TOKEN:
     raise ValueError("❌ BOT_TOKEN topilmadi!")
 
 if not DATABASE_URL:
-    raise ValueError("❌ DATABASE_URL topilmadi!")
-# Timezone sozlamalari
-DEFAULT_TIMEZONE = timezone.utc  # UTC timezone
-# Database connection string fallback
-# if not DATABASE_URL:
-#     DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    # Database connection string fallback
+    if DB_PASSWORD:
+        DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    else:
+        raise ValueError("❌ DATABASE_URL topilmadi!")
 
 # Timezone sozlamalari
 DEFAULT_TIMEZONE = timezone.utc  # UTC timezone
@@ -46,12 +45,6 @@ VACANCY_SITES = {
 }
 
 
-PAYMENT_INFO = {
-    'card_number': '5614 6814 0308 5164',
-    'card_holder': 'Sayfullayev Bekzod',
-    'support_username': 'SayfullayevBekzod'
-}
-# Telegram kanallari (Premium foydalanuvchilar uchun)
 # Telegram kanallari (Premium foydalanuvchilar uchun)
 TELEGRAM_CHANNELS = [
     '@UstozShogirdSohalar',
@@ -221,7 +214,7 @@ def validate_config():
     if not BOT_TOKEN:
         errors.append("❌ BOT_TOKEN o'rnatilmagan!")
     
-    if not DB_PASSWORD:
+    if not DATABASE_URL and not DB_PASSWORD:
         errors.append("❌ DB_PASSWORD o'rnatilmagan!")
     
     if not ADMIN_IDS:

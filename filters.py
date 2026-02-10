@@ -107,7 +107,6 @@ class VacancyFilter:
         return False
     
     @staticmethod
-    @staticmethod
     def filter_by_source(vacancy: Dict, user_sources: List[str]) -> bool:
         """Manba bo'yicha filtrlash"""
         if not user_sources:
@@ -143,8 +142,8 @@ class VacancyFilter:
             
             if not VacancyFilter.filter_by_salary(
                 vacancy,
-                user_filter.get('min_salary'),
-                user_filter.get('max_salary')
+                user_filter.get('salary_min'),
+                user_filter.get('salary_max')
             ):
                 continue
             

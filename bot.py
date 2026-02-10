@@ -310,15 +310,16 @@ async def on_startup():
     )
     
     # Kunlik xulosalar (har 15 minutda tekshirish)
-    from handlers.notifications import send_daily_digests
-    scheduler.add_job(
-        send_daily_digests,
-        'interval',
-        minutes=15,
-        id='daily_digest',
-        max_instances=1,
-        coalesce=True
-    )
+    if NOTIFICATIONS_ENABLED:
+        from handlers.notifications import send_daily_digests
+        scheduler.add_job(
+            send_daily_digests,
+            'interval',
+            minutes=15,
+            id='daily_digest',
+            max_instances=1,
+            coalesce=True
+        )
     
     scheduler.start()
     logger.info(f"   ✅ Scheduler ishga tushdi (interval: {SCRAPING_INTERVAL}s)")

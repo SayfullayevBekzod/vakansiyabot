@@ -2,6 +2,8 @@ from aiogram import Router, F
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from database import db
 import logging
+import asyncio
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 router = Router()
@@ -46,6 +48,14 @@ def get_notification_settings_keyboard(settings: dict):
     """Bildirishnoma sozlamalari"""
     instant = settings.get('instant_notify', True)
     daily = settings.get('daily_digest', False)
+    digest_time = settings.get('digest_time')
+    if digest_time is None:
+        digest_time_text = "20:00"
+    else:
+        try:
+            digest_time_text = digest_time.strftime("%H:%M")
+        except Exception:
+            digest_time_text = str(digest_time)[:5] if str(digest_time) else "20:00"
     
     return InlineKeyboardMarkup(
         inline_keyboard=[
@@ -63,7 +73,7 @@ def get_notification_settings_keyboard(settings: dict):
             ],
             [
                 InlineKeyboardButton(
-                    text="⏰ Vaqtni sozlash",
+                    text=f"⏰ Vaqt: {digest_time_text}",
                     callback_data="set_notification_time"
                 )
             ],
@@ -215,14 +225,25 @@ async def notification_settings(callback: CallbackQuery):
     
     settings_dict = dict(settings) if settings else {
         'instant_notify': True,
-        'daily_digest': False
+        'daily_digest': False,
+        'digest_time': None
     }
+    
+    digest_time = settings_dict.get('digest_time')
+    if digest_time is None:
+        digest_time_text = "20:00"
+    else:
+        try:
+            digest_time_text = digest_time.strftime("%H:%M")
+        except Exception:
+            digest_time_text = str(digest_time)[:5] if str(digest_time) else "20:00"
     
     text = "⚙️ <b>Bildirishnoma sozlamalari</b>\n\n"
     text += "🔔 <b>Darhol xabar:</b>\n"
     text += "Yangi vakansiya chiqqanda darhol xabar berish\n\n"
     text += "📊 <b>Kunlik xulosa:</b>\n"
-    text += "Har kuni kechqurun kunlik vakansiyalar xulasasi\n\n"
+    text += "Har kuni kunlik vakansiyalar xulosasi\n"
+    text += f"⏰ <b>Vaqt:</b> {digest_time_text}\n\n"
     text += "Kerakli sozlamalarni tanlang:"
     
     await callback.message.edit_text(
@@ -322,7 +343,8 @@ async def set_notification_time(callback: CallbackQuery):
     buttons = []
     row = []
     for t in times:
-        row.append(InlineKeyboardButton(text=t, callback_data=f"set_time_{t}"))
+        payload = t.replace(":", "")
+        row.append(InlineKeyboardButton(text=t, callback_data=f"set_time_{payload}"))
         if len(row) == 3:
             buttons.append(row)
             row = []
@@ -340,19 +362,28 @@ async def set_notification_time(callback: CallbackQuery):
 @router.callback_query(F.data.startswith("set_time_"))
 async def save_notification_time(callback: CallbackQuery):
     """Vaqtni saqlash"""
-    new_time = callback.data.replace("set_time_", "")
+    raw = callback.data.replace("set_time_", "")
+    if raw.isdigit() and len(raw) == 4:
+        candidate = f"{raw[:2]}:{raw[2:]}"
+    else:
+        candidate = raw
+    try:
+        new_time = datetime.strptime(candidate, "%H:%M").time()
+    except ValueError:
+        await callback.answer("❌ Vaqt formati noto'g'ri", show_alert=True)
+        return
     try:
         async with db.pool.acquire() as conn:
             await conn.execute('''
                 INSERT INTO notification_settings (user_id, digest_time)
-                VALUES ($1, $2::TIME)
+                VALUES ($1, $2)
                 ON CONFLICT (user_id) DO UPDATE SET digest_time = EXCLUDED.digest_time, updated_at = NOW()
             ''', callback.from_user.id, new_time)
         
-        await callback.answer(f"✅ Vaqt {new_time} ga o'rnatildi")
+        await callback.answer(f"✅ Vaqt {new_time.strftime('%H:%M')} ga o'rnatildi")
         await notification_settings(callback)
     except Exception as e:
-        logger.error(f"save_notification_time error: {e}")
+        logger.error(f"save_notification_time error: {e}", exc_info=True)
         await callback.answer("❌ Xatolik", show_alert=True)
 
 @router.callback_query(F.data == "close_notifications")

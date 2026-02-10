@@ -664,6 +664,24 @@ async def process_broadcast(message: Message, state: FSMContext):
         return
     
     broadcast_text = message.text
+    broadcast_video = message.video
+    broadcast_type = None
+    broadcast_payload = {}
+
+    if broadcast_video:
+        broadcast_type = "video"
+        broadcast_payload = {
+            "file_id": broadcast_video.file_id,
+            "caption": message.caption
+        }
+    elif broadcast_text:
+        broadcast_type = "text"
+        broadcast_payload = {
+            "text": broadcast_text
+        }
+    else:
+        await message.answer("❌ Faqat matn yoki video yuboring.")
+        return
     
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
@@ -674,16 +692,29 @@ async def process_broadcast(message: Message, state: FSMContext):
         ]
     )
     
-    await state.update_data(broadcast_text=broadcast_text)
-    await message.answer(
-        f"📢 <b>Xabarni tasdiqlang:</b>\n\n"
-        f"━━━━━━━━━━━━━━━━\n"
-        f"{broadcast_text}\n"
-        f"━━━━━━━━━━━━━━━━\n\n"
-        f"Barcha foydalanuvchilarga yuborilsinmi?",
-        reply_markup=keyboard,
-        parse_mode='HTML'
-    )
+    await state.update_data(broadcast_type=broadcast_type, **broadcast_payload)
+
+    if broadcast_type == "video":
+        caption = broadcast_payload.get("caption") or ""
+        preview_text = (
+            "📢 <b>Video xabar qabul qilindi.</b>\n\n"
+            f"{caption}\n\n" if caption else "📢 <b>Video xabar qabul qilindi.</b>\n\n"
+        )
+        await message.answer(
+            f"{preview_text}Barcha foydalanuvchilarga yuborilsinmi?",
+            reply_markup=keyboard,
+            parse_mode='HTML'
+        )
+    else:
+        await message.answer(
+            f"📢 <b>Xabarni tasdiqlang:</b>\n\n"
+            f"━━━━━━━━━━━━━━━━\n"
+            f"{broadcast_text}\n"
+            f"━━━━━━━━━━━━━━━━\n\n"
+            f"Barcha foydalanuvchilarga yuborilsinmi?",
+            reply_markup=keyboard,
+            parse_mode='HTML'
+        )
 
 
 @router.callback_query(F.data == "broadcast_confirm")
@@ -694,7 +725,10 @@ async def confirm_broadcast(callback: CallbackQuery, state: FSMContext):
         return
     
     data = await state.get_data()
-    broadcast_text = data.get('broadcast_text')
+    broadcast_type = data.get('broadcast_type')
+    broadcast_text = data.get('text')
+    broadcast_video_id = data.get('file_id')
+    broadcast_caption = data.get('caption')
     
     await callback.message.edit_text("📤 Xabar yuborilmoqda...")
     
@@ -704,7 +738,15 @@ async def confirm_broadcast(callback: CallbackQuery, state: FSMContext):
     
     for user_id in all_users:
         try:
-            await callback.bot.send_message(user_id, broadcast_text, parse_mode='HTML')
+            if broadcast_type == "video" and broadcast_video_id:
+                await callback.bot.send_video(
+                    user_id,
+                    broadcast_video_id,
+                    caption=broadcast_caption,
+                    parse_mode='HTML' if broadcast_caption else None
+                )
+            else:
+                await callback.bot.send_message(user_id, broadcast_text, parse_mode='HTML')
             success += 1
             await asyncio.sleep(0.05)
         except Exception as e:
