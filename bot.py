@@ -349,41 +349,15 @@ async def on_startup():
             logger.info("⚠️  Telegram scraper (o'chirilgan)")
     except:
         logger.info("⚠️  Telegram scraper (sozlanmagan)")
-    
+
     logger.info("="*60)
     logger.info("🚀 BOT TAYYOR! OPTIMIZED FOR SCALE")
     logger.info("="*60 + "\n")
 
-
-async def on_shutdown():
-    """Bot to'xtaganda"""
-    logger.info("\n" + "="*60)
-    logger.info("BOT TO'XTATILMOQDA...")
-    logger.info("="*60)
-    
-    # Scheduler to'xtatish
-    logger.info("1. Scheduler to'xtatish...")
-    scheduler.shutdown(wait=False)
-    logger.info("   ✅ Scheduler to'xtatildi")
-    
-    # Database dan uzilish
-    logger.info("2. Database dan uzilish...")
-    await db.disconnect()
-    logger.info("   ✅ Database uzilish muvaffaqiyatli")
-    
-    # Bot session yopish
-    logger.info("3. Bot session yopish...")
-    await bot.session.close()
-    logger.info("   ✅ Bot session yopildi")
-    
-    logger.info("="*60)
-    logger.info("👋 BOT TO'XTATILDI")
-    logger.info("="*60 + "\n")
-
-
 async def main():
     """Asosiy funksiya"""
     try:
+    
         # Startup
         await on_startup()
         

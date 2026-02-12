@@ -5,6 +5,7 @@ from typing import List, Dict, Optional
 from datetime import datetime, timezone
 import logging
 import re
+import random
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +19,7 @@ class UzJobsScraper:
         }
 
     async def scrape_uzjobs(self, keywords: List[str] = None) -> List[Dict]:
-        """uzjobs.com dan vakansiyalarni yig'ish"""
+        """uzjobs.com dan vakansiyalarni yig'ish - OPTIMIZED with Rate Limiting"""
         vacancies = []
         search_query = '+'.join(keywords) if keywords else ''
         
@@ -26,29 +27,46 @@ class UzJobsScraper:
         url = f"{self.base_url}/ru/vacancy/search"
         params = {'q': search_query}
         
-        try:
-            async with aiohttp.ClientSession(headers=self.headers) as session:
-                async with session.get(url, params=params, timeout=30) as response:
-                    if response.status != 200:
-                        logger.error(f"UzJobs error: {response.status}")
-                        return []
-                    
-                    html = await response.text()
-                    soup = BeautifulSoup(html, 'lxml')
-                    
-                    # Vakansiya bloklarini topish
-                    items = soup.select('.vacancy-box') # Bu selektorni tekshirish kerak
-                    if not items:
-                        # Fallback selektor
-                        items = soup.find_all('div', class_='vacancy-item')
-                    
-                    for item in items:
-                        vacancy = self.parse_item(item)
-                        if vacancy:
-                            vacancies.append(vacancy)
+        retries = 3
+        delay = 2  # Boshlang'ich kutish vaqti (soniya)
+
+        for attempt in range(retries):
+            try:
+                # Random delay to avoid hitting rate limits exactly at same time
+                await asyncio.sleep(delay * (0.8 + 0.4 * random.random())) # Simple jitter
+
+                async with aiohttp.ClientSession(headers=self.headers) as session:
+                    async with session.get(url, params=params, timeout=30) as response:
+                        if response.status == 200:
+                            html = await response.text()
+                            soup = BeautifulSoup(html, 'lxml')
                             
-        except Exception as e:
-            logger.error(f"UzJobs scraper error: {e}")
+                            # Vakansiya bloklarini topish
+                            items = soup.select('.vacancy-box') # Bu selektorni tekshirish kerak
+                            if not items:
+                                # Fallback selektor
+                                items = soup.find_all('div', class_='vacancy-item')
+                            
+                            for item in items:
+                                vacancy = self.parse_item(item)
+                                if vacancy:
+                                    vacancies.append(vacancy)
+                            
+                            # Muvaffaqiyatli bo'lsa loopni to'xtatish
+                            return vacancies
+
+                        elif response.status == 429:
+                            logger.warning(f"UzJobs 429 (Too Many Requests). Retrying in {delay}s...")
+                            await asyncio.sleep(delay)
+                            delay *= 2  # Exponential backoff
+                        else:
+                            logger.error(f"UzJobs error: {response.status}")
+                            return []
+                            
+            except Exception as e:
+                logger.error(f"UzJobs scraper error (attempt {attempt+1}): {e}")
+                await asyncio.sleep(delay)
+                delay *= 1.5
             
         return vacancies
 
