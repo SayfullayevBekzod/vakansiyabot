@@ -17,58 +17,59 @@ class UzJobsScraper:
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         }
+        # Global semaphore to ensure only one request happens at a time across all instances
+        self.semaphore = asyncio.Semaphore(1)
 
     async def scrape_uzjobs(self, keywords: List[str] = None) -> List[Dict]:
-        """uzjobs.com dan vakansiyalarni yig'ish - OPTIMIZED with Rate Limiting"""
-        vacancies = []
-        search_query = '+'.join(keywords) if keywords else ''
-        
-        # Qidiruv sahifasi
-        url = f"{self.base_url}/ru/vacancy/search"
-        params = {'q': search_query}
-        
-        retries = 3
-        delay = 2  # Boshlang'ich kutish vaqti (soniya)
-
-        for attempt in range(retries):
-            try:
-                # Random delay to avoid hitting rate limits exactly at same time
-                await asyncio.sleep(delay * (0.8 + 0.4 * random.random())) # Simple jitter
-
-                async with aiohttp.ClientSession(headers=self.headers) as session:
-                    async with session.get(url, params=params, timeout=30) as response:
-                        if response.status == 200:
-                            html = await response.text()
-                            soup = BeautifulSoup(html, 'lxml')
-                            
-                            # Vakansiya bloklarini topish
-                            items = soup.select('.vacancy-box') # Bu selektorni tekshirish kerak
-                            if not items:
-                                # Fallback selektor
-                                items = soup.find_all('div', class_='vacancy-item')
-                            
-                            for item in items:
-                                vacancy = self.parse_item(item)
-                                if vacancy:
-                                    vacancies.append(vacancy)
-                            
-                            # Muvaffaqiyatli bo'lsa loopni to'xtatish
-                            return vacancies
-
-                        elif response.status == 429:
-                            logger.warning(f"UzJobs 429 (Too Many Requests). Retrying in {delay}s...")
-                            await asyncio.sleep(delay)
-                            delay *= 2  # Exponential backoff
-                        else:
-                            logger.error(f"UzJobs error: {response.status}")
-                            return []
-                            
-            except Exception as e:
-                logger.error(f"UzJobs scraper error (attempt {attempt+1}): {e}")
-                await asyncio.sleep(delay)
-                delay *= 1.5
+        """uzjobs.com dan vakansiyalarni yig'ish - OPTIMIZED with Global Semaphore"""
+        async with self.semaphore:
+            vacancies = []
+            search_query = '+'.join(keywords) if keywords else ''
             
-        return vacancies
+            # Qidiruv sahifasi
+            url = f"{self.base_url}/ru/vacancy/search"
+            params = {'q': search_query}
+            
+            retries = 5  # Increased retries
+            delay = 5    # Increased initial delay
+    
+            for attempt in range(retries):
+                try:
+                    # Random delay to avoid hitting rate limits exactly at same time
+                    await asyncio.sleep(delay * (0.8 + 0.4 * random.random())) # Simple jitter
+    
+                    async with aiohttp.ClientSession(headers=self.headers) as session:
+                        async with session.get(url, params=params, timeout=30) as response:
+                            if response.status == 200:
+                                html = await response.text()
+                                soup = BeautifulSoup(html, 'lxml')
+                                
+                                # Vakansiya bloklarini topish
+                                items = soup.select('.vacancy-box')
+                                if not items:
+                                    items = soup.find_all('div', class_='vacancy-item')
+                                
+                                for item in items:
+                                    vacancy = self.parse_item(item)
+                                    if vacancy:
+                                        vacancies.append(vacancy)
+                                
+                                return vacancies
+    
+                            elif response.status == 429:
+                                logger.warning(f"UzJobs 429 (Too Many Requests). Retrying in {delay}s...")
+                                await asyncio.sleep(delay)
+                                delay *= 2.5  # Stronger exponential backoff
+                            else:
+                                logger.error(f"UzJobs error: {response.status}")
+                                return []
+                                
+                except Exception as e:
+                    logger.error(f"UzJobs scraper error (attempt {attempt+1}): {e}")
+                    await asyncio.sleep(delay)
+                    delay *= 2.0
+                
+            return vacancies
 
     def parse_item(self, item) -> Optional[Dict]:
         """Bir dona vakansiya itemini parse qilish"""
