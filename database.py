@@ -58,6 +58,7 @@ class Database:
                     username VARCHAR(255),
                     first_name VARCHAR(255),
                     last_name VARCHAR(255),
+                    language VARCHAR(5) DEFAULT 'uz',
                     is_active BOOLEAN DEFAULT TRUE,
                     premium_until TIMESTAMPTZ,
                     referred_by BIGINT,
@@ -67,62 +68,17 @@ class Database:
                 )
             ''')
             
-            # User filters jadvali
-            await conn.execute('''
-                CREATE TABLE IF NOT EXISTS user_filters (
-                    id SERIAL PRIMARY KEY,
-                    user_id BIGINT REFERENCES users(user_id) ON DELETE CASCADE,
-                    keywords TEXT[],
-                    locations TEXT[],
-                    regions TEXT[],
-                    categories TEXT[],
-                    salary_min INTEGER,
-                    salary_max INTEGER,
-                    employment_types TEXT[],
-                    experience_level VARCHAR(50),
-                    sources TEXT[] DEFAULT ARRAY['hh_uz', 'user_post'],
-                    created_at TIMESTAMPTZ DEFAULT NOW(),
-                    updated_at TIMESTAMPTZ DEFAULT NOW(),
-                    UNIQUE(user_id)
-                )
-            ''')
-            
-            # Sent vacancies jadvali
-            await conn.execute('''
-                CREATE TABLE IF NOT EXISTS sent_vacancies (
-                    id SERIAL PRIMARY KEY,
-                    user_id BIGINT REFERENCES users(user_id) ON DELETE CASCADE,
-                    vacancy_id VARCHAR(255),
-                    vacancy_title TEXT,
-                    sent_at TIMESTAMPTZ DEFAULT NOW(),
-                    UNIQUE(user_id, vacancy_id)
-                )
-            ''')
-            
-            # Vacancies jadvali
-            await conn.execute('''
-                CREATE TABLE IF NOT EXISTS vacancies (
-                    id SERIAL PRIMARY KEY,
-                    vacancy_id VARCHAR(255) UNIQUE,
-                    title TEXT,
-                    company VARCHAR(255),
-                    location VARCHAR(255),
-                    salary_min INTEGER,
-                    salary_max INTEGER,
-                    experience_level VARCHAR(50),
-                    description TEXT,
-                    url TEXT,
-                    source VARCHAR(50),
-                    published_date TIMESTAMPTZ,
-                    created_at TIMESTAMPTZ DEFAULT NOW()
-                )
-            ''')
+            # Migration: Add language column if not exists
+            try:
+                await conn.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS language VARCHAR(5) DEFAULT 'uz'")
+            except:
+                pass
 
-            # Resumes jadvali (Seekers)
+            # Resumes jadvali
             await conn.execute('''
                 CREATE TABLE IF NOT EXISTS resumes (
                     id SERIAL PRIMARY KEY,
-                    user_id BIGINT REFERENCES users(user_id) ON DELETE CASCADE,
+                    user_id BIGINT REFERENCES users(user_id),
                     full_name VARCHAR(255),
                     age INTEGER,
                     technology TEXT,
@@ -133,109 +89,27 @@ class Database:
                     profession VARCHAR(255),
                     call_time VARCHAR(255),
                     goal TEXT,
-                    created_at TIMESTAMPTZ DEFAULT NOW(),
-                    updated_at TIMESTAMPTZ DEFAULT NOW()
+                    created_at TIMESTAMPTZ DEFAULT NOW()
                 )
             ''')
-            
-            # Notification settings jadvali
-            await conn.execute('''
-                CREATE TABLE IF NOT EXISTS notification_settings (
-                    user_id BIGINT PRIMARY KEY REFERENCES users(user_id) ON DELETE CASCADE,
-                    enabled BOOLEAN DEFAULT TRUE,
-                    instant_notify BOOLEAN DEFAULT TRUE,
-                    daily_digest BOOLEAN DEFAULT FALSE,
-                    digest_time TIME DEFAULT '20:00:00',
-                    last_digest_sent TIMESTAMPTZ,
-                    updated_at TIMESTAMPTZ DEFAULT NOW()
-                )
-            ''')
-            await conn.execute('CREATE INDEX IF NOT EXISTS idx_users_premium ON users(premium_until)')
-            await conn.execute('CREATE INDEX IF NOT EXISTS idx_users_referred_by ON users(referred_by)')
-            await conn.execute('CREATE INDEX IF NOT EXISTS idx_users_active ON users(is_active) WHERE is_active = TRUE')
-            await conn.execute('CREATE INDEX IF NOT EXISTS idx_sent_vacancies_user ON sent_vacancies(user_id)')
-            await conn.execute('CREATE INDEX IF NOT EXISTS idx_sent_vacancies_vacancy ON sent_vacancies(vacancy_id)')
-            await conn.execute('CREATE INDEX IF NOT EXISTS idx_vacancies_published ON vacancies(published_date DESC)')
-            await conn.execute('CREATE INDEX IF NOT EXISTS idx_vacancies_source ON vacancies(source)')
-            await conn.execute('CREATE INDEX IF NOT EXISTS idx_vacancies_location ON vacancies(location)')
-            await conn.execute('CREATE INDEX IF NOT EXISTS idx_vacancies_experience ON vacancies(experience_level)')
-            
-            # referred_by ustunini qo'shish (eski database uchun)
-            try:
-                await conn.execute('ALTER TABLE users ADD COLUMN IF NOT EXISTS referred_by BIGINT')
-                logger.info("✅ referred_by ustuni qo'shildi/tekshirildi")
-            except:
-                pass
-            
-            logger.info("✅ Jadvallar va indexlar yaratildi/tekshirildi")
-    
-    # ========== USER MANAGEMENT - OPTIMIZED ==========
-    
-    async def add_resume(self, **kwargs):
-        """Rezyume qo'shish"""
-        try:
-            async with self.pool.acquire() as conn:
-                await conn.execute('''
-                    INSERT INTO resumes (
-                        user_id, full_name, age, technology, telegram_username, 
-                        phone, region, salary, profession, call_time, goal
-                    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-                ''', 
-                kwargs['user_id'], kwargs['full_name'], kwargs['age'], kwargs['technology'],
-                kwargs['telegram_username'], kwargs['phone'], kwargs['region'], kwargs['salary'],
-                kwargs['profession'], kwargs['call_time'], kwargs['goal']
-                )
-                return True
-        except Exception as e:
-            logger.error(f"❌ add_resume xatolik: {e}")
-            return False
-
-    async def get_resumes(self, limit: int = 50, offset: int = 0) -> List[Dict]:
-        """Rezyumelarni olish"""
-        try:
-            async with self.pool.acquire() as conn:
-                rows = await conn.fetch('''
-                    SELECT * FROM resumes 
-                    ORDER BY created_at DESC 
-                    LIMIT $1 OFFSET $2
-                ''', limit, offset)
-                return [dict(row) for row in rows]
-        except Exception as e:
-            logger.error(f"❌ get_resumes xatolik: {e}")
-            return []
-
-    async def get_all_seekers_with_filters(self) -> List[Dict]:
-        """Barcha ish qidiruvchilarni filtrlari bilan olish"""
-        try:
-            async with self.pool.acquire() as conn:
-                rows = await conn.fetch('''
-                    SELECT u.user_id, f.keywords, f.locations, f.salary_min, f.salary_max, f.experience_level
-                    FROM users u
-                    JOIN user_filters f ON u.user_id = f.user_id
-                    WHERE u.role = 'seeker' AND u.is_active = TRUE
-                ''')
-                return [dict(row) for row in rows]
-        except Exception as e:
-            logger.error(f"❌ get_all_seekers_with_filters xatolik: {e}")
-            return []
 
     async def add_user(self, user_id: int, username: str = None, 
-                      first_name: str = None, last_name: str = None):
+                      first_name: str = None, last_name: str = None, language: str = 'uz'):
         """Yangi foydalanuvchi qo'shish - OPTIMIZED"""
         try:
             now = datetime.now(timezone.utc)
             
             async with self.pool.acquire() as conn:
                 await conn.execute('''
-                    INSERT INTO users (user_id, username, first_name, last_name, created_at, updated_at)
-                    VALUES ($1, $2, $3, $4, $5, $6)
+                    INSERT INTO users (user_id, username, first_name, last_name, language, created_at, updated_at)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7)
                     ON CONFLICT (user_id) DO UPDATE
                     SET username = EXCLUDED.username, 
                         first_name = EXCLUDED.first_name, 
                         last_name = EXCLUDED.last_name,
                         updated_at = EXCLUDED.updated_at,
                         is_active = TRUE
-                ''', user_id, username, first_name, last_name, now, now)
+                ''', user_id, username, first_name, last_name, language, now, now)
                 
                 return True
                 
@@ -262,7 +136,100 @@ class Database:
         except Exception as e:
             logger.error(f"❌ get_user xatolik: {e}")
             return None
+
+    async def set_language(self, user_id: int, language: str):
+        """Tilni o'zgartirish"""
+        try:
+            async with self.pool.acquire() as conn:
+                await conn.execute(
+                    "UPDATE users SET language = $1 WHERE user_id = $2",
+                    language, user_id
+                )
+                return True
+        except Exception as e:
+            logger.error(f"set_language error: {e}")
+            return False
+
+    async def get_language(self, user_id: int) -> str:
+        """Foydalanuvchi tilini olish"""
+        try:
+            async with self.pool.acquire() as conn:
+                lang = await conn.fetchval(
+                    "SELECT language FROM users WHERE user_id = $1",
+                    user_id
+                )
+                return lang or 'uz'
+        except Exception as e:
+            logger.error(f"get_language error: {e}")
+            return 'uz'
     
+    async def get_user_referrer(self, user_id: int) -> Optional[int]:
+        """Userni kim taklif qilganini olish"""
+        try:
+            async with self.pool.acquire() as conn:
+                return await conn.fetchval(
+                    'SELECT referred_by FROM users WHERE user_id = $1',
+                    user_id
+                )
+        except Exception as e:
+            logger.error(f"get_user_referrer error: {e}")
+            return None
+
+    async def set_user_referrer(self, user_id: int, referrer_id: int) -> bool:
+        """Referrerni o'rnatish"""
+        try:
+            async with self.pool.acquire() as conn:
+                await conn.execute(
+                    'UPDATE users SET referred_by = $2 WHERE user_id = $1',
+                    user_id, referrer_id
+                )
+                return True
+        except Exception as e:
+            logger.error(f"set_user_referrer error: {e}")
+            return False
+
+    async def update_user_activity(self, user_id: int) -> bool:
+        """Foydalanuvchi oxirgi faolligini yangilash"""
+        try:
+            async with self.pool.acquire() as conn:
+                await conn.execute(
+                    'UPDATE users SET updated_at = NOW() WHERE user_id = $1',
+                    user_id
+                )
+                return True
+        except Exception as e:
+            logger.error(f"update_user_activity error: {e}")
+            return False
+
+    async def get_recently_active_users(self, limit: int = 20) -> List[Dict]:
+        """Oxirgi faol foydalanuvchilarni olish"""
+        try:
+            async with self.pool.acquire() as conn:
+                rows = await conn.fetch('''
+                    SELECT user_id, username, first_name, premium_until, updated_at
+                    FROM users 
+                    WHERE is_active = TRUE
+                    ORDER BY updated_at DESC
+                    LIMIT $1
+                ''', limit)
+                
+                users = []
+                now = datetime.now(timezone.utc)
+                for row in rows:
+                    user_data = dict(row)
+                    # Premium statusni hisoblash
+                    is_p = False
+                    if row['premium_until']:
+                        unt = row['premium_until']
+                        if unt.tzinfo is None: unt = unt.replace(tzinfo=timezone.utc)
+                        is_p = unt > now
+                    user_data['is_premium'] = is_p
+                    users.append(user_data)
+                return users
+        except Exception as e:
+            logger.error(f"get_recently_active_users error: {e}")
+            return []
+
     async def get_all_active_users(self) -> List[int]:
         """Barcha faol foydalanuvchilar - OPTIMIZED with index"""
         try:
@@ -547,6 +514,49 @@ class Database:
                 return row is not None
         except:
             return False
+
+    async def add_sent_vacancy(self, user_id: int, vacancy_id: str, vacancy_title: str = None):
+        """Alias for mark_vacancy_sent to match handler expectation"""
+        return await self.mark_vacancy_sent(user_id, vacancy_id, vacancy_title)
+
+    async def add_resume(self, **kwargs):
+        """Rezyume qo'shish"""
+        try:
+            async with self.pool.acquire() as conn:
+                await conn.execute('''
+                    INSERT INTO resumes 
+                    (user_id, full_name, age, technology, telegram_username, phone,
+                     region, salary, profession, call_time, goal)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+                ''',
+                kwargs.get('user_id'),
+                kwargs.get('full_name'),
+                int(kwargs.get('age', 0)),
+                kwargs.get('technology'),
+                kwargs.get('telegram_username'),
+                kwargs.get('phone'),
+                kwargs.get('region'),
+                kwargs.get('salary'),
+                kwargs.get('profession'),
+                kwargs.get('call_time'),
+                kwargs.get('goal'))
+                return True
+        except Exception as e:
+            logger.error(f"add_resume error: {e}")
+            return False
+
+    async def get_resumes(self, limit: int = 100) -> List[Dict]:
+        """Barcha rezyumelarni olish"""
+        try:
+            async with self.pool.acquire() as conn:
+                rows = await conn.fetch(
+                    'SELECT * FROM resumes ORDER BY created_at DESC LIMIT $1',
+                    limit
+                )
+                return [dict(row) for row in rows]
+        except Exception as e:
+            logger.error(f"get_resumes error: {e}")
+            return []
     
     async def remove_premium(self, user_id: int) -> bool:
         """Premium bekor qilish"""

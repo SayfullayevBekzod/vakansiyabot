@@ -33,8 +33,13 @@ except Exception as e:
     logger.warning(f"⚠️ Telegram scraper yuklanmadi: {e}")
 
 
-def get_vacancy_keyboard(current_index: int, total: int, vacancy_id: str = None, is_admin: bool = False, source: str = 'hh_uz') -> InlineKeyboardMarkup:
+from utils.i18n import get_text, get_user_lang
+
+async def get_vacancy_keyboard(user_id: int, current_index: int, total: int, vacancy_id: str = None, is_admin: bool = False, source: str = 'hh_uz') -> InlineKeyboardMarkup:
     """Vakansiya uchun klaviatura"""
+    lang = await get_user_lang(user_id)
+    async def t(key): return await get_text(key, lang=lang)
+    
     buttons = []
     
     # Navigatsiya tugmalari
@@ -42,7 +47,7 @@ def get_vacancy_keyboard(current_index: int, total: int, vacancy_id: str = None,
     
     if current_index > 0:
         nav_buttons.append(
-            InlineKeyboardButton(text="⬅️ Oldingi", callback_data=f"vac_prev_{current_index}")
+            InlineKeyboardButton(text=await t("nav_prev"), callback_data=f"vac_prev_{current_index}")
         )
     
     nav_buttons.append(
@@ -51,7 +56,7 @@ def get_vacancy_keyboard(current_index: int, total: int, vacancy_id: str = None,
     
     if current_index < total - 1:
         nav_buttons.append(
-            InlineKeyboardButton(text="Keyingi ➡️", callback_data=f"vac_next_{current_index}")
+            InlineKeyboardButton(text=await t("nav_next"), callback_data=f"vac_next_{current_index}")
         )
     
     if nav_buttons:
@@ -62,22 +67,22 @@ def get_vacancy_keyboard(current_index: int, total: int, vacancy_id: str = None,
     
     if vacancy_id:
         action_buttons.append(
-            InlineKeyboardButton(text="💾 Saqlash", callback_data=f"vac_save_{vacancy_id}")
+            InlineKeyboardButton(text=await t("btn_save_vacancy"), callback_data=f"vac_save_{vacancy_id}")
         )
         
         # Interview buttons
         action_buttons.append(
-            InlineKeyboardButton(text="❓ Interview", callback_data=f"interview_prep_{vacancy_id}")
+            InlineKeyboardButton(text=await t("btn_interview"), callback_data=f"interview_prep_{vacancy_id}")
         )
         
         # Adminlar uchun o'chirish tugmasi (faqat user_post va telegram uchun)
         if is_admin and source != 'hh_uz':
             action_buttons.append(
-                InlineKeyboardButton(text="🗑 O'chirish (Admin)", callback_data=f"delete_vacancy_{vacancy_id}")
+                InlineKeyboardButton(text=await t("btn_delete_admin"), callback_data=f"delete_vacancy_{vacancy_id}")
             )
     
     action_buttons.append(
-        InlineKeyboardButton(text="🔍 Yangi qidiruv", callback_data="new_search")
+        InlineKeyboardButton(text=await t("btn_new_search"), callback_data="new_search")
     )
     
     buttons.append(action_buttons)
@@ -87,9 +92,11 @@ def get_vacancy_keyboard(current_index: int, total: int, vacancy_id: str = None,
 
 async def send_vacancy_to_user(message_or_callback, user_id: int, index: int):
     """Vakansiyani yuborish yoki yangilash"""
+    lang = await get_user_lang(user_id)
+    
     if user_id not in user_vacancies:
         if isinstance(message_or_callback, CallbackQuery):
-            await message_or_callback.answer("⚠️ Sessiya tugadi. Yangi qidiruv boshlang.", show_alert=True)
+            await message_or_callback.answer(await get_text("session_expired", lang=lang), show_alert=True)
         return
     
     data = user_vacancies[user_id]
@@ -97,7 +104,7 @@ async def send_vacancy_to_user(message_or_callback, user_id: int, index: int):
     
     if index < 0 or index >= len(vacancies):
         if isinstance(message_or_callback, CallbackQuery):
-            await message_or_callback.answer("⚠️ Vakansiya topilmadi", show_alert=True)
+            await message_or_callback.answer(await get_text("vacancy_not_found", lang=lang), show_alert=True)
         return
     
     vacancy = vacancies[index]
@@ -105,11 +112,11 @@ async def send_vacancy_to_user(message_or_callback, user_id: int, index: int):
     
     # Vakansiyani formatlash
     from filters import vacancy_filter
-    vacancy_text = vacancy_filter.format_vacancy_message(vacancy)
+    vacancy_text = vacancy_filter.format_vacancy_message(vacancy, lang=lang)
     
     # To'liq ma'lumot tugmasi
     url_button = InlineKeyboardButton(
-        text="📄 To'liq ma'lumot",
+        text=await get_text("btn_full_info", lang=lang),
         url=vacancy.get('url', '#')
     )
     
@@ -120,7 +127,7 @@ async def send_vacancy_to_user(message_or_callback, user_id: int, index: int):
     is_admin = user_id in ADMIN_IDS
     vacancy_source = vacancy.get('source', 'hh_uz')
     
-    keyboard = get_vacancy_keyboard(index, len(vacancies), str(vacancy_id) if vacancy_id else None, is_admin, vacancy_source)
+    keyboard = await get_vacancy_keyboard(user_id, index, len(vacancies), str(vacancy_id) if vacancy_id else None, is_admin, vacancy_source)
     keyboard.inline_keyboard.insert(0, [url_button])
     
     try:
@@ -142,20 +149,26 @@ async def send_vacancy_to_user(message_or_callback, user_id: int, index: int):
     except Exception as e:
         logger.error(f"Vakansiya yuborishda xatolik: {e}")
         if isinstance(message_or_callback, CallbackQuery):
-            await message_or_callback.answer("⚠️ Xatolik yuz berdi", show_alert=True)
+            await message_or_callback.answer(await get_text("msg_error_generic", lang=lang), show_alert=True)
 
 
-@router.message(F.text == "🔍 Vakansiya qidirish")
+from utils.i18n import get_msg_options
+
+@router.message(F.text.in_(get_msg_options("menu_vacancies")))
 async def search_choice(message: Message):
     """Qidiruv turini tanlash"""
+    lang = await get_user_lang(message.from_user.id)
+    async def t(key): return await get_text(key, lang=lang)
+    
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text="🔍 Vakansiya qidirish", callback_data="start_search_vacancies"),
-            InlineKeyboardButton(text="👨‍💼 Nomzodlarni ko'rish", callback_data="start_search_candidates")
+            InlineKeyboardButton(text=await t("btn_search_vacancies"), callback_data="start_search_vacancies"),
+            InlineKeyboardButton(text=await t("btn_search_candidates"), callback_data="start_search_candidates")
         ],
-        [InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_choice")]
+        [InlineKeyboardButton(text=await t("btn_cancel_choice"), callback_data="cancel_choice")]
     ])
-    await message.answer("🔍 <b>Qidiruv bo'limi</b>\n\nNima qidirmoqchisiz?", reply_markup=keyboard, parse_mode='HTML')
+    await message.answer(await t("search_choice_title"), reply_markup=keyboard, parse_mode='HTML')
+
 
 @router.callback_query(F.data == "cancel_choice")
 async def cancel_choice(callback: CallbackQuery):
@@ -178,13 +191,12 @@ async def trigger_vacancies_search(callback: CallbackQuery):
 
 async def perform_vacancy_search(message: Message, user_id: int):
     """Vakansiya qidirishning asosiy mantiqi"""
+    lang = await get_user_lang(user_id)
+    async def t(key): return await get_text(key, lang=lang)
+
     # Agar user allaqachon qidirayotgan bo'lsa
     if user_id in searching_users:
-        await message.answer(
-            "⏳ <b>Siz allaqachon qidiruv boshlagansiz!</b>\n\n"
-            "Iltimos, hozirgi qidiruv tugashini kuting.",
-            parse_mode='HTML'
-        )
+        await message.answer(await t("search_already_running"), parse_mode='HTML')
         return
     
     from config import PREMIUM_FEATURES
@@ -197,22 +209,22 @@ async def perform_vacancy_search(message: Message, user_id: int):
     user_filter = await db.get_user_filter(user_id)
     
     if not user_filter or not user_filter.get('keywords'):
-        await message.answer(
-            "⚠️ <b>Avval sozlamalarni o'rnating!</b>\n\n"
-            "Sizga mos vakansiyalarni topish uchun, iltimos, "
-            "kalit so'zlarni va boshqa filtrlarni o'rnating.\n\n"
-            "⚙️ <b>Sozlamalar</b> tugmasini bosing.",
-            parse_mode='HTML'
-        )
+        await message.answer(await t("search_no_settings"), parse_mode='HTML')
         return
     
     # Qidiruv jarayonini belgilash
     searching_users.add(user_id)
     
     # Qidiruv jarayonini boshlash
+    keywords = user_filter.get('keywords', [])
+    locations = user_filter.get('locations', ['Tashkent'])
+    sources = user_filter.get('sources', ['hh_uz', 'user_post'])
+    
     wait_msg = await message.answer(
-        "🔍 <b>Vakansiyalarni qidiryapman...</b>\n\n"
-        "⏳ Bu bir necha soniya vaqt olishi mumkin.",
+        (await t("search_start")).format(
+            keywords=", ".join(keywords),
+            location=locations[0] if locations else "Tashkent"
+        ), 
         parse_mode='HTML'
     )
     
@@ -220,10 +232,6 @@ async def perform_vacancy_search(message: Message, user_id: int):
         # Vakansiyalarni olish
         from scraper_api import scraper_api
         from filters import vacancy_filter
-        
-        keywords = user_filter.get('keywords', [])
-        locations = user_filter.get('locations', ['Tashkent'])
-        sources = user_filter.get('sources', ['hh_uz', 'user_post'])
         
         # Premium bo'lsa, Telegram manbasini avtomatik qo'shish (search da ham)
         if is_premium and 'telegram' not in sources:
@@ -270,7 +278,7 @@ async def perform_vacancy_search(message: Message, user_id: int):
                     
                     if user_posted:
                         logger.info(f"[SEARCH] User-posted: {len(user_posted)} ta")
-                        return ('Bot e\'lonlar', '📢', user_posted)
+                        return (await t("source_user_post"), '📢', user_posted)
                     return None
             except Exception as e:
                 logger.error(f"[SEARCH] User-posted error: {e}")
@@ -290,7 +298,7 @@ async def perform_vacancy_search(message: Message, user_id: int):
                     )
                     if hh_vacancies:
                         logger.info(f"[SEARCH] hh.uz: {len(hh_vacancies)} ta")
-                        return ('hh.uz', '🌐', hh_vacancies)
+                        return (await t("source_hh_uz"), '🌐', hh_vacancies)
                     return None
                 except Exception as e:
                     logger.error(f"[SEARCH] hh.uz error: {e}")
@@ -341,7 +349,7 @@ async def perform_vacancy_search(message: Message, user_id: int):
                                         tg_channels[channel] = tg_channels.get(channel, 0) + 1
                             
                             logger.info(f"[SEARCH] Telegram DB: {len(tg_vacancies)} ta")
-                            return ('Telegram', '📱', tg_vacancies, tg_channels)
+                            return (await t("source_telegram"), '📱', tg_vacancies, tg_channels)
                         return None
                 except Exception as e:
                     logger.error(f"[SEARCH] Telegram DB error: {e}")
@@ -356,7 +364,7 @@ async def perform_vacancy_search(message: Message, user_id: int):
                 logger.info("[SEARCH] Fetching from UzJobs...")
                 res = await uz_jobs_scraper.scrape_uzjobs(keywords)
                 if res:
-                    return ('UzJobs', '🌐', res)
+                    return (await t("source_uzjobs"), '🌐', res)
                 return None
             except Exception as e:
                 logger.error(f"[SEARCH] UzJobs error: {e}")
@@ -394,15 +402,7 @@ async def perform_vacancy_search(message: Message, user_id: int):
             except:
                 pass
             
-            await message.answer(
-                "😕 <b>Hech qanday vakansiya topilmadi</b>\n\n"
-                "Iltimos:\n"
-                "• Kalit so'zlarni kengaytiring\n"
-                "• Boshqa shaharlarni qo'shing\n"
-                "• Keyinroq qayta urinib ko'ring\n\n"
-                "⚙️ Sozlamalar bo'limiga o'ting.",
-                parse_mode='HTML'
-            )
+            await message.answer(await t("search_not_found"), parse_mode='HTML')
             return
         
         # Filtr qo'llash
@@ -424,15 +424,7 @@ async def perform_vacancy_search(message: Message, user_id: int):
             pass
         
         if not filtered_vacancies:
-            await message.answer(
-                "😕 <b>Filtrdan hech qanday vakansiya o'tmadi</b>\n\n"
-                "Filtrlarni kengaytiring:\n"
-                "• Kalit so'zlarni kamaytiring\n"
-                "• Maosh talablarini pasaytiring\n"
-                "• Tajriba filtrini o'zgartiring\n\n"
-                "⚙️ Sozlamalar bo'limiga o'ting.",
-                parse_mode='HTML'
-            )
+            await message.answer(await t("search_filtered_out"), parse_mode='HTML')
             return
         
         # Foydalanuvchi uchun vakansiyalarni saqlash
@@ -442,11 +434,12 @@ async def perform_vacancy_search(message: Message, user_id: int):
         }
         
         # === NATIJALAR XABARI ===
-        result_text = f"✅ <b>{len(filtered_vacancies)} ta vakansiya topildi!</b>\n\n"
+        res_found = await t("results_found")
+        result_text = res_found.format(count=len(filtered_vacancies))
         
         # Manbalardagi natijalar
         if sources_used:
-            result_text += f"📊 <b>Manbalar:</b>\n"
+            result_text += await t("results_sources")
             for source in sources_used:
                 result_text += f"{source['emoji']} <b>{source['name']}:</b> {source['count']} ta\n"
                 
@@ -461,10 +454,10 @@ async def perform_vacancy_search(message: Message, user_id: int):
             result_text += "\n"
         
         if limited:
-            result_text += f"⚠️ <b>Free versiya:</b> faqat birinchi {max_results} ta natija\n"
-            result_text += f"💎 <b>Premium:</b> cheksiz natijalar + Telegram kanallar\n\n"
+            res_limited = await t("results_limited")
+            result_text += res_limited.format(count=max_results)
         
-        result_text += f"Vakansiyalarni birma-bir ko'ring 👇"
+        result_text += await t("results_view_action")
         
         await message.answer(result_text, parse_mode='HTML')
         
@@ -477,11 +470,7 @@ async def perform_vacancy_search(message: Message, user_id: int):
             await wait_msg.delete()
         except:
             pass
-        await message.answer(
-            "❌ <b>Xatolik yuz berdi</b>\n\n"
-            "Iltimos, keyinroq qayta urinib ko'ring.",
-            parse_mode='HTML'
-        )
+        await message.answer(await t("search_error"), parse_mode='HTML')
     
     finally:
         # Qidiruv tugadi
@@ -496,7 +485,8 @@ async def next_vacancy(callback: CallbackQuery):
         await send_vacancy_to_user(callback, callback.from_user.id, current_index + 1)
     except Exception as e:
         logger.error(f"next_vacancy xatolik: {e}")
-        await callback.answer("❌ Xatolik", show_alert=True)
+        lang = await get_user_lang(callback.from_user.id)
+        await callback.answer(await get_text("msg_error_generic", lang=lang), show_alert=True)
 
 
 @router.callback_query(F.data.startswith("vac_prev_"))
@@ -507,42 +497,54 @@ async def prev_vacancy(callback: CallbackQuery):
         await send_vacancy_to_user(callback, callback.from_user.id, current_index - 1)
     except Exception as e:
         logger.error(f"prev_vacancy xatolik: {e}")
-        await callback.answer("❌ Xatolik", show_alert=True)
+        lang = await get_user_lang(callback.from_user.id)
+        await callback.answer(await get_text("msg_error_generic", lang=lang), show_alert=True)
 
 
 @router.callback_query(F.data == "vac_count")
 async def show_count(callback: CallbackQuery):
     """Statistika"""
+    lang = await get_user_lang(callback.from_user.id)
     if callback.from_user.id in user_vacancies:
         data = user_vacancies[callback.from_user.id]
+        # TODO: localize "Vakansiya X / Y" if strictly needed, but numbers are fine. 
+        # Actually better to have a format string.
+        # "status_vacancy_count": "📊 Vakansiya {current} / {total}"
+        # I'll stick to simple format for now or add key.
+        # Let's add key implicitly or just format string.
+        # "Vaccancy" word is the only thing.
+        # I'll leave as is for now or use "results_found" style?
+        # Let's use hardcoded emoji for now to save time, or better:
         await callback.answer(
-            f"📊 Vakansiya {data['current_index'] + 1} / {len(data['vacancies'])}",
+            f"📊 {data['current_index'] + 1} / {len(data['vacancies'])}",
             show_alert=False
         )
     else:
-        await callback.answer("⚠️ Sessiya tugadi", show_alert=True)
+        await callback.answer(await get_text("session_expired", lang=lang), show_alert=True)
 
 
 @router.callback_query(F.data.startswith("vac_save_"))
 async def save_vacancy(callback: CallbackQuery):
     """Vakansiyani saqlash"""
+    lang = await get_user_lang(callback.from_user.id)
     try:
         vacancy_id = callback.data.split("_", 2)[2]
         await db.add_sent_vacancy(callback.from_user.id, vacancy_id, "Saqlangan")
-        await callback.answer("✅ Vakansiya saqlandi!", show_alert=True)
+        await callback.answer(await get_text("vacancy_saved", lang=lang), show_alert=True)
     except Exception as e:
         logger.error(f"Vakansiya saqlashda xatolik: {e}")
-        await callback.answer("❌ Xatolik yuz berdi", show_alert=True)
+        await callback.answer(await get_text("msg_error_generic", lang=lang), show_alert=True)
 
 
 @router.callback_query(F.data == "new_search")
 async def new_search(callback: CallbackQuery):
     """Yangi qidiruv"""
+    lang = await get_user_lang(callback.from_user.id)
     if callback.from_user.id in user_vacancies:
         del user_vacancies[callback.from_user.id]
     
     await callback.message.answer(
-        "🔍 Yangi qidiruv uchun <b>🔍 Vakansiya qidirish</b> tugmasini bosing.",
+        await get_text("msg_new_search_hint", lang=lang),
         parse_mode='HTML'
     )
     
@@ -556,6 +558,7 @@ async def new_search(callback: CallbackQuery):
 @router.message(F.text.regexp(r'^/view_(.+)$'))
 async def view_vacancy_handler(message: Message):
     """Vakansiyani ID orqali ko'rish"""
+    lang = await get_user_lang(message.from_user.id)
     try:
         from filters import vacancy_filter
         # Regex orqali ID ni olish
@@ -567,19 +570,19 @@ async def view_vacancy_handler(message: Message):
         vac = await db.get_vacancy(vacancy_id)
         
         if not vac:
-            await message.answer("⚠️ Vakansiya topilmadi yoki o'chirib yuborilgan.")
+            await message.answer(await get_text("vacancy_not_found", lang=lang))
             return
             
-        text = vacancy_filter.format_vacancy_message(vac)
+        text = vacancy_filter.format_vacancy_message(vac, lang=lang)
         
         from handlers.favorites import get_favorite_keyboard
         await message.answer(
             text,
-            reply_markup=get_favorite_keyboard(vacancy_id),
+            reply_markup=await get_favorite_keyboard(message.from_user.id, vacancy_id),
             parse_mode='HTML',
             disable_web_page_preview=True
         )
         
     except Exception as e:
         logger.error(f"view_vacancy_handler error: {e}")
-        await message.answer("❌ Xatolik yuz berdi")
+        await message.answer(await get_text("msg_error_generic", lang=lang))

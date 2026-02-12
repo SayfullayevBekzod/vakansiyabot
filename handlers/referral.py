@@ -3,13 +3,14 @@ from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, C
 from aiogram.filters import CommandStart, Command
 from database import db
 import logging
+import urllib.parse
 from datetime import datetime, timezone, timedelta
+from utils.i18n import get_text, get_user_lang, get_msg_options
 
 logger = logging.getLogger(__name__)
 router = Router()
 
 
-# Referral mukofotlar
 # Referral mukofotlar - YANGILANGAN (5, 10, 20, 30)
 REFERRAL_REWARDS = {
     '5': {'days': 3, 'title': '5 ta do\'st'},
@@ -21,30 +22,41 @@ REFERRAL_REWARDS = {
 
 async def get_referral_keyboard(user_id: int, bot: Bot):
     """Referral klaviaturasi"""
+    lang = await get_user_lang(user_id)
+    async def t(key): return await get_text(key, lang=lang)
+    
     me = await bot.get_me()
     ref_link = f"https://t.me/{me.username}?start=ref_{user_id}"
+    share_text = await t("ref_share_text")
+    
+    # URL encoding for parameters
+    encoded_ref_link = urllib.parse.quote(ref_link)
+    encoded_text = urllib.parse.quote(share_text)
     
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text="📤 Ulashish",
-                    url=f"https://t.me/share/url?url={ref_link}&text=Ish topish uchun zo'r bot! 🚀"
+                    text=await t("btn_share"),
+                    url=f"https://t.me/share/url?url={encoded_ref_link}&text={encoded_text}"
                 )
             ],
             [
-                InlineKeyboardButton(text="📊 Statistikam", callback_data="referral_stats"),
-                InlineKeyboardButton(text="🏆 Leaderboard", callback_data="referral_leaderboard")
+                InlineKeyboardButton(text=await t("btn_my_stats"), callback_data="referral_stats"),
+                InlineKeyboardButton(text=await t("btn_leaderboard"), callback_data="referral_leaderboard")
             ],
-            [InlineKeyboardButton(text="🔙 Orqaga", callback_data="close_referral")]
+            [InlineKeyboardButton(text=await t("btn_back"), callback_data="close_referral")]
         ]
     )
 
 
-@router.message(F.text == "🤝 Taklif qilish")
-async def cmd_referral(message: Message):
+@router.message(F.text.in_(get_msg_options("menu_referral")))
+async def cmd_referral(message: Message, user_id: int = None):
     """Referral sistema"""
-    user_id = message.from_user.id
+    if user_id is None:
+        user_id = message.from_user.id
+    lang = await get_user_lang(user_id)
+    async def t(key, **kwargs): return await get_text(key, lang=lang, **kwargs)
     
     # Referral statistika
     stats = await db.get_referral_stats(user_id)
@@ -54,18 +66,14 @@ async def cmd_referral(message: Message):
     me = await message.bot.get_me()
     ref_link = f"https://t.me/{me.username}?start=ref_{user_id}"
     
-    text = "🤝 <b>Do'stlarni taklif qilish</b>\n\n"
-    text += "Do'stlarni taklif qiling va Premium bonus oling:\n"
-    text += "• 5 ta do'st = 3 kun\n"
-    text += "• 10 ta do'st = 6 kun\n"
-    text += "• 20 ta do'st = 12 kun\n"
-    text += "• 30 ta do'st = 30 kun!\n\n"
-    
-    text += f"👥 <b>Sizning referrallaringiz:</b> {ref_count} ta\n"
+    premium_info = ""
     if premium_refs > 0:
-        text += f"💎 Premium referrallar: {premium_refs} ta\n"
+        premium_info = await t("ref_premium_info", premium=premium_refs)
     
-    text += "\n🎁 <b>Mukofotlar:</b>\n"
+    text = await t("ref_title") + "\n\n"
+    text += await t("ref_desc", total=ref_count, premium_info=premium_info) + "\n\n"
+    
+    text += await t("ref_rewards_title") + "\n"
     for count_str, reward in sorted(REFERRAL_REWARDS.items(), key=lambda x: int(x[0])):
         count = int(count_str)
         if ref_count >= count:
@@ -75,12 +83,12 @@ async def cmd_referral(message: Message):
         else:
             status = "🔒"
         
-        text += f"{status} {reward['title']}: +{reward['days']} kun Premium\n"
+        text += await t("ref_reward_item", status=status, title=reward['title'], days=reward['days']) + "\n"
         if status == "⏳":
-            text += f"   (yana {count - ref_count} ta kerak)\n"
+            text += await t("ref_reward_remaining", count=count - ref_count) + "\n"
     
-    text += f"\n🔗 <b>Sizning linkingiz:</b>\n<code>{ref_link}</code>\n\n"
-    text += "💡 Do'stlaringizga ulashing va avtomatik Premium bonus oling!"
+    text += f"\n" + await t("ref_link_title") + f"\n<code>{ref_link}</code>\n\n"
+    text += await t("ref_footer")
     
     await message.answer(
         text,
@@ -93,13 +101,15 @@ async def cmd_referral(message: Message):
 async def referral_stats(callback: CallbackQuery):
     """Referral statistika"""
     user_id = callback.from_user.id
+    lang = await get_user_lang(user_id)
+    async def t(key, **kwargs): return await get_text(key, lang=lang, **kwargs)
+    
     referrals = await db.get_referral_list(user_id, limit=20)
     
     if not referrals:
-        text = "📊 <b>Statistika</b>\n\nSizda hali referrallar yo'q.\n\n"
-        text += "💡 Do'stlaringizni taklif qiling va Premium mukofot oling!"
+        text = await t("ref_stats_title") + "\n\n" + await t("ref_no_referrals")
     else:
-        text = f"📊 <b>Referral statistika</b> (oxirgi 20 ta)\n\n"
+        text = await t("ref_stats_title") + " " + await t("ref_list_header")
         for i, ref in enumerate(referrals, 1):
             name = ref['first_name']
             username = f" @{ref['username']}" if ref['username'] else ""
@@ -110,7 +120,7 @@ async def referral_stats(callback: CallbackQuery):
     await callback.message.edit_text(
         text,
         reply_markup=InlineKeyboardMarkup(
-            inline_keyboard=[[InlineKeyboardButton(text="🔙 Orqaga", callback_data="show_referral")]]
+            inline_keyboard=[[InlineKeyboardButton(text=await t("btn_back"), callback_data="show_referral")]]
         ),
         parse_mode='HTML'
     )
@@ -120,51 +130,27 @@ async def referral_stats(callback: CallbackQuery):
 @router.callback_query(F.data == "referral_leaderboard")
 async def referral_leaderboard(callback: CallbackQuery):
     """Top referrallar"""
+    user_id = callback.from_user.id
+    lang = await get_user_lang(user_id)
+    async def t(key, **kwargs): return await get_text(key, lang=lang, **kwargs)
+    
     top = await db.get_top_referrers(10)
     
-    text = "🏆 <b>Referral Leaderboard</b>\n\n"
+    text = await t("ref_leaderboard_title") + "\n\n"
     if not top:
-        text += "Hali natijalar yo'q."
+        text += await t("ref_no_leaderboard")
     else:
         for i, user in enumerate(top, 1):
             emoji = "🥇" if i == 1 else ("🥈" if i == 2 else ("🥉" if i == 3 else "👤"))
             text += f"{emoji} {i}. {user['first_name']} - <b>{user['total']}</b> ta\n"
     
-    text += "\n💡 Do'stlarni taklif qiling va ro'yxatga kiring!"
+    text += await t("ref_leaderboard_footer")
     
     await callback.message.edit_text(
         text,
         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="🔙 Orqaga", callback_data="show_referral")]
+            [InlineKeyboardButton(text=await t("btn_back"), callback_data="show_referral")]
         ]),
-        parse_mode='HTML'
-    )
-    await callback.answer()
-
-
-@router.callback_query(F.data == "referral_rewards")
-async def referral_rewards(callback: CallbackQuery):
-    """Mukofotlar ro'yxati"""
-    user_id = callback.from_user.id
-    stats = await db.get_referral_stats(user_id)
-    ref_count = stats['total']
-    
-    text = "🎁 <b>Referral mukofotlari</b>\n\n"
-    for count_str, reward in sorted(REFERRAL_REWARDS.items(), key=lambda x: int(x[0])):
-        count = int(count_str)
-        if ref_count >= count:
-            text += f"✅ <b>{reward['title']}</b> - Olindi!\n"
-        else:
-            text += f"🔒 <b>{reward['title']}</b> - Yana {count - ref_count} ta kerak\n"
-        text += f"   +{reward['days']} kun Premium\n\n"
-    
-    text += "💡 Har bir yangi referral uchun mukofot avtomatik beriladi!"
-    
-    await callback.message.edit_text(
-        text,
-        reply_markup=InlineKeyboardMarkup(
-            inline_keyboard=[[InlineKeyboardButton(text="🔙 Orqaga", callback_data="show_referral")]]
-        ),
         parse_mode='HTML'
     )
     await callback.answer()
@@ -173,8 +159,7 @@ async def referral_rewards(callback: CallbackQuery):
 @router.callback_query(F.data == "show_referral")
 async def show_referral(callback: CallbackQuery):
     """Referral sahifasini qayta ko'rsatish"""
-    # Call original message handler logic
-    await cmd_referral(callback.message)
+    await cmd_referral(callback.message, user_id=callback.from_user.id)
     await callback.message.delete()
     await callback.answer()
 
@@ -192,24 +177,38 @@ async def process_referral_start(message: Message, referrer_id: int):
     user_id = message.from_user.id
     if user_id == referrer_id: return
     
-    # Allaqachon registered bo'lsa tekshirish (db.add_user allaqachon chaqirilgan bo'lishi kerak)
     user = await db.get_user(user_id)
     if user and user.get('referred_by'): return
     
     # Referrerni saqlash
-    async with db.pool.acquire() as conn:
-        await conn.execute('UPDATE users SET referred_by = $2 WHERE user_id = $1', user_id, referrer_id)
-        # Yangi count
-        ref_count = await conn.fetchval('SELECT COUNT(*) FROM users WHERE referred_by = $1', referrer_id)
+    try:
+        current_ref = await db.get_user_referrer(user_id)
+        if current_ref:
+            logger.info(f"User {user_id} already has referrer: {current_ref}")
+            return
+            
+        success = await db.set_user_referrer(user_id, referrer_id)
+        if not success:
+            logger.error(f"Failed to set referrer for {user_id}")
+            return
+            
+        # Yangi statistika
+        stats = await db.get_referral_stats(referrer_id)
+        ref_count = stats['total']
+        logger.info(f"Referral successful: {referrer_id} -> {user_id}. Total for referrer: {ref_count}")
+    except Exception as e:
+        logger.error(f"Error in process_referral_start (DB part): {e}")
+        return
     
     # Referrerga xabar
     try:
+        ref_lang = await get_user_lang(referrer_id)
+        btn_text = await get_text("menu_referral", lang=ref_lang)
+        alert_text = await get_text("ref_new_alert", lang=ref_lang, name=message.from_user.first_name, total=ref_count, btn=btn_text)
+        
         await message.bot.send_message(
             referrer_id,
-            f"🎉 <b>Yangi referral!</b>\n\n"
-            f"👤 {message.from_user.first_name} taklifnomangiz orqali qo'shildi!\n"
-            f"👥 Jami: {ref_count} ta\n"
-            f"💡 Mukofotlarni tekshirish: 🤝 Taklif qilish",
+            alert_text,
             parse_mode='HTML'
         )
     except: pass
@@ -220,11 +219,11 @@ async def process_referral_start(message: Message, referrer_id: int):
             days = reward['days']
             if await db.set_premium(referrer_id, days):
                 try:
+                    ref_lang = await get_user_lang(referrer_id)
+                    reward_alert = await get_text("ref_reward_alert", lang=ref_lang, title=reward['title'], days=days)
                     await message.bot.send_message(
                         referrer_id,
-                        f"🎁 <b>YANGI MUKOFOT!</b>\n\n"
-                        f"{reward['title']} uchun sizga 💎 <b>+{days} kun Premium</b> berildi!\n\n"
-                        f"Faol foydalanishda davom eting! 🚀",
+                        reward_alert,
                         parse_mode='HTML'
                     )
                 except: pass

@@ -75,58 +75,53 @@ def get_match_emoji(score: int) -> str:
         return "📌"
 
 
-def get_smart_keyboard():
+from utils.i18n import get_text, get_user_lang
+
+async def get_smart_keyboard(user_id: int):
     """Smart matching klaviaturasi"""
+    lang = await get_user_lang(user_id)
+    async def t(key): return await get_text(key, lang=lang)
+    
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
-                InlineKeyboardButton(text="🎯 Eng mos vakansiyalar", callback_data="smart_best_match"),
-                InlineKeyboardButton(text="🔥 Top 10", callback_data="smart_top_10")
+                InlineKeyboardButton(text=await t("smart_btn_best"), callback_data="smart_best_match"),
+                InlineKeyboardButton(text=await t("smart_btn_top10"), callback_data="smart_top_10")
             ],
             [
-                InlineKeyboardButton(text="📊 Profilim", callback_data="smart_profile"),
-                InlineKeyboardButton(text="⚙️ Sozlash", callback_data="smart_settings")
+                InlineKeyboardButton(text=await t("smart_btn_ai_analysis"), callback_data="ai_skill_gap")
             ],
             [
-                InlineKeyboardButton(text="🔙 Orqaga", callback_data="close_smart")
+                InlineKeyboardButton(text=await t("smart_btn_profile"), callback_data="smart_profile"),
+                InlineKeyboardButton(text=await t("smart_btn_settings"), callback_data="smart_settings")
+            ],
+            [
+                InlineKeyboardButton(text=await t("btn_back"), callback_data="close_smart")
             ]
         ]
     )
 
 
-@router.message(F.text == "🎯 Smart tavsiya")
+from utils.i18n import get_msg_options
+
+@router.message(F.text.in_(get_msg_options("menu_smart")))
 async def cmd_smart_matching(message: Message):
     """Smart matching asosiy sahifa"""
     # Premium tekshirish
     is_premium = await db.is_premium(message.from_user.id)
+    lang = await get_user_lang(message.from_user.id)
     
     if not is_premium:
-        await message.answer(
-            "🔒 <b>Premium xususiyat!</b>\n\n"
-            "Smart Matching - AI tavsiyalar faqat Premium foydalanuvchilar uchun.\n\n"
-            "💎 Premium bilan:\n"
-            "• AI sizga eng mos vakansiyalarni topadi\n"
-            "• Match % ko'rsatiladi\n"
-            "• Avtomatik saralash\n"
-            "• Personallashtirilgan tavsiyalar\n\n"
-            "Premium sotib olish uchun 💎 Premium tugmasini bosing.",
-            parse_mode='HTML'
-        )
+        title = await get_text("smart_premium_title", lang=lang)
+        desc = await get_text("smart_premium_desc", lang=lang)
+        await message.answer(f"{title}\n\n{desc}", parse_mode='HTML')
         return
     
     # User profili
     user_filter = await db.get_user_filter(message.from_user.id)
     
     if not user_filter or not user_filter.get('keywords'):
-        await message.answer(
-            "⚠️ <b>Avval profilingizni to'ldiring!</b>\n\n"
-            "Smart Matching ishlashi uchun:\n"
-            "1. ⚙️ Sozlamalar\n"
-            "2. Kalit so'zlar, joylashuv va boshqalarni to'ldiring\n"
-            "3. Qaytadan urinib ko'ring\n\n"
-            "💡 Qanchalik to'liq bo'lsa, shunchalik aniq tavsiyalar!",
-            parse_mode='HTML'
-        )
+        await message.answer(await get_text("smart_no_profile", lang=lang), parse_mode='HTML')
         return
     
     # Profile completeness
@@ -140,24 +135,22 @@ async def cmd_smart_matching(message: Message):
     if user_filter.get('experience_level'):
         completeness += 30
     
-    text = "🎯 <b>Smart Matching</b>\n"
-    text += "<i>AI powered vakansiya tavsiyalari</i>\n\n"
+    text = await get_text("smart_intro_title", lang=lang) + "\n\n"
     
-    text += f"📊 <b>Profil to'liqlik:</b> {completeness}%\n"
+    comp_text = await get_text("smart_completeness", lang=lang)
+    text += f"{comp_text.format(percent=completeness)}\n"
+    
     if completeness < 100:
-        text += "💡 Profilni to'ldirib, yaxshiroq natijalar oling!\n"
+        text += await get_text("smart_tip_fill", lang=lang) + "\n"
     text += "\n"
     
-    text += "<b>🎯 Nima qiladi?</b>\n"
-    text += "• Sizning profilingizga qarab eng mos vakansiyalarni topadi\n"
-    text += "• Har bir vakansiya uchun match % hisoblanadi\n"
-    text += "• Eng yuqori match'larni birinchi ko'rsatadi\n\n"
+    text += await get_text("smart_what_is", lang=lang) + "\n\n"
     
-    text += "Tanlang:"
+    text += await get_text("smart_choose", lang=lang)
     
     await message.answer(
         text,
-        reply_markup=get_smart_keyboard(),
+        reply_markup=await get_smart_keyboard(message.from_user.id),
         parse_mode='HTML'
     )
 
@@ -165,11 +158,8 @@ async def cmd_smart_matching(message: Message):
 @router.callback_query(F.data == "smart_best_match")
 async def smart_best_match(callback: CallbackQuery):
     """Eng mos vakansiyalar"""
-    await callback.message.edit_text(
-        "🔍 <b>Sizga eng mos vakansiyalarni qidiryapman...</b>\n\n"
-        "⏳ Bu biroz vaqt olishi mumkin...",
-        parse_mode='HTML'
-    )
+    lang = await get_user_lang(callback.from_user.id)
+    await callback.message.edit_text(await get_text("smart_searching", lang=lang), parse_mode='HTML')
     
     try:
         # User profili
@@ -185,11 +175,7 @@ async def smart_best_match(callback: CallbackQuery):
             ''')
         
         if not vacancies:
-            await callback.message.edit_text(
-                "😕 <b>Hech qanday vakansiya topilmadi</b>\n\n"
-                "Keyinroq qayta urinib ko'ring.",
-                parse_mode='HTML'
-            )
+            await callback.message.edit_text(await get_text("smart_no_results", lang=lang), parse_mode='HTML')
             return
         
         # Match score hisoblash
@@ -204,7 +190,7 @@ async def smart_best_match(callback: CallbackQuery):
         scored_vacancies.sort(key=lambda x: x['match_score'], reverse=True)
         
         # Top 5 ni ko'rsatish
-        text = "🎯 <b>Sizga eng mos vakansiyalar</b>\n\n"
+        text = await get_text("smart_results_title", lang=lang) + "\n\n"
         
         for i, vac in enumerate(scored_vacancies[:5], 1):
             score = vac['match_score']
@@ -225,12 +211,12 @@ async def smart_best_match(callback: CallbackQuery):
             
             text += f"   🔗 {vac['url']}\n\n"
         
-        text += "💡 Match % qanchalik yuqori bo'lsa, sizga shunchalik mos!"
+        text += await get_text("smart_results_hint", lang=lang)
         
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
-                [InlineKeyboardButton(text="📊 Top 10", callback_data="smart_top_10")],
-                [InlineKeyboardButton(text="🔙 Orqaga", callback_data="show_smart")]
+                [InlineKeyboardButton(text=await get_text("smart_btn_top10", lang=lang), callback_data="smart_top_10")],
+                [InlineKeyboardButton(text=await get_text("btn_back", lang=lang), callback_data="show_smart")]
             ]
         )
         
@@ -238,11 +224,7 @@ async def smart_best_match(callback: CallbackQuery):
         
     except Exception as e:
         logger.error(f"Smart matching error: {e}", exc_info=True)
-        await callback.message.edit_text(
-            "❌ <b>Xatolik yuz berdi</b>\n\n"
-            "Iltimos, keyinroq qayta urinib ko'ring.",
-            parse_mode='HTML'
-        )
+        await callback.message.edit_text(await get_text("msg_error_generic", lang=lang), parse_mode='HTML')
     
     await callback.answer()
 
@@ -250,6 +232,7 @@ async def smart_best_match(callback: CallbackQuery):
 @router.callback_query(F.data == "smart_top_10")
 async def smart_top_10(callback: CallbackQuery):
     """Top 10 vakansiyalar (qisqacha)"""
+    lang = await get_user_lang(callback.from_user.id)
     try:
         user_filter = await db.get_user_filter(callback.from_user.id)
         
@@ -272,8 +255,7 @@ async def smart_top_10(callback: CallbackQuery):
         scored_vacancies.sort(key=lambda x: x['match_score'], reverse=True)
         
         # Top 10
-        text = "🔥 <b>Top 10 vakansiyalar</b>\n"
-        text += "<i>Sizga eng mos</i>\n\n"
+        text = await get_text("smart_top10_title", lang=lang) + "\n\n"
         
         for i, vac in enumerate(scored_vacancies[:10], 1):
             score = vac['match_score']
@@ -284,8 +266,8 @@ async def smart_top_10(callback: CallbackQuery):
         
         keyboard = InlineKeyboardMarkup(
             inline_keyboard=[
-                [InlineKeyboardButton(text="🎯 Batafsil", callback_data="smart_best_match")],
-                [InlineKeyboardButton(text="🔙 Orqaga", callback_data="show_smart")]
+                [InlineKeyboardButton(text=await get_text("smart_btn_details", lang=lang), callback_data="smart_best_match")],
+                [InlineKeyboardButton(text=await get_text("btn_back", lang=lang), callback_data="show_smart")]
             ]
         )
         
@@ -293,7 +275,7 @@ async def smart_top_10(callback: CallbackQuery):
         
     except Exception as e:
         logger.error(f"Top 10 error: {e}")
-        await callback.answer("❌ Xatolik", show_alert=True)
+        await callback.answer(await get_text("msg_error_generic", lang=lang), show_alert=True)
     
     await callback.answer()
 
@@ -301,12 +283,12 @@ async def smart_top_10(callback: CallbackQuery):
 @router.callback_query(F.data == "smart_profile")
 async def smart_profile(callback: CallbackQuery):
     """Foydalanuvchi profili"""
+    lang = await get_user_lang(callback.from_user.id)
     user_filter = await db.get_user_filter(callback.from_user.id)
     
     if not user_filter:
         await callback.message.edit_text(
-            "⚠️ Profil to'ldirilmagan\n\n"
-            "⚙️ Sozlamalar bo'limiga o'ting",
+            await get_text("smart_profile_empty", lang=lang),
             parse_mode='HTML'
         )
         return
@@ -318,56 +300,53 @@ async def smart_profile(callback: CallbackQuery):
     if user_filter.get('keywords'):
         completeness += 30
     else:
-        missing.append("🔑 Kalit so'zlar")
+        missing.append(await get_text("settings_lbl_keywords", lang=lang))
     
     if user_filter.get('locations'):
         completeness += 20
     else:
-        missing.append("📍 Joylashuv")
+        missing.append(await get_text("settings_lbl_locations", lang=lang))
     
     if user_filter.get('salary_min'):
         completeness += 20
     else:
-        missing.append("💰 Maosh")
+        missing.append(await get_text("settings_lbl_salary", lang=lang))
     
     if user_filter.get('experience_level'):
         completeness += 30
     else:
-        missing.append("👔 Tajriba")
+        missing.append(await get_text("settings_lbl_experience", lang=lang))
     
-    text = f"📊 <b>Sizning profilingiz</b>\n\n"
-    text += f"To'liqlik: <b>{completeness}%</b>\n\n"
+    text = await get_text("smart_profile_title", lang=lang) + "\n\n"
+    
+    comp_text = await get_text("smart_completeness", lang=lang)
+    text += f"{comp_text.format(percent=completeness)}\n\n"
     
     if completeness == 100:
-        text += "✅ Profil to'liq to'ldirilgan!\n"
-        text += "🎯 Smart Matching eng yaxshi ishlaydi!\n\n"
+        text += await get_text("smart_profile_complete", lang=lang) + "\n\n"
     else:
-        text += "⚠️ Profilni to'ldiring:\n"
+        text += await get_text("smart_profile_missing", lang=lang) + "\n"
         for item in missing:
             text += f"  • {item}\n"
-        text += "\n💡 To'liq profil = yaxshiroq tavsiyalar!\n\n"
+        text += f"\n{await get_text('smart_profile_tip', lang=lang)}\n\n"
     
     # Current settings
-    text += "<b>Hozirgi sozlamalar:</b>\n"
+    text += await get_text("smart_settings_current", lang=lang) + "\n"
     if user_filter.get('keywords'):
         text += f"🔑 {', '.join(user_filter['keywords'][:3])}\n"
     if user_filter.get('locations'):
         text += f"📍 {', '.join(user_filter['locations'])}\n"
     if user_filter.get('salary_min'):
-        text += f"💰 dan {user_filter['salary_min']:,} so'm\n"
+        text += f"💰 {await get_text('settings_val_from', lang=lang)} {user_filter['salary_min']:,} so'm\n"
     if user_filter.get('experience_level'):
-        exp_map = {
-            'no_experience': 'Tajribasiz',
-            'between_1_and_3': '1-3 yil',
-            'between_3_and_6': '3-6 yil',
-            'more_than_6': '6+ yil'
-        }
-        text += f"👔 {exp_map.get(user_filter['experience_level'], 'N/A')}\n"
+        exp_level = user_filter['experience_level']
+        exp_text = await get_text(f"exp_{exp_level}", lang=lang)
+        text += f"👔 {exp_text}\n"
     
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="⚙️ O'zgartirish", callback_data="smart_settings")],
-            [InlineKeyboardButton(text="🔙 Orqaga", callback_data="show_smart")]
+            [InlineKeyboardButton(text=await get_text("smart_btn_settings", lang=lang), callback_data="smart_settings")],
+            [InlineKeyboardButton(text=await get_text("btn_back", lang=lang), callback_data="show_smart")]
         ]
     )
     
@@ -378,16 +357,12 @@ async def smart_profile(callback: CallbackQuery):
 @router.callback_query(F.data == "smart_settings")
 async def smart_settings(callback: CallbackQuery):
     """Sozlamalar"""
+    lang = await get_user_lang(callback.from_user.id)
     await callback.message.edit_text(
-        "⚙️ <b>Profilni sozlash</b>\n\n"
-        "Smart Matching uchun profilingizni to'ldiring:\n\n"
-        "1. Asosiy menyu\n"
-        "2. ⚙️ Sozlamalar\n"
-        "3. Barcha maydonlarni to'ldiring\n\n"
-        "💡 To'liq profil = aniq tavsiyalar!",
+        await get_text("smart_settings_page", lang=lang),
         reply_markup=InlineKeyboardMarkup(
             inline_keyboard=[
-                [InlineKeyboardButton(text="🔙 Orqaga", callback_data="show_smart")]
+                [InlineKeyboardButton(text=await get_text("btn_back", lang=lang), callback_data="show_smart")]
             ]
         ),
         parse_mode='HTML'

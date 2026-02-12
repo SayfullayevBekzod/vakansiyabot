@@ -9,42 +9,45 @@ logger = logging.getLogger(__name__)
 router = Router()
 
 
-def get_analytics_keyboard():
+from utils.i18n import get_text, get_user_lang
+
+async def get_analytics_keyboard(user_id: int):
     """Analytics klaviaturasi"""
+    lang = await get_user_lang(user_id)
+    async def t(key): return await get_text(key, lang=lang)
+    
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
-                InlineKeyboardButton(text="📈 Eng ko'p qidirilgan", callback_data="analytics_top_keywords"),
-                InlineKeyboardButton(text="🏢 Eng aktiv kompaniyalar", callback_data="analytics_top_companies")
+                InlineKeyboardButton(text=await t("btn_analytics_keywords"), callback_data="analytics_top_keywords"),
+                InlineKeyboardButton(text=await t("btn_analytics_companies"), callback_data="analytics_top_companies")
             ],
             [
-                InlineKeyboardButton(text="💰 Maosh statistikasi", callback_data="analytics_salary"),
-                InlineKeyboardButton(text="📍 Joylar bo'yicha", callback_data="analytics_locations")
+                InlineKeyboardButton(text=await t("btn_analytics_salary"), callback_data="analytics_salary"),
+                InlineKeyboardButton(text=await t("btn_analytics_locations"), callback_data="analytics_locations")
             ],
             [
-                InlineKeyboardButton(text="📅 Bugungi vakansiyalar", callback_data="analytics_today"),
-                InlineKeyboardButton(text="📊 Umumiy statistika", callback_data="analytics_general")
+                InlineKeyboardButton(text=await t("btn_analytics_today"), callback_data="analytics_today"),
+                InlineKeyboardButton(text=await t("btn_analytics_general"), callback_data="analytics_general")
             ],
             [
-                InlineKeyboardButton(text="🔙 Orqaga", callback_data="close_analytics")
+                InlineKeyboardButton(text=await t("btn_close"), callback_data="close_analytics")
             ]
         ]
     )
 
 
-@router.message(F.text == "📊 Statistika")
+from utils.i18n import get_msg_options
+
+@router.message(F.text.in_(get_msg_options("menu_stats")))
 async def cmd_analytics(message: Message):
     """Vakansiya statistikasi"""
+    lang = await get_user_lang(message.from_user.id)
+    async def t(key): return await get_text(key, lang=lang)
+    
     await message.answer(
-        "📊 <b>Vakansiya Statistikasi</b>\n\n"
-        "Bozor haqida qiziqarli ma'lumotlar:\n\n"
-        "• 📈 Eng ko'p qidirilgan so'zlar\n"
-        "• 🏢 Eng aktiv kompaniyalar\n"
-        "• 💰 O'rtacha maoshlar\n"
-        "• 📍 Eng ko'p vakansiyalar qayerda\n"
-        "• 📅 Bugungi yangi vakansiyalar\n\n"
-        "Tanlang:",
-        reply_markup=get_analytics_keyboard(),
+        await t("analytics_title") + "\n\n" + await t("analytics_text"),
+        reply_markup=await get_analytics_keyboard(message.from_user.id),
         parse_mode='HTML'
     )
 
@@ -53,6 +56,10 @@ async def cmd_analytics(message: Message):
 async def analytics_today(callback: CallbackQuery):
     """Bugungi vakansiyalar"""
     try:
+        user_id = callback.from_user.id
+        lang = await get_user_lang(user_id)
+        async def t(key, **kwargs): return await get_text(key, lang=lang, **kwargs)
+        
         async with db.pool.acquire() as conn:
             today = datetime.now(timezone.utc).date()
             
@@ -71,11 +78,11 @@ async def analytics_today(callback: CallbackQuery):
                 ORDER BY count DESC
             ''', today)
             
-            text = f"📅 <b>Bugungi vakansiyalar</b>\n\n"
-            text += f"📊 Jami: <b>{count}</b> ta yangi vakansiya\n\n"
+            text = await t("analytics_today_title")
+            text += await t("analytics_total_new", count=count)
             
             if sources:
-                text += "📱 <b>Manbalar:</b>\n"
+                text += await t("analytics_sources")
                 for row in sources:
                     emoji = {'hh_uz': '🌐', 'telegram': '📱', 'user_post': '📢'}.get(row['source'], '🔗')
                     text += f"  {emoji} {row['source']}: {row['count']} ta\n"
@@ -85,7 +92,7 @@ async def analytics_today(callback: CallbackQuery):
                     text,
                     reply_markup=InlineKeyboardMarkup(
                         inline_keyboard=[
-                            [InlineKeyboardButton(text="🔙 Orqaga", callback_data="show_analytics")]
+                            [InlineKeyboardButton(text=await t("btn_back"), callback_data="show_analytics")]
                         ]
                     ),
                     parse_mode='HTML'
@@ -95,7 +102,7 @@ async def analytics_today(callback: CallbackQuery):
             
     except Exception as e:
         logger.error(f"Analytics today error: {e}")
-        await callback.answer("❌ Xatolik", show_alert=True)
+        await callback.answer(await get_text("msg_error_generic", lang=await get_user_lang(callback.from_user.id)), show_alert=True)
     
     await callback.answer()
 
@@ -104,6 +111,10 @@ async def analytics_today(callback: CallbackQuery):
 async def analytics_companies(callback: CallbackQuery):
     """Eng aktiv kompaniyalar"""
     try:
+        user_id = callback.from_user.id
+        lang = await get_user_lang(user_id)
+        async def t(key, **kwargs): return await get_text(key, lang=lang, **kwargs)
+        
         async with db.pool.acquire() as conn:
             # Oxirgi 30 kundagi eng aktiv kompaniyalar
             companies = await conn.fetch('''
@@ -116,22 +127,22 @@ async def analytics_companies(callback: CallbackQuery):
                 LIMIT 10
             ''')
             
-            text = "🏢 <b>Eng aktiv kompaniyalar</b>\n"
-            text += "<i>Oxirgi 30 kun</i>\n\n"
+            text = await t("analytics_companies_title")
+            text += await t("analytics_last_30_days")
             
             if companies:
                 for i, row in enumerate(companies, 1):
                     emoji = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else "📌"
                     text += f"{emoji} {row['company']}: <b>{row['count']}</b> ta\n"
             else:
-                text += "⚠️ Ma'lumot yo'q"
+                text += await t("analytics_no_data")
             
             try:
                 await callback.message.edit_text(
                     text,
                     reply_markup=InlineKeyboardMarkup(
                         inline_keyboard=[
-                            [InlineKeyboardButton(text="🔙 Orqaga", callback_data="show_analytics")]
+                            [InlineKeyboardButton(text=await t("btn_back"), callback_data="show_analytics")]
                         ]
                     ),
                     parse_mode='HTML'
@@ -141,7 +152,7 @@ async def analytics_companies(callback: CallbackQuery):
             
     except Exception as e:
         logger.error(f"Analytics companies error: {e}")
-        await callback.answer("❌ Xatolik", show_alert=True)
+        await callback.answer(await get_text("msg_error_generic", lang=await get_user_lang(callback.from_user.id)), show_alert=True)
     
     await callback.answer()
 
@@ -150,6 +161,10 @@ async def analytics_companies(callback: CallbackQuery):
 async def analytics_salary(callback: CallbackQuery):
     """Maosh statistikasi"""
     try:
+        user_id = callback.from_user.id
+        lang = await get_user_lang(user_id)
+        async def t(key, **kwargs): return await get_text(key, lang=lang, **kwargs)
+        
         async with db.pool.acquire() as conn:
             # O'rtacha maosh
             avg_salary = await conn.fetchrow('''
@@ -163,26 +178,26 @@ async def analytics_salary(callback: CallbackQuery):
                 AND published_date > NOW() - INTERVAL '30 days'
             ''')
             
-            text = "💰 <b>Maosh Statistikasi</b>\n"
-            text += "<i>Oxirgi 30 kun</i>\n\n"
+            text = await t("analytics_salary_title")
+            text += await t("analytics_last_30_days")
             
             if avg_salary and avg_salary['avg_min']:
-                text += f"📊 <b>O'rtacha maosh:</b>\n"
-                text += f"  • Minimal: {int(avg_salary['avg_min']):,} so'm\n"
-                text += f"  • Maksimal: {int(avg_salary['avg_max']):,} so'm\n\n"
+                text += await t("analytics_avg_salary")
+                text += await t("analytics_min", salary=f"{int(avg_salary['avg_min']):,}")
+                text += await t("analytics_max", salary=f"{int(avg_salary['avg_max']):,}")
                 
-                text += f"📈 <b>Diapazoni:</b>\n"
-                text += f"  • Eng past: {int(avg_salary['min_salary']):,} so'm\n"
-                text += f"  • Eng yuqori: {int(avg_salary['max_salary']):,} so'm\n"
+                text += await t("analytics_range")
+                text += await t("analytics_lowest", salary=f"{int(avg_salary['min_salary']):,}")
+                text += await t("analytics_highest", salary=f"{int(avg_salary['max_salary']):,}")
             else:
-                text += "⚠️ Maosh ma'lumoti yo'q"
+                text += await t("analytics_no_data")
             
             try:
                 await callback.message.edit_text(
                     text,
                     reply_markup=InlineKeyboardMarkup(
                         inline_keyboard=[
-                            [InlineKeyboardButton(text="🔙 Orqaga", callback_data="show_analytics")]
+                            [InlineKeyboardButton(text=await t("btn_back"), callback_data="show_analytics")]
                         ]
                     ),
                     parse_mode='HTML'
@@ -192,11 +207,8 @@ async def analytics_salary(callback: CallbackQuery):
             
     except Exception as e:
         logger.error(f"Analytics salary error: {e}")
-        await callback.answer("❌ Xatolik", show_alert=True)
+        await callback.answer(await get_text("msg_error_generic", lang=await get_user_lang(callback.from_user.id)), show_alert=True)
     
-    await callback.answer()
-
-
     await callback.answer()
 
 
@@ -204,6 +216,10 @@ async def analytics_salary(callback: CallbackQuery):
 async def analytics_keywords(callback: CallbackQuery):
     """Eng ko'p qidirilgan so'zlar"""
     try:
+        user_id = callback.from_user.id
+        lang = await get_user_lang(user_id)
+        async def t(key): return await get_text(key, lang=lang)
+        
         async with db.pool.acquire() as conn:
             # User filtrlaridan barcha keywordlarni yig'ish (sodda usul)
             filters = await conn.fetch("SELECT filter_data FROM users WHERE filter_data IS NOT NULL")
@@ -220,23 +236,23 @@ async def analytics_keywords(callback: CallbackQuery):
             
             top_keywords = Counter(all_keywords).most_common(10)
             
-            text = "📈 <b>Eng ko'p qidirilgan so'zlar</b>\n\n"
+            text = await t("analytics_keywords_title")
             if top_keywords:
                 for i, (word, count) in enumerate(top_keywords, 1):
-                    text += f"{i}. <b>{word}</b>: {count} marta\n"
+                    text += f"{i}. <b>{word}</b>: {count} marta\n" # 'marta' could be localized but likely acceptable
             else:
-                text += "⚠️ Ma'lumot yo'q"
+                text += await t("analytics_no_data")
             
             await callback.message.edit_text(
                 text,
                 reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text="🔙 Orqaga", callback_data="show_analytics")]
+                    [InlineKeyboardButton(text=await t("btn_back"), callback_data="show_analytics")]
                 ]),
                 parse_mode='HTML'
             )
     except Exception as e:
         logger.error(f"Analytics keywords error: {e}")
-        await callback.answer("❌ Xatolik")
+        await callback.answer(await get_text("msg_error_generic", lang=await get_user_lang(callback.from_user.id)))
     await callback.answer()
 
 
@@ -244,6 +260,10 @@ async def analytics_keywords(callback: CallbackQuery):
 async def analytics_locations(callback: CallbackQuery):
     """Joylar bo'yicha statistika"""
     try:
+        user_id = callback.from_user.id
+        lang = await get_user_lang(user_id)
+        async def t(key): return await get_text(key, lang=lang)
+        
         async with db.pool.acquire() as conn:
             locations = await conn.fetch('''
                 SELECT location, COUNT(*) as count
@@ -254,23 +274,23 @@ async def analytics_locations(callback: CallbackQuery):
                 LIMIT 10
             ''')
             
-            text = "📍 <b>Vakansiyalar joylashuvi</b>\n\n"
+            text = await t("analytics_locations_title")
             if locations:
                 for i, row in enumerate(locations, 1):
-                    text += f"{i}. <b>{row['location']}</b>: {row['count']} ta vakansiya\n"
+                    text += f"{i}. <b>{row['location']}</b>: {row['count']} ta vakansiya\n" # 'ta vakansiya' could be localized
             else:
-                text += "⚠️ Ma'lumot yo'q"
+                text += await t("analytics_no_data")
             
             await callback.message.edit_text(
                 text,
                 reply_markup=InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text="🔙 Orqaga", callback_data="show_analytics")]
+                    [InlineKeyboardButton(text=await t("btn_back"), callback_data="show_analytics")]
                 ]),
                 parse_mode='HTML'
             )
     except Exception as e:
         logger.error(f"Analytics locations error: {e}")
-        await callback.answer("❌ Xatolik")
+        await callback.answer(await get_text("msg_error_generic", lang=await get_user_lang(callback.from_user.id)))
     await callback.answer()
 
 
@@ -279,21 +299,19 @@ async def analytics_locations(callback: CallbackQuery):
 async def show_analytics(callback: CallbackQuery):
     """Umumiy statistika"""
     try:
+        user_id = callback.from_user.id
+        lang = await get_user_lang(user_id)
+        async def t(key): return await get_text(key, lang=lang)
+        
         await callback.message.edit_text(
-            "📊 <b>Vakansiya Statistikasi</b>\n\n"
-            "Bozor haqida qiziqarli ma'lumotlar:\n\n"
-            "• 📈 Eng ko'p qidirilgan so'zlar\n"
-            "• 🏢 Eng aktiv kompaniyalar\n"
-            "• 💰 O'rtacha maoshlar\n"
-            "• 📍 Eng ko'p vakansiyalar qayerda\n"
-            "• 📅 Bugungi yangi vakansiyalar\n\n"
-            "Tanlang:",
-            reply_markup=get_analytics_keyboard(),
+            await t("analytics_title") + "\n\n" + await t("analytics_text"),
+            reply_markup=await get_analytics_keyboard(user_id),
             parse_mode='HTML'
         )
     except Exception:
         pass
     await callback.answer()
+
 
 @router.callback_query(F.data == "close_analytics")
 async def close_analytics(callback: CallbackQuery):

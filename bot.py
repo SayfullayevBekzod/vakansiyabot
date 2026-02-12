@@ -107,11 +107,21 @@ if INTERVIEW_ENABLED:
 
 
 if CANDIDATES_ENABLED:
+    from handlers import ai_assistant
+    dp.include_router(ai_assistant.router)
+    logger.info("  ✅ AI Assistant handler")
+    
     dp.include_router(candidates.router)
     logger.info("  ✅ Candidates handler")
 
 dp.include_router(start.router)
 logger.info("  ✅ Start handler")
+
+# Middleware ro'yxatdan o'tkazish
+from utils.middleware import ActivityMiddleware
+dp.message.middleware(ActivityMiddleware())
+dp.callback_query.middleware(ActivityMiddleware())
+logger.info("  ✅ Activity Middleware")
 
 dp.include_router(premium.router)
 logger.info("  ✅ Premium handler")
@@ -235,6 +245,10 @@ async def distribute_vacancies_to_group(user_ids: list, vacancies: list):
             if not user_filter:
                 continue
             
+            # Tilni olish
+            from utils.i18n import get_user_lang
+            lang = await get_user_lang(user_id)
+            
             # Premium tekshirish
             is_premium = await db.is_premium(user_id)
             
@@ -264,10 +278,15 @@ async def distribute_vacancies_to_group(user_ids: list, vacancies: list):
                 
                 # Yuborish
                 try:
-                    vacancy_text = vacancy_filter.format_vacancy_message(vacancy)
+                    vacancy_text = vacancy_filter.format_vacancy_message(vacancy, lang=lang)
+                    
+                    # Alert sarlavhasi
+                    from utils.i18n import get_text
+                    alert_title = await get_text("vac_alert_new", lang=lang)
+                    
                     await bot.send_message(
                         chat_id=user_id,
-                        text=f"🆕 <b>Yangi vakansiya!</b>\n\n{vacancy_text}",
+                        text=f"{alert_title}{vacancy_text}",
                         parse_mode='HTML',
                         disable_web_page_preview=True
                     )
@@ -352,6 +371,39 @@ async def on_startup():
 
     logger.info("="*60)
     logger.info("🚀 BOT TAYYOR! OPTIMIZED FOR SCALE")
+    logger.info("="*60 + "\n")
+
+async def on_shutdown():
+    """Bot to'xtaganda"""
+    logger.info("\n" + "="*60)
+    logger.info("BOT TO'XTATILMOQDA...")
+    logger.info("="*60)
+    
+    # 1. Scheduler to'xtatish (Wait for jobs)
+    logger.info("1. Scheduler to'xtatish (Kutilmoqda)...")
+    try:
+        scheduler.shutdown(wait=True)
+        logger.info("   ✅ Scheduler to'xtatildi")
+    except Exception as e:
+        logger.error(f"   ⚠️ Scheduler xatolik: {e}")
+
+    # 2. Bot session yopish
+    logger.info("2. Bot session yopish...")
+    try:
+        await bot.session.close()
+        logger.info("   ✅ Bot session yopildi")
+    except Exception as e:
+        logger.error(f"   ⚠️ Bot session xatolik: {e}")
+    
+    # 3. Database dan uzilish (Eng oxirida)
+    logger.info("3. Database dan uzilish...")
+    if db.pool:
+        await asyncio.sleep(0.5) 
+        await db.disconnect()
+        logger.info("   ✅ Database uzilish muvaffaqiyatli")
+    
+    logger.info("="*60)
+    logger.info("👋 BOT TO'XTATILDI")
     logger.info("="*60 + "\n")
 
 async def main():

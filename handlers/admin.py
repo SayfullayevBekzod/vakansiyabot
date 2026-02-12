@@ -11,6 +11,7 @@ from datetime import datetime, timezone, timedelta
 
 logger = logging.getLogger(__name__)
 router = Router()
+from utils.i18n import get_text, get_user_lang, get_msg_options
 
 
 # FSM States
@@ -27,45 +28,51 @@ def is_admin(user_id: int) -> bool:
     return user_id in ADMIN_IDS
 
 
-def get_admin_keyboard():
+async def get_admin_keyboard(user_id: int):
     """Admin panel klaviaturasi"""
+    lang = await get_user_lang(user_id)
+    async def t(key): return await get_text(key, lang=lang)
+    
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
-                InlineKeyboardButton(text="📊 Statistika", callback_data="admin_stats"),
-                InlineKeyboardButton(text="👥 Foydalanuvchilar", callback_data="admin_users")
+                InlineKeyboardButton(text=await t("admin_btn_stats"), callback_data="admin_stats"),
+                InlineKeyboardButton(text=await t("admin_btn_users"), callback_data="admin_users")
             ],
             [
-                InlineKeyboardButton(text="💎 Premium", callback_data="admin_premium"),
-                InlineKeyboardButton(text="🔍 Qidirish", callback_data="admin_find_user")
+                InlineKeyboardButton(text=await t("admin_btn_premium"), callback_data="admin_premium"),
+                InlineKeyboardButton(text=await t("admin_btn_find"), callback_data="admin_find_user")
             ],
             [
-                InlineKeyboardButton(text="📢 Broadcast", callback_data="admin_broadcast")
+                InlineKeyboardButton(text=await t("admin_btn_broadcast"), callback_data="admin_broadcast")
             ],
             [
-                InlineKeyboardButton(text="🔄 Yangilash", callback_data="admin_panel"),
-                InlineKeyboardButton(text="❌ Yopish", callback_data="admin_close")
+                InlineKeyboardButton(text=await t("admin_btn_refresh"), callback_data="admin_panel"),
+                InlineKeyboardButton(text=await t("admin_btn_close"), callback_data="admin_close")
             ]
         ]
     )
 
 
-def get_premium_manage_keyboard():
+async def get_premium_manage_keyboard(user_id: int):
     """Premium boshqaruv klaviaturasi"""
+    lang = await get_user_lang(user_id)
+    async def t(key): return await get_text(key, lang=lang)
+    
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
-                InlineKeyboardButton(text="➕ Berish", callback_data="admin_grant_premium"),
-                InlineKeyboardButton(text="➖ Bekor qilish", callback_data="admin_revoke_premium")
+                InlineKeyboardButton(text=await t("admin_btn_grant"), callback_data="admin_grant_premium"),
+                InlineKeyboardButton(text=await t("admin_btn_revoke"), callback_data="admin_revoke_premium")
             ],
             [
-                InlineKeyboardButton(text="📋 Ro'yxat", callback_data="admin_premium_list")
+                InlineKeyboardButton(text=await t("admin_btn_list"), callback_data="admin_premium_list")
             ],
             [
-                InlineKeyboardButton(text="💎 Tezkor berish", callback_data="admin_quick_premium")
+                InlineKeyboardButton(text=await t("admin_btn_quick"), callback_data="admin_quick_premium")
             ],
             [
-                InlineKeyboardButton(text="🔙 Orqaga", callback_data="admin_panel")
+                InlineKeyboardButton(text=await t("btn_back"), callback_data="admin_panel")
             ]
         ]
     )
@@ -74,21 +81,17 @@ def get_premium_manage_keyboard():
 @router.message(F.text == "/admin")
 async def cmd_admin(message: Message):
     """Admin panel"""
-    if not is_admin(message.from_user.id):
-        await message.answer("⛔️ Sizda admin huquqlari yo'q!")
+    user_id = message.from_user.id
+    if not is_admin(user_id):
+        # await message.answer("⛔️ Sizda admin huquqlari yo'q!")
         return
     
+    lang = await get_user_lang(user_id)
+    async def t(key): return await get_text(key, lang=lang)
+    
     await message.answer(
-        "🔐 <b>Admin Panel</b>\n\n"
-        "Xush kelibsiz, Admin!\n\n"
-        "Quyidagi funksiyalardan foydalanishingiz mumkin:\n"
-        "• 📊 Bot statistikasi\n"
-        "• 👥 Foydalanuvchilar ro'yxati\n"
-        "• 💎 Premium boshqaruv\n"
-        "• 📢 Barcha foydalanuvchilarga xabar\n"
-        "• 🔍 Foydalanuvchi qidirish\n\n"
-        "Kerakli bo'limni tanlang:",
-        reply_markup=get_admin_keyboard(),
+        await t("admin_panel_title") + "\n\n" + await t("admin_welcome"),
+        reply_markup=await get_admin_keyboard(user_id),
         parse_mode='HTML'
     )
 
@@ -96,21 +99,17 @@ async def cmd_admin(message: Message):
 @router.callback_query(F.data == "admin_panel")
 async def show_admin_panel(callback: CallbackQuery):
     """Admin panel"""
-    if not is_admin(callback.from_user.id):
-        await callback.answer("⛔️ Admin emas!", show_alert=True)
+    user_id = callback.from_user.id
+    if not is_admin(user_id):
+        # await callback.answer("⛔️ Admin emas!", show_alert=True)
         return
     
+    lang = await get_user_lang(user_id)
+    async def t(key): return await get_text(key, lang=lang)
+    
     await callback.message.edit_text(
-        "🔐 <b>Admin Panel</b>\n\n"
-        "Xush kelibsiz, Admin!\n\n"
-        "Quyidagi funksiyalardan foydalanishingiz mumkin:\n"
-        "• 📊 Bot statistikasi\n"
-        "• 👥 Foydalanuvchilar ro'yxati\n"
-        "• 💎 Premium boshqaruv\n"
-        "• 📢 Barcha foydalanuvchilarga xabar\n"
-        "• 🔍 Foydalanuvchi qidirish\n\n"
-        "Kerakli bo'limni tanlang:",
-        reply_markup=get_admin_keyboard(),
+        await t("admin_panel_title") + "\n\n" + await t("admin_welcome"),
+        reply_markup=await get_admin_keyboard(user_id),
         parse_mode='HTML'
     )
     await callback.answer()
@@ -213,6 +212,7 @@ async def admin_users(callback: CallbackQuery):
             text,
             reply_markup=InlineKeyboardMarkup(
                 inline_keyboard=[
+                    [InlineKeyboardButton(text="🚀 So'nggi faollar", callback_data="admin_active_users")],
                     [InlineKeyboardButton(text="🔍 Qidirish", callback_data="admin_find_user")],
                     [InlineKeyboardButton(text="🔙 Orqaga", callback_data="admin_panel")]
                 ]
@@ -224,6 +224,60 @@ async def admin_users(callback: CallbackQuery):
     except Exception as e:
         logger.error(f"Admin users xatolik: {e}")
         await callback.answer("❌ Xatolik yuz berdi", show_alert=True)
+
+
+@router.callback_query(F.data == "admin_active_users")
+async def admin_active_users(callback: CallbackQuery):
+    """Oxirgi faol foydalanuvchilar"""
+    if not is_admin(callback.from_user.id):
+        await callback.answer("⛔️ Admin emas!", show_alert=True)
+        return
+    
+    try:
+        active_users = await db.get_recently_active_users(limit=20)
+        
+        if not active_users:
+            text = "🚀 <b>Faol foydalanuvchilar topilmadi</b>"
+        else:
+            user_lines = []
+            for i, user in enumerate(active_users, 1):
+                status = "💎" if user['is_premium'] else "🆓"
+                name = user['first_name']
+                # Oxirgi faollik vaqti (Toshkent vaqti bilan taxminan)
+                last_seen = user['updated_at']
+                if last_seen:
+                    # timezone shift if needed, but updated_at is TIMESTAMPTZ
+                    time_str = last_seen.strftime('%H:%M:%S')
+                    date_str = last_seen.strftime('%d.%m')
+                    activity = f"[{date_str} {time_str}]"
+                else:
+                    activity = "[N/A]"
+                
+                user_lines.append(f"{i}. {status} <b>{name}</b> {activity} - <code>{user['user_id']}</code>")
+            
+            text = f"""
+🚀 <b>So'nggi faol foydalanuvchilar (20 ta)</b>
+
+{''.join([f"\n{line}" for line in user_lines])}
+
+💡 <i>Ushbu ro'yxatda bot bilan oxirgi marta muloqot qilganlar ko'rinadi.</i>
+"""
+        
+        await callback.message.edit_text(
+            text,
+            reply_markup=InlineKeyboardMarkup(
+                inline_keyboard=[
+                    [InlineKeyboardButton(text="🔄 Yangilash", callback_data="admin_active_users")],
+                    [InlineKeyboardButton(text="🔙 Orqaga", callback_data="admin_users")]
+                ]
+            ),
+            parse_mode='HTML'
+        )
+        await callback.answer()
+        
+    except Exception as e:
+        logger.error(f"admin_active_users xatolik: {e}")
+        await callback.answer("❌ Xatolik!", show_alert=True)
 
 
 @router.callback_query(F.data == "admin_premium")
@@ -248,7 +302,7 @@ Eng ko'p ishlatiladigan muddatlar uchun!
     
     await callback.message.edit_text(
         text,
-        reply_markup=get_premium_manage_keyboard(),
+        reply_markup=await get_premium_manage_keyboard(callback.from_user.id),
         parse_mode='HTML'
     )
     await callback.answer()

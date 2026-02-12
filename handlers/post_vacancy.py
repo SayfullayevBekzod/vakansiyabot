@@ -36,27 +36,33 @@ class PostResumeStates(StatesGroup):
     waiting_for_goal = State()
     confirming = State()
 
-# --- Common Utilities ---
+from utils.i18n import get_text, get_user_lang, get_msg_options
 
-def get_experience_keyboard():
+async def get_experience_keyboard(user_id: int):
+    lang = await get_user_lang(user_id)
+    async def t(key): return await get_text(key, lang=lang)
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🟢 Tajribasiz", callback_data="post_exp_no_experience")],
-        [InlineKeyboardButton(text="🟡 1-3 yil", callback_data="post_exp_between_1_and_3")],
-        [InlineKeyboardButton(text="🟠 3-6 yil", callback_data="post_exp_between_3_and_6")],
-        [InlineKeyboardButton(text="🔴 6+ yil", callback_data="post_exp_more_than_6")],
-        [InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_post")]
+        [InlineKeyboardButton(text=await t("btn_no_experience"), callback_data="post_exp_no_experience")],
+        [InlineKeyboardButton(text=await t("btn_exp_1_3"), callback_data="post_exp_between_1_and_3")],
+        [InlineKeyboardButton(text=await t("btn_exp_3_6"), callback_data="post_exp_between_3_and_6")],
+        [InlineKeyboardButton(text=await t("btn_exp_6_plus"), callback_data="post_exp_more_than_6")],
+        [InlineKeyboardButton(text=await t("btn_cancel"), callback_data="cancel_post")]
     ])
 
-def get_confirm_keyboard(prefix):
+async def get_confirm_keyboard(prefix, user_id: int):
+    lang = await get_user_lang(user_id)
+    async def t(key): return await get_text(key, lang=lang)
     return InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text="✅ E'lon qilish", callback_data=f"confirm_{prefix}"),
-            InlineKeyboardButton(text="✏️ O'zgartirish", callback_data=f"edit_{prefix}")
+            InlineKeyboardButton(text=await t("btn_publish"), callback_data=f"confirm_{prefix}"),
+            InlineKeyboardButton(text=await t("btn_edit"), callback_data=f"edit_{prefix}")
         ],
-        [InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_post")]
+        [InlineKeyboardButton(text=await t("btn_cancel"), callback_data="cancel_post")]
     ])
 
-def get_region_keyboard():
+async def get_region_keyboard(user_id: int):
+    lang = await get_user_lang(user_id)
+    async def t(key): return await get_text(key, lang=lang)
     regions = ["Toshkent", "Andijon", "Buxoro", "Farg'ona", "Jizzax", "Xorazm", "Namangan", "Navoiy", "Qashqadaryo", "Samarqand", "Sirdaryo", "Surxondaryo", "Qoraqalpog'iston"]
     rows = []
     current_row = []
@@ -67,48 +73,57 @@ def get_region_keyboard():
             current_row = []
     if current_row:
         rows.append(current_row)
-    rows.append([InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_post")])
+    rows.append([InlineKeyboardButton(text=await t("btn_cancel"), callback_data="cancel_post")])
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
 # --- Entry Points ---
 
-@router.message(F.text == "📢 Vakansiya qo'shish")
+@router.message(F.text.in_(get_msg_options("menu_post_vacancy")))
 async def start_add_content(message: Message, state: FSMContext):
+    user_id = message.from_user.id
+    lang = await get_user_lang(user_id)
+    async def t(key): return await get_text(key, lang=lang)
+    
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🏢 Ish beruvchi (Vakansiya qo'shish)", callback_data="start_employer_flow")],
-        [InlineKeyboardButton(text="👨‍💼 Ish qidiruvchi (Rezyume qo'shish)", callback_data="start_seeker_flow")],
-        [InlineKeyboardButton(text="❌ Bekor qilish", callback_data="cancel_post")]
+        [InlineKeyboardButton(text=await t("btn_employer"), callback_data="start_employer_flow")],
+        [InlineKeyboardButton(text=await t("btn_seeker"), callback_data="start_seeker_flow")],
+        [InlineKeyboardButton(text=await t("btn_cancel"), callback_data="cancel_post")]
     ])
-    await message.answer("📝 <b>Ma'lumot qo'shish</b>\n\nKim sifatida ma'lumot qoldirmoqchisiz?", reply_markup=keyboard, parse_mode='HTML')
+    await message.answer(await t("post_choose_role_title"), reply_markup=keyboard, parse_mode='HTML')
 
 @router.callback_query(F.data == "cancel_post")
 async def cancel_post(callback: CallbackQuery, state: FSMContext):
     await state.clear()
-    await callback.message.edit_text("❌ Bekor qilindi.")
+    lang = await get_user_lang(callback.from_user.id)
+    await callback.message.edit_text(await get_text("post_cancelled", lang=lang))
     await callback.answer()
 
 @router.message(F.text == "/cancel")
 async def cancel_command(message: Message, state: FSMContext):
     await state.clear()
-    await message.answer("❌ Bekor qilindi.")
+    lang = await get_user_lang(message.from_user.id)
+    await message.answer(await get_text("post_cancelled", lang=lang))
 
 # --- EMPLOYER FLOW ---
 
 @router.callback_query(F.data == "start_employer_flow")
 async def start_employer_flow(callback: CallbackQuery, state: FSMContext):
     user_id = callback.from_user.id
+    lang = await get_user_lang(user_id)
+    async def t(key): return await get_text(key, lang=lang)
+
     await db.pool.execute("UPDATE users SET role = 'employer' WHERE user_id = $1", user_id)
     
     is_premium = await db.is_premium(user_id)
     if not is_premium:
         await callback.message.edit_text(
-            "🔒 <b>Premium xususiyat!</b>\n\nVakansiya qo'shish faqat Premium 'Ish beruvchi'lar uchun mavjud.\n\nPremium sotib olish uchun 💎 Premium bo'limiga o'ting.",
+            await t("error_premium_required"),
             parse_mode='HTML'
         )
         return
 
     await callback.message.edit_text(
-        "📢 <b>Vakansiya e'lon qilish</b>\n\n1. Kompaniya nomini kiriting:",
+        await t("post_employer_step_1"),
         parse_mode='HTML'
     )
     await state.set_state(PostVacancyStates.waiting_for_company)
@@ -116,45 +131,55 @@ async def start_employer_flow(callback: CallbackQuery, state: FSMContext):
 @router.message(PostVacancyStates.waiting_for_company)
 async def process_company(message: Message, state: FSMContext):
     await state.update_data(company=message.text)
-    await message.answer("2. Vakansiya Nomi (Profession) ni kiriting:\nMisol: Python Developer")
+    lang = await get_user_lang(message.from_user.id)
+    await message.answer(await get_text("post_employer_step_2", lang=lang))
     await state.set_state(PostVacancyStates.waiting_for_title)
 
 @router.message(PostVacancyStates.waiting_for_title)
 async def process_title(message: Message, state: FSMContext):
     await state.update_data(title=message.text)
-    await message.answer("3. Maoshni kiriting (Minimal):\nMisol: 5000000 (yoki 'Kelishilgan')")
+    lang = await get_user_lang(message.from_user.id)
+    await message.answer(await get_text("post_employer_step_3", lang=lang))
     await state.set_state(PostVacancyStates.waiting_for_salary_min)
 
 @router.message(PostVacancyStates.waiting_for_salary_min)
 async def process_salary_min(message: Message, state: FSMContext):
     await state.update_data(salary_min=message.text)
-    await message.answer("Maksimal maosh (ixtiyoriy, /skip):")
+    lang = await get_user_lang(message.from_user.id)
+    await message.answer(await get_text("post_employer_step_3_max", lang=lang))
     await state.set_state(PostVacancyStates.waiting_for_salary_max)
 
 @router.message(PostVacancyStates.waiting_for_salary_max)
 async def process_salary_max(message: Message, state: FSMContext):
     if message.text != "/skip":
         await state.update_data(salary_max=message.text)
-    await message.answer("4. Joylashuvni kiriting (Shahar/Viloyat):")
+    lang = await get_user_lang(message.from_user.id)
+    await message.answer(await get_text("post_employer_step_4", lang=lang))
     await state.set_state(PostVacancyStates.waiting_for_location)
 
 @router.message(PostVacancyStates.waiting_for_location)
 async def process_location(message: Message, state: FSMContext):
     await state.update_data(location=message.text)
-    await message.answer("5. Tajriba darajasini tanlang:", reply_markup=get_experience_keyboard())
+    lang = await get_user_lang(message.from_user.id)
+    await message.answer(await get_text("post_employer_step_5", lang=lang), reply_markup=await get_experience_keyboard(message.from_user.id))
     await state.set_state(PostVacancyStates.waiting_for_experience)
 
 @router.callback_query(PostVacancyStates.waiting_for_experience)
 async def process_experience(callback: CallbackQuery, state: FSMContext):
     exp = callback.data.replace("post_exp_", "")
     await state.update_data(experience=exp)
-    await callback.message.edit_text("6. Aloqa uchun kontakt:\nMisol: +998901234567, @username")
+    
+    user_id = callback.from_user.id
+    lang = await get_user_lang(user_id)
+    
+    await callback.message.edit_text(await get_text("post_employer_step_6", lang=lang))
     await state.set_state(PostVacancyStates.waiting_for_contact)
 
 @router.message(PostVacancyStates.waiting_for_contact)
 async def process_contact(message: Message, state: FSMContext):
     await state.update_data(contact=message.text)
-    await message.answer("7. Tavsif (Batafsil ma'lumot):")
+    lang = await get_user_lang(message.from_user.id)
+    await message.answer(await get_text("post_employer_step_7", lang=lang))
     await state.set_state(PostVacancyStates.waiting_for_description)
 
 @router.message(PostVacancyStates.waiting_for_description)
@@ -162,15 +187,22 @@ async def process_description(message: Message, state: FSMContext):
     await state.update_data(description=message.text)
     data = await state.get_data()
     
-    preview = f"""📢 <b>VAKANSIYA TEKSHIRISH</b>
-🏢 <b>{data.get('company')}</b>
-💼 <b>{data.get('title')}</b>
-💰 Maosh: {data.get('salary_min')} - {data.get('salary_max', '')}
-📍 Joy: {data.get('location')}
-📞 Aloqa: {data.get('contact')}
-📝 Tavsif: {data.get('description')}
-    """
-    await message.answer(preview, reply_markup=get_confirm_keyboard("vacancy"), parse_mode='HTML')
+    user_id = message.from_user.id
+    lang = await get_user_lang(user_id)
+    async def t(key, **kwargs): return await get_text(key, lang=lang, **kwargs)
+    
+    preview_template = await t("post_vacancy_preview")
+    preview = preview_template.format(
+        company=data.get('company'),
+        title=data.get('title'),
+        salary_min=data.get('salary_min'),
+        salary_max=data.get('salary_max', ''),
+        location=data.get('location'),
+        contact=data.get('contact'),
+        description=data.get('description')
+    )
+    
+    await message.answer(preview, reply_markup=await get_confirm_keyboard("vacancy", user_id), parse_mode='HTML')
     await state.set_state(PostVacancyStates.confirming)
 
 @router.callback_query(F.data == "confirm_vacancy")
@@ -179,6 +211,10 @@ async def confirm_vacancy(callback: CallbackQuery, state: FSMContext):
     now = datetime.now(timezone.utc)
     vacancy_id = f"user_{callback.from_user.id}_{int(now.timestamp())}"
     
+    user_id = callback.from_user.id
+    lang = await get_user_lang(user_id)
+    async def t(key): return await get_text(key, lang=lang)
+
     try:
         await db.add_vacancy(
             external_id=vacancy_id,
@@ -192,7 +228,7 @@ async def confirm_vacancy(callback: CallbackQuery, state: FSMContext):
             source='user_post',
             published_date=now
         )
-        await callback.message.edit_text("✅ Vakansiya muvaffaqiyatli e'lon qilindi!")
+        await callback.message.edit_text(await t("post_vacancy_success"))
         
         # --- MATCH ALERT - Ish qidiruvchilarga xabar berish ---
         try:
@@ -227,8 +263,9 @@ async def confirm_vacancy(callback: CallbackQuery, state: FSMContext):
                 # Mos kelishini tekshirish
                 if vacancy_filter.apply_filters([new_vacancy], seeker_filter):
                     try:
-                        alert_text = f"🔔 <b>Yangi mos vakansiya topildi!</b>\n\n"
-                        alert_text += vacancy_filter.format_vacancy_message(new_vacancy)
+                        seeker_lang = await get_user_lang(seeker['user_id'])
+                        alert_title = await get_text("post_match_alert", lang=seeker_lang)
+                        alert_text = f"{alert_title}{vacancy_filter.format_vacancy_message(new_vacancy, lang=seeker_lang)}"
                         
                         await callback.bot.send_message(
                             seeker['user_id'],
@@ -246,7 +283,7 @@ async def confirm_vacancy(callback: CallbackQuery, state: FSMContext):
 
     except Exception as e:
         logger.error(f"Error posting vacancy: {e}")
-        await callback.message.edit_text("❌ Xatolik yuz berdi.")
+        await callback.message.edit_text(await t("error_generic"))
     await state.clear()
 
 # --- SEEKER FLOW (RESUME) ---
@@ -254,66 +291,85 @@ async def confirm_vacancy(callback: CallbackQuery, state: FSMContext):
 @router.callback_query(F.data == "start_seeker_flow")
 async def start_seeker_flow(callback: CallbackQuery, state: FSMContext):
     user_id = callback.from_user.id
+    lang = await get_user_lang(user_id)
+    async def t(key): return await get_text(key, lang=lang)
+    
     await db.pool.execute("UPDATE users SET role = 'seeker' WHERE user_id = $1", user_id)
-    await callback.message.edit_text("👨‍💼 <b>Rezyume joylash</b>\n\n1. Ismingizni kiriting:", parse_mode='HTML')
+    await callback.message.edit_text(await t("post_resume_step_1"), parse_mode='HTML')
     await state.set_state(PostResumeStates.waiting_for_name)
 
 @router.message(PostResumeStates.waiting_for_name)
 async def resume_name(message: Message, state: FSMContext):
     await state.update_data(full_name=message.text)
-    await message.answer("2. Yoshingizni kiriting (raqamda):")
+    lang = await get_user_lang(message.from_user.id)
+    await message.answer(await get_text("post_resume_step_2", lang=lang))
     await state.set_state(PostResumeStates.waiting_for_age)
 
 @router.message(PostResumeStates.waiting_for_age)
 async def resume_age(message: Message, state: FSMContext):
+    user_id = message.from_user.id
+    lang = await get_user_lang(user_id)
+    
     if not message.text.isdigit():
-        await message.answer("❌ Faqat raqam kiriting!")
+        await message.answer(await get_text("error_digit_only", lang=lang))
         return
     await state.update_data(age=int(message.text))
-    await message.answer("3. Texnologiyalar (Stack):\nMisol: Python, Django, PostgreSQL")
+    await message.answer(await get_text("post_resume_step_3", lang=lang))
     await state.set_state(PostResumeStates.waiting_for_technology)
 
 @router.message(PostResumeStates.waiting_for_technology)
 async def resume_tech(message: Message, state: FSMContext):
     await state.update_data(technology=message.text)
-    await message.answer("4. Telegram username (@username):")
+    lang = await get_user_lang(message.from_user.id)
+    await message.answer(await get_text("post_resume_step_4", lang=lang))
     await state.set_state(PostResumeStates.waiting_for_telegram)
 
 @router.message(PostResumeStates.waiting_for_telegram)
 async def resume_telegram(message: Message, state: FSMContext):
     await state.update_data(telegram_username=message.text)
-    await message.answer("5. Aloqa uchun telefon raqam:")
+    lang = await get_user_lang(message.from_user.id)
+    await message.answer(await get_text("post_resume_step_5", lang=lang))
     await state.set_state(PostResumeStates.waiting_for_phone)
 
 @router.message(PostResumeStates.waiting_for_phone)
 async def resume_phone(message: Message, state: FSMContext):
     await state.update_data(phone=message.text)
-    await message.answer("6. Hududni tanlang:", reply_markup=get_region_keyboard())
+    user_id = message.from_user.id
+    lang = await get_user_lang(user_id)
+    await message.answer(await get_text("post_resume_step_6", lang=lang), reply_markup=await get_region_keyboard(user_id))
     await state.set_state(PostResumeStates.waiting_for_region)
 
 @router.callback_query(PostResumeStates.waiting_for_region)
 async def resume_region(callback: CallbackQuery, state: FSMContext):
     region = callback.data.replace("region_", "")
     await state.update_data(region=region)
-    await callback.message.edit_text(f"Tanlangan hudud: {region}\n\n7. Kutilayotgan maosh (Narxi):")
+    user_id = callback.from_user.id
+    lang = await get_user_lang(user_id)
+    async def t(key, **kwargs): return await get_text(key, lang=lang, **kwargs)
+    
+    msg = await t("post_resume_step_7")
+    await callback.message.edit_text(msg.format(region=region))
     await state.set_state(PostResumeStates.waiting_for_salary)
 
 @router.message(PostResumeStates.waiting_for_salary)
 async def resume_salary(message: Message, state: FSMContext):
     await state.update_data(salary=message.text)
-    await message.answer("8. Kasbingiz (Title):\nMisol: Backend Developer")
+    lang = await get_user_lang(message.from_user.id)
+    await message.answer(await get_text("post_resume_step_8", lang=lang))
     await state.set_state(PostResumeStates.waiting_for_profession)
 
 @router.message(PostResumeStates.waiting_for_profession)
 async def resume_profession(message: Message, state: FSMContext):
     await state.update_data(profession=message.text)
-    await message.answer("9. Murojaat qilish vaqti (Call time):\nMisol: 09:00 - 18:00")
+    lang = await get_user_lang(message.from_user.id)
+    await message.answer(await get_text("post_resume_step_9", lang=lang))
     await state.set_state(PostResumeStates.waiting_for_call_time)
 
 @router.message(PostResumeStates.waiting_for_call_time)
 async def resume_call_time(message: Message, state: FSMContext):
     await state.update_data(call_time=message.text)
-    await message.answer("10. Maqsad (Goal):\nQisqacha maqsadingiz:")
+    lang = await get_user_lang(message.from_user.id)
+    await message.answer(await get_text("post_resume_step_10", lang=lang))
     await state.set_state(PostResumeStates.waiting_for_goal)
 
 @router.message(PostResumeStates.waiting_for_goal)
@@ -321,27 +377,37 @@ async def resume_goal(message: Message, state: FSMContext):
     await state.update_data(goal=message.text)
     data = await state.get_data()
     
-    preview = f"""👨‍💼 <b>REZYUME TEKSHIRISH</b>
-👤 <b>{data.get('full_name')}</b> ({data.get('age')} yosh)
-💻 Stack: {data.get('technology')}
-💼 Kasb: {data.get('profession')}
-💰 Maosh: {data.get('salary')}
-📍 Hudud: {data.get('region')}
-📞 Tel: {data.get('phone')}
-✈️ Tg: {data.get('telegram_username')}
-⏰ Vaqt: {data.get('call_time')}
-🎯 Maqsad: {data.get('goal')}
-    """
-    await message.answer(preview, reply_markup=get_confirm_keyboard("resume"), parse_mode='HTML')
+    user_id = message.from_user.id
+    lang = await get_user_lang(user_id)
+    async def t(key, **kwargs): return await get_text(key, lang=lang, **kwargs)
+    
+    preview_template = await t("post_resume_preview")
+    preview = preview_template.format(
+        full_name=data.get('full_name'),
+        age=data.get('age'),
+        technology=data.get('technology'),
+        profession=data.get('profession'),
+        salary=data.get('salary'),
+        region=data.get('region'),
+        phone=data.get('phone'),
+        telegram=data.get('telegram_username'),
+        call_time=data.get('call_time'),
+        goal=data.get('goal')
+    )
+    
+    await message.answer(preview, reply_markup=await get_confirm_keyboard("resume", user_id), parse_mode='HTML')
     await state.set_state(PostResumeStates.confirming)
 
 @router.callback_query(F.data == "confirm_resume")
 async def confirm_resume(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
+    user_id = callback.from_user.id
+    lang = await get_user_lang(user_id)
+    async def t(key): return await get_text(key, lang=lang)
     
     try:
         await db.add_resume(
-            user_id=callback.from_user.id,
+            user_id=user_id,
             full_name=data['full_name'],
             age=data['age'],
             technology=data['technology'],
@@ -353,8 +419,8 @@ async def confirm_resume(callback: CallbackQuery, state: FSMContext):
             call_time=data['call_time'],
             goal=data['goal']
         )
-        await callback.message.edit_text("✅ Rezyume muvaffaqiyatli joylandi!")
+        await callback.message.edit_text(await t("post_resume_success"))
     except Exception as e:
         logger.error(f"Error adding resume: {e}")
-        await callback.message.edit_text("❌ Xatolik yuz berdi.")
+        await callback.message.edit_text(await t("error_generic"))
     await state.clear()

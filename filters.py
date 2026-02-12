@@ -163,10 +163,20 @@ class VacancyFilter:
         return filtered
     
     @staticmethod
-    def format_vacancy_message(vacancy: Dict) -> str:
-        """Vakansiyani xabar formatiga o'tkazish - YAXSHILANGAN"""
+    def format_vacancy_message(vacancy: Dict, lang: str = 'uz') -> str:
+        """Vakansiyani xabar formatiga o'tkazish - LOCALIZED"""
         from datetime import datetime, timezone
+        from utils.i18n import LANGUAGES
         
+        texts = LANGUAGES.get(lang, LANGUAGES['uz'])
+        def t(key, **kwargs):
+            try:
+                text = texts.get(key, key)
+                return text.format(**kwargs)
+            except Exception as e:
+                logger.error(f"Translation error key={{key}}: {{e}}")
+                return key
+
         title = vacancy.get('title', 'N/A')
         company = vacancy.get('company', 'N/A')
         location = vacancy.get('location', 'N/A')
@@ -177,26 +187,29 @@ class VacancyFilter:
         salary_max = vacancy.get('salary_max')
         
         if salary_min and salary_max:
-            salary = f"{salary_min:,} - {salary_max:,} so'm"
+            salary = t("vac_salary_range", min=f"{salary_min:,}", max=f"{salary_max:,}")
         elif salary_min:
-            salary = f"dan {salary_min:,} so'm"
+            salary = t("vac_salary_from", min=f"{salary_min:,}")
         elif salary_max:
-            salary = f"gacha {salary_max:,} so'm"
+            salary = t("vac_salary_to", max=f"{salary_max:,}")
         else:
-            salary = "Ko'rsatilmagan"
+            salary = t("vac_salary_not_specified")
         
         # Tajriba
-        exp_map = {
-            'no_experience': '🟢 Tajribasiz',
-            'between_1_and_3': '🟡 1-3 yil',
-            'between_3_and_6': '🟠 3-6 yil',
-            'more_than_6': '🔴 6+ yil',
-            'not_specified': '⚪️ Ko\'rsatilmagan'
+        vac_exp = vacancy.get('experience_level', 'not_specified')
+        exp_map_keys = {
+            'no_experience': "vac_exp_no_experience",
+            'between_1_and_3': "vac_exp_between_1_and_3",
+            'between_3_and_6': "vac_exp_between_3_and_6",
+            'more_than_6': "vac_exp_more_than_6",
+            'not_specified': "vac_exp_not_specified"
         }
-        experience = exp_map.get(vacancy.get('experience_level'), '⚪️ Ko\'rsatilmagan')
+        experience = t(exp_map_keys.get(vac_exp, "vac_exp_not_specified"))
         
         # E'lon qilingan vaqt
         published_date = vacancy.get('published_date')
+        time_ago = t("vac_time_unknown")
+        
         if published_date:
             try:
                 if isinstance(published_date, datetime):
@@ -207,21 +220,19 @@ class VacancyFilter:
                     diff = now - published_date
                     
                     if diff.days > 0:
-                        time_ago = f"{diff.days} kun oldin"
+                        time_ago = t("vac_time_days_ago", days=diff.days)
                     elif diff.seconds >= 3600:
                         hours = diff.seconds // 3600
-                        time_ago = f"{hours} soat oldin"
+                        time_ago = t("vac_time_hours_ago", hours=hours)
                     elif diff.seconds >= 60:
                         minutes = diff.seconds // 60
-                        time_ago = f"{minutes} daqiqa oldin"
+                        time_ago = t("vac_time_minutes_ago", minutes=minutes)
                     else:
-                        time_ago = "Hozirgina"
+                        time_ago = t("vac_time_just_now")
                 else:
                     time_ago = str(published_date)[:10]
             except:
-                time_ago = "Noma'lum"
-        else:
-            time_ago = "Noma'lum"
+                pass
         
         # Tavsif
         description = vacancy.get('description', '')
@@ -240,19 +251,19 @@ class VacancyFilter:
                 if len(parts) >= 2:
                     channel_name = parts[1]  # @channel_name
                     source_emoji = '📱'
-                    source_text = f"Telegram: {channel_name}"
+                    source_text = t("vac_source_telegram", channel=channel_name)
                 else:
                     source_emoji = '📱'
-                    source_text = 'TELEGRAM'
+                    source_text = t("vac_source_telegram_default")
             except:
                 source_emoji = '📱'
-                source_text = 'TELEGRAM'
+                source_text = t("vac_source_telegram_default")
         elif source == 'hh_uz':
             source_emoji = '🌐'
-            source_text = 'HH.UZ'
+            source_text = t("vac_source_hh")
         elif source == 'user_post':
             source_emoji = '📢'
-            source_text = 'Bot e\'loni'
+            source_text = t("vac_source_bot")
         else:
             source_emoji = '🔗'
             source_text = source.upper().replace('_', ' ')
@@ -261,17 +272,17 @@ class VacancyFilter:
         message = f"""
 🔹 <b>{title}</b>
 
-🏢 <b>Kompaniya:</b> {company}
-💰 <b>Maosh:</b> {salary}
-📍 <b>Joylashuv:</b> {location}
-👔 <b>Tajriba:</b> {experience}
-🕐 <b>E'lon qilingan:</b> {time_ago}
-{source_emoji} <b>Manba:</b> {source_text}
+{t('vac_label_company')} {company}
+{t('vac_label_salary')} {salary}
+{t('vac_label_location')} {location}
+{t('vac_label_exp')} {experience}
+{t('vac_label_posted')} {time_ago}
+{source_emoji} {t('vac_label_source')} {source_text}
 
-📝 <b>Tavsif:</b>
+{t('vac_label_desc')}
 {description}
 
-🔗 <a href="{url}">Batafsil ma'lumot</a>
+{t("vac_link_more", url=url)}
 """
         return message.strip()
 

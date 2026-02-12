@@ -13,6 +13,7 @@ DB_PORT = int(os.getenv('DB_PORT', 5432))
 DB_NAME = os.getenv('DB_NAME', 'vacancybot')
 DB_USER = os.getenv('DB_USER', 'postgres')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
+GROK_API_KEY = os.getenv('GROK_API_KEY')
 if not BOT_TOKEN:
     raise ValueError("❌ BOT_TOKEN topilmadi!")
 
