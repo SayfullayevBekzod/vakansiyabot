@@ -35,9 +35,6 @@ class UzJobsScraper:
     
             for attempt in range(retries):
                 try:
-                    # Random delay to avoid hitting rate limits exactly at same time
-                    await asyncio.sleep(delay * (0.8 + 0.4 * random.random())) # Simple jitter
-    
                     async with aiohttp.ClientSession(headers=self.headers) as session:
                         async with session.get(url, params=params, timeout=30) as response:
                             if response.status == 200:

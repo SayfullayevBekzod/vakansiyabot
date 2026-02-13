@@ -18,6 +18,11 @@ user_vacancies = {}
 # Qidiruv jarayonidagi userlar (bir vaqtda bitta qidiruv)
 searching_users = set()
 
+# Qidiruv natijalari keshi (keywords + location + source -> vacancies)
+# Format: { 'keyword+location+sources': {'time': timestamp, 'vacancies': [...]} }
+search_cache = {}
+CACHE_TIMEOUT = 300  # 5 daqiqa
+
 # Telegram scraper instanceni import qilish
 telegram_scraper_instance = None
 
@@ -228,6 +233,23 @@ async def perform_vacancy_search(message: Message, user_id: int):
         parse_mode='HTML'
     )
     
+    # Kesh kalitini yaratish
+    import time
+    cache_key = f"{'+'.join(sorted(keywords))}_{locations[0] if locations else 'Tashkent'}_{'+'.join(sorted(sources))}"
+    
+    # Keshtan tekshirish
+    if cache_key in search_cache:
+        cached_data = search_cache[cache_key]
+        if time.time() - cached_data['time'] < CACHE_TIMEOUT:
+            logger.info(f"[SEARCH] Cache hit for {cache_key}")
+            vacancies = cached_data['vacancies']
+            sources_used = cached_data['sources_used']
+            
+            # Agar keshda ma'lumot bo'lsa, davom ettiramiz (scraping qilmasdan)
+            await process_search_results(message, user_id, vacancies, sources_used, wait_msg, features, user_filter)
+            searching_users.discard(user_id)
+            return
+
     try:
         # Vakansiyalarni olish
         from scraper_api import scraper_api
@@ -396,74 +418,15 @@ async def perform_vacancy_search(message: Message, user_id: int):
                         'count': len(vacs)
                     })
         
-        if not vacancies:
-            try:
-                await wait_msg.delete()
-            except:
-                pass
-            
-            await message.answer(await t("search_not_found"), parse_mode='HTML')
-            return
-        
-        # Filtr qo'llash
-        logger.info(f"[SEARCH] Filtrlash: {len(vacancies)} ta vakansiya")
-        filtered_vacancies = vacancy_filter.apply_filters(vacancies, user_filter)
-        logger.info(f"[SEARCH] Filtrlash natijasi: {len(filtered_vacancies)} ta")
-        
-        # Natijalar cheklash (free foydalanuvchilar uchun)
-        max_results = features.get('max_results', 10)
-        limited = False
-        
-        if len(filtered_vacancies) > max_results:
-            filtered_vacancies = filtered_vacancies[:max_results]
-            limited = True
-        
-        try:
-            await wait_msg.delete()
-        except:
-            pass
-        
-        if not filtered_vacancies:
-            await message.answer(await t("search_filtered_out"), parse_mode='HTML')
-            return
-        
-        # Foydalanuvchi uchun vakansiyalarni saqlash
-        user_vacancies[user_id] = {
-            'vacancies': filtered_vacancies,
-            'current_index': 0
+        # Keshga saqlash
+        search_cache[cache_key] = {
+            'time': time.time(),
+            'vacancies': vacancies,
+            'sources_used': sources_used
         }
         
-        # === NATIJALAR XABARI ===
-        res_found = await t("results_found")
-        result_text = res_found.format(count=len(filtered_vacancies))
-        
-        # Manbalardagi natijalar
-        if sources_used:
-            result_text += await t("results_sources")
-            for source in sources_used:
-                result_text += f"{source['emoji']} <b>{source['name']}:</b> {source['count']} ta\n"
-                
-                # Telegram kanallari
-                if source['name'] == 'Telegram' and source.get('channels'):
-                    channels_list = []
-                    for channel, count in sorted(source['channels'].items(), key=lambda x: x[1], reverse=True)[:5]:
-                        channels_list.append(f"  • {channel}: {count} ta")
-                    if channels_list:
-                        result_text += "\n".join(channels_list) + "\n"
-            
-            result_text += "\n"
-        
-        if limited:
-            res_limited = await t("results_limited")
-            result_text += res_limited.format(count=max_results)
-        
-        result_text += await t("results_view_action")
-        
-        await message.answer(result_text, parse_mode='HTML')
-        
-        # Birinchi vakansiyani yuborish
-        await send_vacancy_to_user(message, user_id, 0)
-    
+        await process_search_results(message, user_id, vacancies, sources_used, wait_msg, features, user_filter)
+
     except Exception as e:
         logger.error(f"[SEARCH] Qidiruvda xatolik: {e}", exc_info=True)
         try:
@@ -476,6 +439,79 @@ async def perform_vacancy_search(message: Message, user_id: int):
         # Qidiruv tugadi
         searching_users.discard(user_id)
 
+async def process_search_results(message: Message, user_id: int, vacancies: List[Dict], sources_used: List[Dict], wait_msg: Message, features: Dict, user_filter: Dict):
+    """Qidiruv natijalarini qayta ishlash va userga yuborish"""
+    lang = await get_user_lang(user_id)
+    async def t(key): return await get_text(key, lang=lang)
+    
+    if not vacancies:
+        try:
+            await wait_msg.delete()
+        except:
+            pass
+        
+        await message.answer(await t("search_not_found"), parse_mode='HTML')
+        return
+    
+    # Filtr qo'llash
+    from filters import vacancy_filter
+    logger.info(f"[SEARCH] Filtrlash: {len(vacancies)} ta vakansiya")
+    filtered_vacancies = vacancy_filter.apply_filters(vacancies, user_filter)
+    logger.info(f"[SEARCH] Filtrlash natijasi: {len(filtered_vacancies)} ta")
+    
+    # Natijalar cheklash (free foydalanuvchilar uchun)
+    max_results = features.get('max_results', 10)
+    limited = False
+    
+    if len(filtered_vacancies) > max_results:
+        filtered_vacancies = filtered_vacancies[:max_results]
+        limited = True
+    
+    try:
+        await wait_msg.delete()
+    except:
+        pass
+    
+    if not filtered_vacancies:
+        await message.answer(await t("search_filtered_out"), parse_mode='HTML')
+        return
+    
+    # Foydalanuvchi uchun vakansiyalarni saqlash
+    user_vacancies[user_id] = {
+        'vacancies': filtered_vacancies,
+        'current_index': 0
+    }
+    
+    # === NATIJALAR XABARI ===
+    res_found = await t("results_found")
+    result_text = res_found.format(count=len(filtered_vacancies))
+    
+    # Manbalardagi natijalar
+    if sources_used:
+        result_text += await t("results_sources")
+        for source in sources_used:
+            result_text += f"{source['emoji']} <b>{source['name']}:</b> {source['count']} ta\n"
+            
+            # Telegram kanallari
+            if source['emoji'] == '📱' and source.get('channels'):
+                channels_list = []
+                for channel, count in sorted(source['channels'].items(), key=lambda x: x[1], reverse=True)[:5]:
+                    channels_list.append(f"  • {channel}: {count} ta")
+                if channels_list:
+                    result_text += "\n".join(channels_list) + "\n"
+        
+        result_text += "\n"
+    
+    if limited:
+        res_limited = await t("results_limited")
+        result_text += res_limited.format(count=max_results)
+    
+    result_text += await t("results_view_action")
+    
+    await message.answer(result_text, parse_mode='HTML')
+    
+    # Birinchi vakansiyani yuborish
+    await send_vacancy_to_user(message, user_id, 0)
 
 @router.callback_query(F.data.startswith("vac_next_"))
 async def next_vacancy(callback: CallbackQuery):
