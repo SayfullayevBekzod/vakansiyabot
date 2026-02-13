@@ -1,5 +1,5 @@
 
-from aiogram import Router, F
+from aiogram import Router, F, html
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
@@ -130,21 +130,21 @@ async def start_employer_flow(callback: CallbackQuery, state: FSMContext):
 
 @router.message(PostVacancyStates.waiting_for_company)
 async def process_company(message: Message, state: FSMContext):
-    await state.update_data(company=message.text)
+    await state.update_data(company=html.quote(message.text))
     lang = await get_user_lang(message.from_user.id)
     await message.answer(await get_text("post_employer_step_2", lang=lang))
     await state.set_state(PostVacancyStates.waiting_for_title)
 
 @router.message(PostVacancyStates.waiting_for_title)
 async def process_title(message: Message, state: FSMContext):
-    await state.update_data(title=message.text)
+    await state.update_data(title=html.quote(message.text))
     lang = await get_user_lang(message.from_user.id)
     await message.answer(await get_text("post_employer_step_3", lang=lang))
     await state.set_state(PostVacancyStates.waiting_for_salary_min)
 
 @router.message(PostVacancyStates.waiting_for_salary_min)
 async def process_salary_min(message: Message, state: FSMContext):
-    await state.update_data(salary_min=message.text)
+    await state.update_data(salary_min=html.quote(message.text))
     lang = await get_user_lang(message.from_user.id)
     await message.answer(await get_text("post_employer_step_3_max", lang=lang))
     await state.set_state(PostVacancyStates.waiting_for_salary_max)
@@ -152,14 +152,14 @@ async def process_salary_min(message: Message, state: FSMContext):
 @router.message(PostVacancyStates.waiting_for_salary_max)
 async def process_salary_max(message: Message, state: FSMContext):
     if message.text != "/skip":
-        await state.update_data(salary_max=message.text)
+        await state.update_data(salary_max=html.quote(message.text))
     lang = await get_user_lang(message.from_user.id)
     await message.answer(await get_text("post_employer_step_4", lang=lang))
     await state.set_state(PostVacancyStates.waiting_for_location)
 
 @router.message(PostVacancyStates.waiting_for_location)
 async def process_location(message: Message, state: FSMContext):
-    await state.update_data(location=message.text)
+    await state.update_data(location=html.quote(message.text))
     lang = await get_user_lang(message.from_user.id)
     await message.answer(await get_text("post_employer_step_5", lang=lang), reply_markup=await get_experience_keyboard(message.from_user.id))
     await state.set_state(PostVacancyStates.waiting_for_experience)
@@ -177,14 +177,14 @@ async def process_experience(callback: CallbackQuery, state: FSMContext):
 
 @router.message(PostVacancyStates.waiting_for_contact)
 async def process_contact(message: Message, state: FSMContext):
-    await state.update_data(contact=message.text)
+    await state.update_data(contact=html.quote(message.text))
     lang = await get_user_lang(message.from_user.id)
     await message.answer(await get_text("post_employer_step_7", lang=lang))
     await state.set_state(PostVacancyStates.waiting_for_description)
 
 @router.message(PostVacancyStates.waiting_for_description)
 async def process_description(message: Message, state: FSMContext):
-    await state.update_data(description=message.text)
+    await state.update_data(description=html.quote(message.text))
     data = await state.get_data()
     
     user_id = message.from_user.id
@@ -300,7 +300,7 @@ async def start_seeker_flow(callback: CallbackQuery, state: FSMContext):
 
 @router.message(PostResumeStates.waiting_for_name)
 async def resume_name(message: Message, state: FSMContext):
-    await state.update_data(full_name=message.text)
+    await state.update_data(full_name=html.quote(message.text))
     lang = await get_user_lang(message.from_user.id)
     await message.answer(await get_text("post_resume_step_2", lang=lang))
     await state.set_state(PostResumeStates.waiting_for_age)
@@ -319,21 +319,21 @@ async def resume_age(message: Message, state: FSMContext):
 
 @router.message(PostResumeStates.waiting_for_technology)
 async def resume_tech(message: Message, state: FSMContext):
-    await state.update_data(technology=message.text)
+    await state.update_data(technology=html.quote(message.text))
     lang = await get_user_lang(message.from_user.id)
     await message.answer(await get_text("post_resume_step_4", lang=lang))
     await state.set_state(PostResumeStates.waiting_for_telegram)
 
 @router.message(PostResumeStates.waiting_for_telegram)
 async def resume_telegram(message: Message, state: FSMContext):
-    await state.update_data(telegram_username=message.text)
+    await state.update_data(telegram_username=html.quote(message.text))
     lang = await get_user_lang(message.from_user.id)
     await message.answer(await get_text("post_resume_step_5", lang=lang))
     await state.set_state(PostResumeStates.waiting_for_phone)
 
 @router.message(PostResumeStates.waiting_for_phone)
 async def resume_phone(message: Message, state: FSMContext):
-    await state.update_data(phone=message.text)
+    await state.update_data(phone=html.quote(message.text))
     user_id = message.from_user.id
     lang = await get_user_lang(user_id)
     await message.answer(await get_text("post_resume_step_6", lang=lang), reply_markup=await get_region_keyboard(user_id))
@@ -353,28 +353,28 @@ async def resume_region(callback: CallbackQuery, state: FSMContext):
 
 @router.message(PostResumeStates.waiting_for_salary)
 async def resume_salary(message: Message, state: FSMContext):
-    await state.update_data(salary=message.text)
+    await state.update_data(salary=html.quote(message.text))
     lang = await get_user_lang(message.from_user.id)
     await message.answer(await get_text("post_resume_step_8", lang=lang))
     await state.set_state(PostResumeStates.waiting_for_profession)
 
 @router.message(PostResumeStates.waiting_for_profession)
 async def resume_profession(message: Message, state: FSMContext):
-    await state.update_data(profession=message.text)
+    await state.update_data(profession=html.quote(message.text))
     lang = await get_user_lang(message.from_user.id)
     await message.answer(await get_text("post_resume_step_9", lang=lang))
     await state.set_state(PostResumeStates.waiting_for_call_time)
 
 @router.message(PostResumeStates.waiting_for_call_time)
 async def resume_call_time(message: Message, state: FSMContext):
-    await state.update_data(call_time=message.text)
+    await state.update_data(call_time=html.quote(message.text))
     lang = await get_user_lang(message.from_user.id)
     await message.answer(await get_text("post_resume_step_10", lang=lang))
     await state.set_state(PostResumeStates.waiting_for_goal)
 
 @router.message(PostResumeStates.waiting_for_goal)
 async def resume_goal(message: Message, state: FSMContext):
-    await state.update_data(goal=message.text)
+    await state.update_data(goal=html.quote(message.text))
     data = await state.get_data()
     
     user_id = message.from_user.id

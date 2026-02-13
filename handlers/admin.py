@@ -1,4 +1,4 @@
-from aiogram import Router, F
+from aiogram import Router, F, html
 from aiogram.filters import StateFilter
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from aiogram.fsm.context import FSMContext
@@ -192,10 +192,10 @@ async def admin_users(callback: CallbackQuery):
             is_premium = await db.is_premium(user_id)
             
             username = user.get('username', 'N/A')
-            first_name = user.get('first_name', 'N/A')
+            first_name = html.quote(user.get('first_name', 'N/A'))
             status = "💎" if is_premium else "🆓"
             
-            recent_users.append(f"\n{status} {first_name} (@{username}) - {user_id}")
+            recent_users.append(f"\n{status} {first_name} (@{html.quote(username)}) - {user_id}")
         
         text = f"""
 👥 <b>Foydalanuvchilar</b>
@@ -242,7 +242,7 @@ async def admin_active_users(callback: CallbackQuery):
             user_lines = []
             for i, user in enumerate(active_users, 1):
                 status = "💎" if user['is_premium'] else "🆓"
-                name = user['first_name']
+                name = html.quote(user['first_name'])
                 # Oxirgi faollik vaqti (Toshkent vaqti bilan taxminan)
                 last_seen = user['updated_at']
                 if last_seen:
@@ -444,7 +444,7 @@ async def process_grant_user(message: Message, state: FSMContext):
             
             await message.answer(
                 f"⏳ <b>Premium berilmoqda...</b>\n\n"
-                f"👤 {first_name} (@{username})\n"
+                f"👤 {html.quote(first_name)} (@{html.quote(username)})\n"
                 f"📅 Muddat: {quick_days} kun",
                 parse_mode='HTML'
             )
@@ -459,7 +459,7 @@ async def process_grant_user(message: Message, state: FSMContext):
                 
                 await message.answer(
                     f"✅✅✅ <b>Premium berildi!</b>\n\n"
-                    f"👤 User: {first_name}\n"
+                    f"👤 User: {html.quote(first_name)}\n"
                     f"📅 Muddat: {quick_days} kun\n"
                     f"📆 Tugash: {expiry.strftime('%d.%m.%Y')}\n"
                     f"💎 Status: {'AKTIV' if is_premium_now else 'TEKSHIRILMOQDA'}",
@@ -489,8 +489,8 @@ async def process_grant_user(message: Message, state: FSMContext):
         await message.answer(
             f"👤 <b>Foydalanuvchi topildi:</b>\n"
             f"• ID: <code>{user_id}</code>\n"
-            f"• Ism: {first_name}\n"
-            f"• Username: @{username}\n\n"
+            f"• Ism: {html.quote(first_name)}\n"
+            f"• Username: @{html.quote(username)}\n\n"
             f"Necha kunlik Premium berasiz?\n\n"
             f"<b>Misollar:</b>\n"
             f"• <code>7</code> - 1 hafta\n"
@@ -659,7 +659,7 @@ async def admin_premium_list(callback: CallbackQuery):
                     date_str = "Abadiy"
                 
                 premium_users.append(
-                    f"\n💎 {first_name} (@{username})"
+                    f"\n💎 {html.quote(first_name)} (@{html.quote(username)})"
                     f"\n   ID: {user_id}"
                     f"\n   Tugash: {date_str}"
                 )

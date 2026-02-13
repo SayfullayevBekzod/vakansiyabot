@@ -167,6 +167,7 @@ class VacancyFilter:
         """Vakansiyani xabar formatiga o'tkazish - LOCALIZED"""
         from datetime import datetime, timezone
         from utils.i18n import LANGUAGES
+        from aiogram import html
         
         texts = LANGUAGES.get(lang, LANGUAGES['uz'])
         def t(key, **kwargs):
@@ -174,13 +175,13 @@ class VacancyFilter:
                 text = texts.get(key, key)
                 return text.format(**kwargs)
             except Exception as e:
-                logger.error(f"Translation error key={{key}}: {{e}}")
+                logger.error(f"Translation error key={key}: {e}")
                 return key
 
-        title = vacancy.get('title', 'N/A')
-        company = vacancy.get('company', 'N/A')
-        location = vacancy.get('location', 'N/A')
-        url = vacancy.get('url', '')
+        title = html.quote(vacancy.get('title', 'N/A'))
+        company = html.quote(vacancy.get('company', 'N/A'))
+        location = html.quote(vacancy.get('location', 'N/A'))
+        url = html.quote(vacancy.get('url', ''))
         
         # Maosh
         salary_min = vacancy.get('salary_min')
@@ -235,7 +236,7 @@ class VacancyFilter:
                 pass
         
         # Tavsif
-        description = vacancy.get('description', '')
+        description = html.quote(vacancy.get('description', ''))
         if len(description) > 300:
             description = description[:300] + '...'
         
