@@ -186,12 +186,34 @@ async def auto_scrape_and_notify():
             
         logger.info(f"Unique qidiruv guruhlari: {len(search_groups)}")
         
-        # 4. Har bir guruh uchun scraping va tarqatish
-        # 4. Har bir guruh uchun scraping va tarqatish (Parallel)
-        semaphore = asyncio.Semaphore(5)  # Bir vaqtning o'zida 5 ta guruh
+        # 3. Unique keywords for UzJobs (reduction of 429s)
+        unique_keywords = set()
+        for group_key in search_groups.keys():
+            unique_keywords.add(group_key[0]) # group_key is (keywords_tuple, location)
+
+        logger.info(f"Unique UzJobs keyword sets: {len(unique_keywords)}")
+        
+        # 4. Global UzJobs results cache for this run
+        uzjobs_results_cache = {}
+        for kw_tuple in unique_keywords:
+            try:
+                kw_list = list(kw_tuple)
+                logger.info(f"UzJobs scraping for keywords: {kw_list}")
+                uzjobs_list = await uz_jobs_scraper.scrape_uzjobs(keywords=kw_list)
+                if uzjobs_list:
+                    uzjobs_results_cache[kw_tuple] = uzjobs_list
+                    # Save to DB immediately
+                    uz_save_tasks = [db.add_vacancy(**v) for v in uzjobs_list]
+                    await asyncio.gather(*uz_save_tasks, return_exceptions=True)
+                await asyncio.sleep(2) # Extra delay between unique keyword searches
+            except Exception as e:
+                logger.error(f"UzJobs global scrape error ({kw_tuple}): {e}")
+
+        # 5. Process each group for hh.uz and distribution
+        hh_semaphore = asyncio.Semaphore(5)
         
         async def process_group(keywords_tuple, location, user_ids):
-            async with semaphore:
+            async with hh_semaphore:
                 try:
                     keywords = list(keywords_tuple)
                     # hh.uz scraping
@@ -206,14 +228,11 @@ async def auto_scrape_and_notify():
                         save_tasks = [db.add_vacancy(**v) for v in vacancies_list]
                         await asyncio.gather(*save_tasks, return_exceptions=True)
                     
-                    # 3. UzJobs scraping (NEW)
-                    uzjobs_list = await uz_jobs_scraper.scrape_uzjobs(keywords=keywords)
-                    if uzjobs_list:
-                        uz_save_tasks = [db.add_vacancy(**v) for v in uzjobs_list]
-                        await asyncio.gather(*uz_save_tasks, return_exceptions=True)
+                    # Get UzJobs results from cache
+                    cached_uzjobs = uzjobs_results_cache.get(keywords_tuple, [])
                     
                     # Umumiy ro'yxat: hh.uz + Telegram + UzJobs
-                    combined_vacancies = (vacancies_list or []) + (uzjobs_list or []) + telegram_vacancies
+                    combined_vacancies = (vacancies_list or []) + cached_uzjobs + telegram_vacancies
                     
                     if combined_vacancies:
                         await distribute_vacancies_to_group(user_ids, combined_vacancies)

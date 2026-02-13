@@ -74,6 +74,12 @@ class Database:
             except:
                 pass
 
+            # Migration: Add role column if not exists
+            try:
+                await conn.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS role VARCHAR(50) DEFAULT 'seeker'")
+            except Exception as e:
+                logger.error(f"Migration error (role column): {e}")
+
             # Resumes jadvali
             await conn.execute('''
                 CREATE TABLE IF NOT EXISTS resumes (

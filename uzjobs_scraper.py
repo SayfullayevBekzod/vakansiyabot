@@ -30,8 +30,8 @@ class UzJobsScraper:
             url = f"{self.base_url}/ru/vacancy/search"
             params = {'q': search_query}
             
-            retries = 5  # Increased retries
-            delay = 5    # Increased initial delay
+            retries = 7  # Increased retries
+            delay = 10   # Increased initial delay (UzJobs is sensitive)
     
             for attempt in range(retries):
                 try:
@@ -59,7 +59,7 @@ class UzJobsScraper:
                             elif response.status == 429:
                                 logger.warning(f"UzJobs 429 (Too Many Requests). Retrying in {delay}s...")
                                 await asyncio.sleep(delay)
-                                delay *= 2.5  # Stronger exponential backoff
+                                delay *= 3.0  # Even stronger exponential backoff
                             else:
                                 logger.error(f"UzJobs error: {response.status}")
                                 return []
