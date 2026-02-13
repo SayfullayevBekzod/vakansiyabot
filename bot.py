@@ -432,6 +432,10 @@ async def main():
         # Startup
         await on_startup()
         
+        # 0. Telegram webhook'ni o'chirish va eski xabarlarni tashlab yuborish (Conflict error oldini olish uchun)
+        await bot.delete_webhook(drop_pending_updates=True)
+        await asyncio.sleep(1) # Telegram serverlari yangilanishi uchun kichik kutish
+        
         # Botni ishga tushirish - OPTIMIZED
         await dp.start_polling(
             bot,
