@@ -45,12 +45,11 @@ async def ai_check_resume(callback: CallbackQuery, state: FSMContext):
     lang = await get_user_lang(user_id)
     
     # Check resumes table
-    resumes = await db.get_resumes(user_id)
+    resume = await db.get_user_resume(user_id)
     
-    if resumes:
+    if resume:
         # Use the latest resume
-        res = resumes[0]
-        resume_text = f"Kasbi: {res['profession']}\nTexnologiyalar: {res['technology']}\nMaqsadi: {res['goal']}"
+        resume_text = f"Kasbi: {resume['profession']}\nTexnologiyalar: {resume['technology']}\nMaqsadi: {resume['goal']}"
         await state.update_data(resume_text=resume_text)
         
         await callback.message.edit_text(

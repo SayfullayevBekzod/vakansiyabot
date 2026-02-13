@@ -563,6 +563,19 @@ class Database:
         except Exception as e:
             logger.error(f"get_resumes error: {e}")
             return []
+
+    async def get_user_resume(self, user_id: int) -> Optional[Dict]:
+        """Userning oxirgi rezyumesini olish"""
+        try:
+            async with self.pool.acquire() as conn:
+                row = await conn.fetchrow(
+                    'SELECT * FROM resumes WHERE user_id = $1 ORDER BY created_at DESC LIMIT 1',
+                    user_id
+                )
+                return dict(row) if row else None
+        except Exception as e:
+            logger.error(f"get_user_resume error: {e}")
+            return None
     
     async def remove_premium(self, user_id: int) -> bool:
         """Premium bekor qilish"""

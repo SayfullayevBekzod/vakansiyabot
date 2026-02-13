@@ -48,6 +48,13 @@ def format_resume_message(resume: dict) -> str:
 """
 
 
+from utils.i18n import get_msg_options
+
+@router.message(F.text.in_(get_msg_options("menu_candidates")))
+async def cmd_candidates(message: Message):
+    """Menyudan Nomzodlarni ko'rish"""
+    await show_candidates(message)
+
 async def show_candidates(message: Message, user_id: int = None):
     """Nomzodlarni ko'rsatish"""
     if user_id is None:

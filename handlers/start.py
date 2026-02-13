@@ -12,40 +12,46 @@ logger = logging.getLogger(__name__)
 router = Router()
 
 async def get_main_keyboard(user_id: int):
-    """Asosiy klaviatura - Premium va funksiyalarga qarab"""
+    """Asosiy klaviatura - Premium, rol va funksiyalarga qarab"""
+    user_data = await db.get_user(user_id)
+    role = user_data.get('role', 'seeker') if user_data else 'seeker'
     is_premium = await db.is_premium(user_id)
     lang = await get_user_lang(user_id)
     
-    # helper for concise text getting
     async def t(key, **kwargs): return await get_text(key, lang=lang, **kwargs)
     
+    # Row 1: Qidiruv va Sozlamalar
     keyboard_buttons = [
         [
             KeyboardButton(text=await t("menu_vacancies")),
             KeyboardButton(text=await t("menu_settings"))
-        ],
-        [
-            KeyboardButton(text=await t("menu_premium")),
-            KeyboardButton(text=await t("menu_saved"))
         ]
     ]
     
-    # Premium foydalanuvchilar uchun qo'shimcha funksiyalar
-    if is_premium:
-        keyboard_buttons.insert(2, [
-            KeyboardButton(text=await t("menu_add_vacancy")),
-            KeyboardButton(text=await t("menu_smart"))
-        ])
-        keyboard_buttons.insert(3, [
-            KeyboardButton(text=await t("menu_notifications")),
-            KeyboardButton(text=await t("menu_stats"))
-        ])
-    else:
-        keyboard_buttons.insert(2, [
-            KeyboardButton(text=await t("menu_stats"))
-        ])
+    # Row 2: Premium va Saqlanganlar
+    keyboard_buttons.append([
+        KeyboardButton(text=await t("menu_premium")),
+        KeyboardButton(text=await t("menu_saved"))
+    ])
     
-    # Referral va Yordam barcha uchun
+    # Row 3: E'lon berish va Nomzodlar/Smart
+    # Employer bo'lsa Nomzodlarni ko'rsatamiz
+    row3 = [KeyboardButton(text=await t("menu_add_vacancy"))]
+    if role == 'employer':
+        row3.append(KeyboardButton(text=await t("menu_candidates")))
+    else:
+        row3.append(KeyboardButton(text=await t("menu_smart")))
+    
+    keyboard_buttons.append(row3)
+    
+    # Row 4: Statistika va Qo'shimcha
+    row4 = [KeyboardButton(text=await t("menu_stats"))]
+    if is_premium:
+        row4.append(KeyboardButton(text=await t("menu_notifications")))
+    
+    keyboard_buttons.append(row4)
+    
+    # Row 5: Referral va Yordam
     keyboard_buttons.append([
         KeyboardButton(text=await t("menu_referral")),
         KeyboardButton(text=await t("menu_help"))

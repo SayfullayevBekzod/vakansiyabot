@@ -18,58 +18,66 @@ try:
     from handlers import post_vacancy
     POST_VACANCY_ENABLED = True
     logger.info("✅ Post vacancy handler")
-except:
+except Exception as e:
     POST_VACANCY_ENABLED = False
+    logger.error(f"❌ Post vacancy handler yuklanishda xatolik: {e}")
 
 try:
     from handlers import favorites
     FAVORITES_ENABLED = True
     logger.info("✅ Favorites handler")
-except:
+except Exception as e:
     FAVORITES_ENABLED = False
+    logger.error(f"❌ Favorites handler yuklanishda xatolik: {e}")
 
 try:
     from handlers import notifications
     NOTIFICATIONS_ENABLED = True
     logger.info("✅ Notifications handler")
-except:
+except Exception as e:
     NOTIFICATIONS_ENABLED = False
+    logger.error(f"❌ Notifications handler yuklanishda xatolik: {e}")
 
 try:
     from handlers import referral
     REFERRAL_ENABLED = True
     logger.info("✅ Referral handler")
-except:
+except Exception as e:
     REFERRAL_ENABLED = False
+    logger.error(f"❌ Referral handler yuklanishda xatolik: {e}")
 
 try:
     from handlers import analytics
     ANALYTICS_ENABLED = True
     logger.info("✅ Analytics handler")
-except:
+except Exception as e:
     ANALYTICS_ENABLED = False
+    logger.error(f"❌ Analytics handler yuklanishda xatolik: {e}")
 
 try:
     from handlers import smart_matching
     SMART_MATCHING_ENABLED = True
     logger.info("✅ Smart matching handler")
-except:
+except Exception as e:
     SMART_MATCHING_ENABLED = False
+    logger.error(f"❌ Smart matching handler yuklanishda xatolik: {e}")
 
 try:
     from handlers import interview
     INTERVIEW_ENABLED = True
     logger.info("✅ Interview handler")
-except:
+except Exception as e:
     INTERVIEW_ENABLED = False
+    logger.error(f"❌ Interview handler yuklanishda xatolik: {e}")
 
 
 try:
     from handlers import candidates
     CANDIDATES_ENABLED = True
     logger.info("✅ Candidates handler")
-except:
+except Exception as e:
     CANDIDATES_ENABLED = False
+    logger.error(f"❌ Candidates handler yuklanishda xatolik: {e}")
 
 # Handlerlarni ro'yxatdan o'tkazish (TARTIB MUHIM!)
 logger.info("Handlerlar ro'yxatga olinmoqda...")
