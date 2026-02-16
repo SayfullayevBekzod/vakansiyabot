@@ -1,0 +1,1399 @@
+2026-02-16 21:20:27,818 - telethon.crypto.libssl - INFO - Failed to load SSL library: <class 'OSError'> (no library called "ssl" found)
+2026-02-16 21:20:27,820 - telethon.crypto.aes - INFO - cryptg module not installed and libssl not found, falling back to (slower) Python encryption
+2026-02-16 21:20:28,158 - telegram_scraper - INFO - ✅ Telethon mavjud
+2026-02-16 21:20:28,158 - telegram_scraper - INFO - ✅ Telegram scraper yaratildi
+2026-02-16 21:20:28,159 - handlers.vacancies - INFO - ✅ Telegram scraper import qilindi
+2026-02-16 21:20:28,182 - loader - INFO - ✅ Post vacancy handler
+2026-02-16 21:20:28,186 - loader - INFO - ✅ Favorites handler
+2026-02-16 21:20:28,196 - loader - INFO - ✅ Notifications handler
+2026-02-16 21:20:28,199 - loader - INFO - ✅ Referral handler
+2026-02-16 21:20:28,206 - loader - INFO - ✅ Analytics handler
+2026-02-16 21:20:28,212 - loader - INFO - ✅ Smart matching handler
+2026-02-16 21:20:28,217 - loader - INFO - ✅ Interview handler
+2026-02-16 21:20:28,220 - loader - INFO - ✅ Candidates handler
+2026-02-16 21:20:28,221 - loader - INFO - Handlerlar ro'yxatga olinmoqda...
+2026-02-16 21:20:28,221 - loader - INFO -   ✅ Admin handler
+2026-02-16 21:20:28,221 - loader - INFO -   ✅ Post vacancy handler
+2026-02-16 21:20:28,221 - loader - INFO -   ✅ Favorites handler
+2026-02-16 21:20:28,221 - loader - INFO -   ✅ Notifications handler
+2026-02-16 21:20:28,221 - loader - INFO -   ✅ Referral handler
+2026-02-16 21:20:28,221 - loader - INFO -   ✅ Analytics handler
+2026-02-16 21:20:28,221 - loader - INFO -   ✅ Smart matching handler
+2026-02-16 21:20:28,221 - loader - INFO -   ✅ Interview handler
+2026-02-16 21:20:28,229 - loader - INFO -   ✅ AI Assistant handler
+2026-02-16 21:20:28,229 - loader - INFO -   ✅ Candidates handler
+2026-02-16 21:20:28,229 - loader - INFO -   ✅ Start handler
+2026-02-16 21:20:28,234 - loader - INFO -   ✅ Activity Middleware
+2026-02-16 21:20:28,236 - loader - INFO -   ✅ Premium handler
+2026-02-16 21:20:28,236 - loader - INFO -   ✅ Settings handler
+2026-02-16 21:20:28,236 - loader - INFO -   ✅ Vacancies handler
+2026-02-16 21:20:28,249 - loader - INFO - 
+============================================================
+2026-02-16 21:20:28,249 - loader - INFO - BOT ISHGA TUSHMOQDA...
+2026-02-16 21:20:28,249 - loader - INFO - ============================================================
+2026-02-16 21:20:28,249 - loader - INFO - 1. Database'ga ulanish...
+2026-02-16 21:20:28,274 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.100.64:8080
+2026-02-16 21:20:28,275 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-02-16 21:20:28,921 - database - INFO - ✅ Database pool yaratildi (optimized: min=5, max=20)
+2026-02-16 21:20:28,929 - loader - INFO -    ✅ Database ulanish muvaffaqiyatli
+2026-02-16 21:20:28,929 - loader - INFO - 2. Scheduler ishga tushirish...
+2026-02-16 21:20:28,936 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-16 21:20:28,936 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-16 21:20:28,939 - apscheduler.scheduler - INFO - Added job "auto_scrape_and_notify" to job store "default"
+2026-02-16 21:20:28,940 - apscheduler.scheduler - INFO - Added job "send_daily_digests" to job store "default"
+2026-02-16 21:20:28,941 - apscheduler.scheduler - INFO - Scheduler started
+2026-02-16 21:20:28,941 - loader - INFO -    ✅ Scheduler ishga tushdi (interval: 3600s)
+2026-02-16 21:20:28,941 - loader - INFO - 
+============================================================
+2026-02-16 21:20:28,941 - loader - INFO - FAOL FUNKSIYALAR:
+2026-02-16 21:20:28,942 - loader - INFO - ============================================================
+2026-02-16 21:20:28,942 - loader - INFO - ✅ Admin panel
+2026-02-16 21:20:28,943 - loader - INFO - ✅ Premium boshqaruv
+2026-02-16 21:20:28,943 - loader - INFO - ✅ Vakansiya qidirish (hh.uz)
+2026-02-16 21:20:28,943 - loader - INFO - ✅ Filtrlar va sozlamalar
+2026-02-16 21:20:28,943 - loader - INFO - ✅ Referral sistema
+2026-02-16 21:20:28,943 - loader - INFO - ✅ Parallel processing (OPTIMIZED)
+2026-02-16 21:20:28,943 - loader - INFO - ✅ Vakansiya qo'shish (Premium)
+2026-02-16 21:20:28,943 - loader - INFO - ✅ Telegram scraper (Premium)
+2026-02-16 21:20:28,943 - loader - INFO - ============================================================
+2026-02-16 21:20:28,943 - loader - INFO - 🚀 BOT TAYYOR! OPTIMIZED FOR SCALE
+2026-02-16 21:20:28,943 - loader - INFO - ============================================================
+
+2026-02-16 21:20:30,347 - aiogram.dispatcher - INFO - Start polling
+2026-02-16 21:20:30,454 - aiogram.dispatcher - INFO - Run polling for bot @testvacancysaybot id=8466568265 - 'test_vacancy'
+2026-02-16 21:21:12,619 - aiogram.dispatcher - INFO - Polling stopped
+2026-02-16 21:21:12,620 - loader - INFO - 
+============================================================
+2026-02-16 21:21:12,620 - loader - INFO - BOT TO'XTATILMOQDA...
+2026-02-16 21:21:12,621 - loader - INFO - ============================================================
+2026-02-16 21:21:12,621 - loader - INFO - 1. Scheduler to'xtatish (Kutilmoqda)...
+2026-02-16 21:21:12,621 - loader - INFO -    ✅ Scheduler to'xtatildi
+2026-02-16 21:21:12,621 - loader - INFO - 2. Bot session yopish...
+2026-02-16 21:21:12,622 - apscheduler.scheduler - INFO - Scheduler has been shut down
+2026-02-16 21:21:12,623 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramNetworkError: HTTP Client says - ServerDisconnectedError: Server disconnected
+2026-02-16 21:21:12,623 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8466568265)
+2026-02-16 21:21:12,876 - loader - INFO -    ✅ Bot session yopildi
+2026-02-16 21:21:12,877 - loader - INFO - 3. Database dan uzilish...
+2026-02-16 21:21:13,404 - database - INFO - Database pool yopildi
+2026-02-16 21:21:13,404 - loader - INFO -    ✅ Database uzilish muvaffaqiyatli
+2026-02-16 21:21:13,406 - loader - INFO - ============================================================
+2026-02-16 21:21:13,406 - loader - INFO - 👋 BOT TO'XTATILDI
+2026-02-16 21:21:13,406 - loader - INFO - ============================================================
+
+2026-02-16 21:21:13,406 - aiogram.dispatcher - INFO - Polling stopped for bot @testvacancysaybot id=8466568265 - 'test_vacancy'
+2026-02-16 21:21:13,406 - loader - INFO - 
+⚠️  Bot to'xtatildi (Ctrl+C)
+2026-02-16 21:21:28,031 - telethon.crypto.libssl - INFO - Failed to load SSL library: <class 'OSError'> (no library called "ssl" found)
+2026-02-16 21:21:28,033 - telethon.crypto.aes - INFO - cryptg module not installed and libssl not found, falling back to (slower) Python encryption
+2026-02-16 21:21:28,337 - telegram_scraper - INFO - ✅ Telethon mavjud
+2026-02-16 21:21:28,337 - telegram_scraper - INFO - ✅ Telegram scraper yaratildi
+2026-02-16 21:21:28,337 - handlers.vacancies - INFO - ✅ Telegram scraper import qilindi
+2026-02-16 21:21:28,359 - loader - INFO - ✅ Post vacancy handler
+2026-02-16 21:21:28,367 - loader - INFO - ✅ Favorites handler
+2026-02-16 21:21:28,374 - loader - INFO - ✅ Notifications handler
+2026-02-16 21:21:28,381 - loader - INFO - ✅ Referral handler
+2026-02-16 21:21:28,386 - loader - INFO - ✅ Analytics handler
+2026-02-16 21:21:28,389 - loader - INFO - ✅ Smart matching handler
+2026-02-16 21:21:28,392 - loader - INFO - ✅ Interview handler
+2026-02-16 21:21:28,396 - loader - INFO - ✅ Candidates handler
+2026-02-16 21:21:28,396 - loader - INFO - Handlerlar ro'yxatga olinmoqda...
+2026-02-16 21:21:28,397 - loader - INFO -   ✅ Admin handler
+2026-02-16 21:21:28,397 - loader - INFO -   ✅ Post vacancy handler
+2026-02-16 21:21:28,398 - loader - INFO -   ✅ Favorites handler
+2026-02-16 21:21:28,398 - loader - INFO -   ✅ Notifications handler
+2026-02-16 21:21:28,399 - loader - INFO -   ✅ Referral handler
+2026-02-16 21:21:28,399 - loader - INFO -   ✅ Analytics handler
+2026-02-16 21:21:28,400 - loader - INFO -   ✅ Smart matching handler
+2026-02-16 21:21:28,400 - loader - INFO -   ✅ Interview handler
+2026-02-16 21:21:28,406 - loader - INFO -   ✅ AI Assistant handler
+2026-02-16 21:21:28,406 - loader - INFO -   ✅ Candidates handler
+2026-02-16 21:21:28,406 - loader - INFO -   ✅ Start handler
+2026-02-16 21:21:28,409 - loader - INFO -   ✅ Activity Middleware
+2026-02-16 21:21:28,410 - loader - INFO -   ✅ Premium handler
+2026-02-16 21:21:28,412 - loader - INFO -   ✅ Settings handler
+2026-02-16 21:21:28,413 - loader - INFO -   ✅ Vacancies handler
+2026-02-16 21:21:28,426 - loader - INFO - 
+============================================================
+2026-02-16 21:21:28,428 - loader - INFO - BOT ISHGA TUSHMOQDA...
+2026-02-16 21:21:28,429 - loader - INFO - ============================================================
+2026-02-16 21:21:28,430 - loader - INFO - 1. Database'ga ulanish...
+2026-02-16 21:21:28,451 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.100.64:8080
+2026-02-16 21:21:28,452 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-02-16 21:21:28,972 - database - INFO - ✅ Database pool yaratildi (optimized: min=5, max=20)
+2026-02-16 21:21:28,982 - loader - INFO -    ✅ Database ulanish muvaffaqiyatli
+2026-02-16 21:21:28,982 - loader - INFO - 2. Scheduler ishga tushirish...
+2026-02-16 21:21:28,984 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-16 21:21:28,984 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-16 21:21:28,987 - apscheduler.scheduler - INFO - Added job "auto_scrape_and_notify" to job store "default"
+2026-02-16 21:21:28,987 - apscheduler.scheduler - INFO - Added job "send_daily_digests" to job store "default"
+2026-02-16 21:21:28,988 - apscheduler.scheduler - INFO - Scheduler started
+2026-02-16 21:21:28,988 - loader - INFO -    ✅ Scheduler ishga tushdi (interval: 3600s)
+2026-02-16 21:21:28,988 - loader - INFO - 
+============================================================
+2026-02-16 21:21:28,988 - loader - INFO - FAOL FUNKSIYALAR:
+2026-02-16 21:21:28,989 - loader - INFO - ============================================================
+2026-02-16 21:21:28,989 - loader - INFO - ✅ Admin panel
+2026-02-16 21:21:28,989 - loader - INFO - ✅ Premium boshqaruv
+2026-02-16 21:21:28,991 - loader - INFO - ✅ Vakansiya qidirish (hh.uz)
+2026-02-16 21:21:28,991 - loader - INFO - ✅ Filtrlar va sozlamalar
+2026-02-16 21:21:28,991 - loader - INFO - ✅ Referral sistema
+2026-02-16 21:21:28,991 - loader - INFO - ✅ Parallel processing (OPTIMIZED)
+2026-02-16 21:21:28,991 - loader - INFO - ✅ Vakansiya qo'shish (Premium)
+2026-02-16 21:21:28,992 - loader - INFO - ✅ Telegram scraper (Premium)
+2026-02-16 21:21:28,993 - loader - INFO - ============================================================
+2026-02-16 21:21:28,994 - loader - INFO - 🚀 BOT TAYYOR! OPTIMIZED FOR SCALE
+2026-02-16 21:21:28,994 - loader - INFO - ============================================================
+
+2026-02-16 21:21:30,423 - aiogram.dispatcher - INFO - Start polling
+2026-02-16 21:21:30,525 - aiogram.dispatcher - INFO - Run polling for bot @testvacancysaybot id=8466568265 - 'test_vacancy'
+2026-02-16 21:22:13,011 - aiogram.event - INFO - Update id=513367030 is handled. Duration 610 ms by bot id=8466568265
+2026-02-16 21:22:14,783 - aiogram.event - INFO - Update id=513367031 is handled. Duration 420 ms by bot id=8466568265
+2026-02-16 21:22:16,043 - aiogram.event - INFO - Update id=513367032 is handled. Duration 468 ms by bot id=8466568265
+2026-02-16 21:22:17,416 - aiogram.event - INFO - Update id=513367033 is handled. Duration 141 ms by bot id=8466568265
+2026-02-16 21:22:19,158 - handlers.vacancies - INFO - [SEARCH] User 1258119183: keywords=['python'], locations=['Tashkent'], sources=['hh_uz', 'user_post', 'telegram']
+2026-02-16 21:22:19,163 - handlers.vacancies - INFO - [SEARCH] Fetching user-posted vacancies...
+2026-02-16 21:22:19,166 - scraper_api - INFO - Qidiruv boshlandi: keywords='python', area=Tashkent (2759), pages=5
+2026-02-16 21:22:19,167 - handlers.vacancies - INFO - [SEARCH] Fetching Telegram vacancies from DB...
+2026-02-16 21:22:19,168 - handlers.vacancies - INFO - [SEARCH] Fetching from UzJobs...
+2026-02-16 21:22:19,169 - scraper_api - INFO - API request: page=0
+2026-02-16 21:22:19,172 - scraper_api - INFO - API request: page=1
+2026-02-16 21:22:19,174 - scraper_api - INFO - API request: page=2
+2026-02-16 21:22:19,175 - scraper_api - INFO - API request: page=3
+2026-02-16 21:22:19,175 - scraper_api - INFO - API request: page=4
+2026-02-16 21:22:34,176 - handlers.vacancies - WARNING - [SEARCH] hh.uz timed out after 15s
+2026-02-16 21:22:39,186 - handlers.vacancies - WARNING - [SEARCH] UzJobs timed out after 20s
+2026-02-16 21:22:40,084 - aiogram.event - INFO - Update id=513367034 is not handled. Duration 21218 ms by bot id=8466568265
+2026-02-16 21:22:40,084 - aiogram.event - ERROR - Cause exception while process update id=513367034 by bot id=8466568265
+TelegramBadRequest: Telegram server says - Bad Request: query is too old and response timeout expired or query ID is invalid
+Traceback (most recent call last):
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 320, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 164, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 27, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 58, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\fsm\middleware.py", line 43, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 283, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 189, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 181, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Work\vakansiya\utils\middleware.py", line 24, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Work\vakansiya\handlers\vacancies.py", line 196, in trigger_vacancies_search
+    await callback.answer()
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\methods\base.py", line 82, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\bot.py", line 484, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\aiohttp.py", line 177, in make_request
+    response = self.check_response(
+               ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\base.py", line 121, in check_response
+    raise TelegramBadRequest(method=method, message=description)
+aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-02-16 21:24:42,128 - telethon.crypto.libssl - INFO - Failed to load SSL library: <class 'OSError'> (no library called "ssl" found)
+2026-02-16 21:24:42,130 - telethon.crypto.aes - INFO - cryptg module not installed and libssl not found, falling back to (slower) Python encryption
+2026-02-16 21:24:42,498 - telegram_scraper - INFO - ✅ Telethon mavjud
+2026-02-16 21:24:42,499 - telegram_scraper - INFO - ✅ Telegram scraper yaratildi
+2026-02-16 21:24:42,500 - handlers.vacancies - INFO - ✅ Telegram scraper import qilindi
+2026-02-16 21:24:42,526 - loader - INFO - ✅ Post vacancy handler
+2026-02-16 21:24:42,533 - loader - INFO - ✅ Favorites handler
+2026-02-16 21:24:42,538 - loader - INFO - ✅ Notifications handler
+2026-02-16 21:24:42,543 - loader - INFO - ✅ Referral handler
+2026-02-16 21:24:42,548 - loader - INFO - ✅ Analytics handler
+2026-02-16 21:24:42,554 - loader - INFO - ✅ Smart matching handler
+2026-02-16 21:24:42,560 - loader - INFO - ✅ Interview handler
+2026-02-16 21:24:42,564 - loader - INFO - ✅ Candidates handler
+2026-02-16 21:24:42,564 - loader - INFO - Handlerlar ro'yxatga olinmoqda...
+2026-02-16 21:24:42,566 - loader - INFO -   ✅ Admin handler
+2026-02-16 21:24:42,566 - loader - INFO -   ✅ Post vacancy handler
+2026-02-16 21:24:42,567 - loader - INFO -   ✅ Favorites handler
+2026-02-16 21:24:42,567 - loader - INFO -   ✅ Notifications handler
+2026-02-16 21:24:42,568 - loader - INFO -   ✅ Referral handler
+2026-02-16 21:24:42,568 - loader - INFO -   ✅ Analytics handler
+2026-02-16 21:24:42,568 - loader - INFO -   ✅ Smart matching handler
+2026-02-16 21:24:42,568 - loader - INFO -   ✅ Interview handler
+2026-02-16 21:24:42,574 - loader - INFO -   ✅ AI Assistant handler
+2026-02-16 21:24:42,575 - loader - INFO -   ✅ Candidates handler
+2026-02-16 21:24:42,576 - loader - INFO -   ✅ Start handler
+2026-02-16 21:24:42,579 - loader - INFO -   ✅ Activity Middleware
+2026-02-16 21:24:42,579 - loader - INFO -   ✅ Premium handler
+2026-02-16 21:24:42,580 - loader - INFO -   ✅ Settings handler
+2026-02-16 21:24:42,580 - loader - INFO -   ✅ Vacancies handler
+2026-02-16 21:24:42,594 - loader - INFO - 
+============================================================
+2026-02-16 21:24:42,595 - loader - INFO - BOT ISHGA TUSHMOQDA...
+2026-02-16 21:24:42,596 - loader - INFO - ============================================================
+2026-02-16 21:24:42,596 - loader - INFO - 1. Database'ga ulanish...
+2026-02-16 21:24:42,630 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.100.64:8080
+2026-02-16 21:24:42,631 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-02-16 21:24:43,222 - database - INFO - ✅ Database pool yaratildi (optimized: min=5, max=20)
+2026-02-16 21:24:43,235 - loader - INFO -    ✅ Database ulanish muvaffaqiyatli
+2026-02-16 21:24:43,235 - loader - INFO - 2. Scheduler ishga tushirish...
+2026-02-16 21:24:43,239 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-16 21:24:43,240 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-16 21:24:43,243 - apscheduler.scheduler - INFO - Added job "auto_scrape_and_notify" to job store "default"
+2026-02-16 21:24:43,244 - apscheduler.scheduler - INFO - Added job "send_daily_digests" to job store "default"
+2026-02-16 21:24:43,244 - apscheduler.scheduler - INFO - Scheduler started
+2026-02-16 21:24:43,245 - loader - INFO -    ✅ Scheduler ishga tushdi (interval: 3600s)
+2026-02-16 21:24:43,246 - loader - INFO - 
+============================================================
+2026-02-16 21:24:43,246 - loader - INFO - FAOL FUNKSIYALAR:
+2026-02-16 21:24:43,247 - loader - INFO - ============================================================
+2026-02-16 21:24:43,247 - loader - INFO - ✅ Admin panel
+2026-02-16 21:24:43,248 - loader - INFO - ✅ Premium boshqaruv
+2026-02-16 21:24:43,248 - loader - INFO - ✅ Vakansiya qidirish (hh.uz)
+2026-02-16 21:24:43,249 - loader - INFO - ✅ Filtrlar va sozlamalar
+2026-02-16 21:24:43,250 - loader - INFO - ✅ Referral sistema
+2026-02-16 21:24:43,251 - loader - INFO - ✅ Parallel processing (OPTIMIZED)
+2026-02-16 21:24:43,252 - loader - INFO - ✅ Vakansiya qo'shish (Premium)
+2026-02-16 21:24:43,252 - loader - INFO - ✅ Telegram scraper (Premium)
+2026-02-16 21:24:43,252 - loader - INFO - ============================================================
+2026-02-16 21:24:43,253 - loader - INFO - 🚀 BOT TAYYOR! OPTIMIZED FOR SCALE
+2026-02-16 21:24:43,253 - loader - INFO - ============================================================
+
+2026-02-16 21:24:44,702 - aiogram.dispatcher - INFO - Start polling
+2026-02-16 21:24:44,821 - aiogram.dispatcher - INFO - Run polling for bot @testvacancysaybot id=8466568265 - 'test_vacancy'
+2026-02-16 21:24:54,984 - aiogram.event - INFO - Update id=513367035 is handled. Duration 938 ms by bot id=8466568265
+2026-02-16 21:24:56,923 - aiogram.event - INFO - Update id=513367036 is handled. Duration 686 ms by bot id=8466568265
+2026-02-16 21:24:58,069 - aiogram.event - INFO - Update id=513367037 is handled. Duration 422 ms by bot id=8466568265
+2026-02-16 21:25:00,347 - aiogram.event - INFO - Update id=513367038 is handled. Duration 156 ms by bot id=8466568265
+2026-02-16 21:25:02,530 - handlers.vacancies - INFO - [SEARCH] User 1258119183: keywords=['python'], locations=['Tashkent'], sources=['hh_uz', 'user_post', 'telegram']
+2026-02-16 21:25:02,530 - handlers.vacancies - INFO - [SEARCH] Fetching user-posted vacancies...
+2026-02-16 21:25:02,531 - scraper_api - INFO - Qidiruv boshlandi: keywords='python', area=Tashkent (2759), pages=5
+2026-02-16 21:25:02,533 - handlers.vacancies - INFO - [SEARCH] Fetching Telegram vacancies from DB...
+2026-02-16 21:25:02,533 - handlers.vacancies - INFO - [SEARCH] Fetching from UzJobs...
+2026-02-16 21:25:02,536 - scraper_api - INFO - API request: page=0
+2026-02-16 21:25:02,539 - scraper_api - INFO - API request: page=1
+2026-02-16 21:25:02,541 - scraper_api - INFO - API request: page=2
+2026-02-16 21:25:02,542 - scraper_api - INFO - API request: page=3
+2026-02-16 21:25:02,542 - scraper_api - INFO - API request: page=4
+2026-02-16 21:25:17,537 - handlers.vacancies - WARNING - [SEARCH] hh.uz timed out after 15s
+2026-02-16 21:25:22,522 - handlers.vacancies - WARNING - [SEARCH] UzJobs timed out after 20s
+2026-02-16 21:25:23,133 - aiogram.event - INFO - Update id=513367039 is not handled. Duration 20891 ms by bot id=8466568265
+2026-02-16 21:25:23,134 - aiogram.event - ERROR - Cause exception while process update id=513367039 by bot id=8466568265
+TelegramBadRequest: Telegram server says - Bad Request: query is too old and response timeout expired or query ID is invalid
+Traceback (most recent call last):
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 320, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 164, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 27, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 58, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\fsm\middleware.py", line 43, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 283, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 189, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 181, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Work\vakansiya\utils\middleware.py", line 24, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Work\vakansiya\handlers\vacancies.py", line 196, in trigger_vacancies_search
+    await callback.answer()
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\methods\base.py", line 82, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\bot.py", line 484, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\aiohttp.py", line 177, in make_request
+    response = self.check_response(
+               ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\base.py", line 121, in check_response
+    raise TelegramBadRequest(method=method, message=description)
+aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-02-16 21:26:52,971 - aiogram.event - INFO - Update id=513367040 is handled. Duration 625 ms by bot id=8466568265
+2026-02-16 21:26:55,084 - handlers.vacancies - INFO - [SEARCH] Cache hit for python_Tashkent_hh_uz+telegram+user_post
+2026-02-16 21:26:55,621 - aiogram.event - INFO - Update id=513367041 is handled. Duration 1140 ms by bot id=8466568265
+2026-02-16 21:33:13,404 - aiogram.event - INFO - Update id=513367042 is handled. Duration 2827 ms by bot id=8466568265
+2026-02-16 21:33:18,027 - handlers.vacancies - INFO - [SEARCH] User 1258119183: keywords=['python'], locations=['Tashkent'], sources=['hh_uz', 'user_post', 'telegram']
+2026-02-16 21:33:18,027 - handlers.vacancies - INFO - [SEARCH] Fetching user-posted vacancies...
+2026-02-16 21:33:18,027 - scraper_api - INFO - Qidiruv boshlandi: keywords='python', area=Tashkent (2759), pages=5
+2026-02-16 21:33:18,029 - handlers.vacancies - INFO - [SEARCH] Fetching Telegram vacancies from DB...
+2026-02-16 21:33:18,030 - handlers.vacancies - INFO - [SEARCH] Fetching from UzJobs...
+2026-02-16 21:33:18,030 - scraper_api - INFO - API request: page=0
+2026-02-16 21:33:18,032 - scraper_api - INFO - API request: page=1
+2026-02-16 21:33:18,032 - scraper_api - INFO - API request: page=2
+2026-02-16 21:33:18,037 - scraper_api - INFO - API request: page=3
+2026-02-16 21:33:18,039 - scraper_api - INFO - API request: page=4
+2026-02-16 21:33:33,030 - handlers.vacancies - WARNING - [SEARCH] hh.uz timed out after 15s
+2026-02-16 21:33:38,039 - handlers.vacancies - WARNING - [SEARCH] UzJobs timed out after 20s
+2026-02-16 21:33:38,953 - aiogram.event - INFO - Update id=513367043 is not handled. Duration 21233 ms by bot id=8466568265
+2026-02-16 21:33:38,953 - aiogram.event - ERROR - Cause exception while process update id=513367043 by bot id=8466568265
+TelegramBadRequest: Telegram server says - Bad Request: query is too old and response timeout expired or query ID is invalid
+Traceback (most recent call last):
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 320, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 164, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 27, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 58, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\fsm\middleware.py", line 43, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 283, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 189, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 181, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Work\vakansiya\utils\middleware.py", line 24, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Work\vakansiya\handlers\vacancies.py", line 196, in trigger_vacancies_search
+    await callback.answer()
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\methods\base.py", line 82, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\bot.py", line 484, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\aiohttp.py", line 177, in make_request
+    response = self.check_response(
+               ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\base.py", line 121, in check_response
+    raise TelegramBadRequest(method=method, message=description)
+aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-02-16 21:35:03,101 - aiogram.event - INFO - Update id=513367044 is handled. Duration 375 ms by bot id=8466568265
+2026-02-16 21:35:04,391 - handlers.vacancies - INFO - [SEARCH] Cache hit for python_Tashkent_hh_uz+telegram+user_post
+2026-02-16 21:35:04,836 - aiogram.event - INFO - Update id=513367045 is handled. Duration 750 ms by bot id=8466568265
+2026-02-16 21:37:41,500 - aiogram.event - INFO - Update id=513367046 is handled. Duration 3250 ms by bot id=8466568265
+2026-02-16 21:37:42,071 - handlers.vacancies - INFO - [SEARCH] Cache hit for python_Tashkent_hh_uz+telegram+user_post
+2026-02-16 21:37:42,781 - aiogram.event - INFO - Update id=513367047 is handled. Duration 1139 ms by bot id=8466568265
+2026-02-16 21:39:43,260 - apscheduler.executors.default - INFO - Running job "send_daily_digests (trigger: interval[0:15:00], next run at: 2026-02-16 21:54:43 +05)" (scheduled at 2026-02-16 21:39:43.240337+05:00)
+2026-02-16 21:39:43,262 - handlers.notifications - INFO - 📅 Kunlik xulosalar yuborish boshlandi...
+2026-02-16 21:39:43,724 - database - ERROR - get_users_for_digest error: column ns.last_digest_sent does not exist
+2026-02-16 21:39:43,724 - handlers.notifications - INFO -    Hozircha yuboriladigan xulosa yo'q
+2026-02-16 21:39:43,725 - apscheduler.executors.default - INFO - Job "send_daily_digests (trigger: interval[0:15:00], next run at: 2026-02-16 21:54:43 +05)" executed successfully
+2026-02-16 21:43:20,722 - aiogram.event - INFO - Update id=513367048 is handled. Duration 516 ms by bot id=8466568265
+2026-02-16 21:43:21,958 - handlers.vacancies - INFO - [SEARCH] User 1258119183: keywords=['python'], locations=['Tashkent'], sources=['hh_uz', 'user_post', 'telegram']
+2026-02-16 21:43:21,958 - handlers.vacancies - INFO - [SEARCH] Fetching user-posted vacancies...
+2026-02-16 21:43:21,963 - scraper_api - INFO - Qidiruv boshlandi: keywords='python', area=Tashkent (2759), pages=5
+2026-02-16 21:43:21,963 - handlers.vacancies - INFO - [SEARCH] Fetching Telegram vacancies from DB...
+2026-02-16 21:43:21,966 - handlers.vacancies - INFO - [SEARCH] Fetching from UzJobs...
+2026-02-16 21:43:21,968 - scraper_api - INFO - API request: page=0
+2026-02-16 21:43:21,969 - scraper_api - INFO - API request: page=1
+2026-02-16 21:43:21,971 - scraper_api - INFO - API request: page=2
+2026-02-16 21:43:21,971 - scraper_api - INFO - API request: page=3
+2026-02-16 21:43:21,973 - scraper_api - INFO - API request: page=4
+2026-02-16 21:43:36,982 - handlers.vacancies - WARNING - [SEARCH] hh.uz timed out after 15s
+2026-02-16 21:43:41,977 - handlers.vacancies - WARNING - [SEARCH] UzJobs timed out after 20s
+2026-02-16 21:43:42,836 - aiogram.event - INFO - Update id=513367049 is not handled. Duration 21172 ms by bot id=8466568265
+2026-02-16 21:43:42,836 - aiogram.event - ERROR - Cause exception while process update id=513367049 by bot id=8466568265
+TelegramBadRequest: Telegram server says - Bad Request: query is too old and response timeout expired or query ID is invalid
+Traceback (most recent call last):
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 320, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 164, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 27, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 58, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\fsm\middleware.py", line 43, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 283, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 189, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 181, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Work\vakansiya\utils\middleware.py", line 24, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Work\vakansiya\handlers\vacancies.py", line 196, in trigger_vacancies_search
+    await callback.answer()
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\methods\base.py", line 82, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\bot.py", line 484, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\aiohttp.py", line 177, in make_request
+    response = self.check_response(
+               ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\base.py", line 121, in check_response
+    raise TelegramBadRequest(method=method, message=description)
+aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-02-16 21:44:29,170 - aiogram.event - INFO - Update id=513367050 is handled. Duration 1296 ms by bot id=8466568265
+2026-02-16 21:44:30,933 - aiogram.event - INFO - Update id=513367051 is handled. Duration 484 ms by bot id=8466568265
+2026-02-16 21:44:32,410 - aiogram.event - INFO - Update id=513367052 is handled. Duration 452 ms by bot id=8466568265
+2026-02-16 21:44:34,284 - aiogram.event - INFO - Update id=513367053 is handled. Duration 202 ms by bot id=8466568265
+2026-02-16 21:44:35,624 - handlers.vacancies - INFO - [SEARCH] Cache hit for python_Tashkent_hh_uz+telegram+user_post
+2026-02-16 21:44:35,969 - aiogram.event - INFO - Update id=513367054 is handled. Duration 672 ms by bot id=8466568265
+2026-02-16 21:46:27,578 - telethon.crypto.libssl - INFO - Failed to load SSL library: <class 'OSError'> (no library called "ssl" found)
+2026-02-16 21:46:27,578 - telethon.crypto.aes - INFO - cryptg module not installed and libssl not found, falling back to (slower) Python encryption
+2026-02-16 21:46:27,693 - telegram_scraper - INFO - ✅ Telethon mavjud
+2026-02-16 21:46:27,693 - telegram_scraper - INFO - ✅ Telegram scraper yaratildi
+2026-02-16 21:46:27,693 - handlers.vacancies - INFO - ✅ Telegram scraper import qilindi
+2026-02-16 21:46:27,705 - loader - INFO - ✅ Post vacancy handler
+2026-02-16 21:46:27,708 - loader - INFO - ✅ Favorites handler
+2026-02-16 21:46:27,709 - loader - INFO - ✅ Notifications handler
+2026-02-16 21:46:27,709 - loader - INFO - ✅ Referral handler
+2026-02-16 21:46:27,715 - loader - INFO - ✅ Analytics handler
+2026-02-16 21:46:27,717 - loader - INFO - ✅ Smart matching handler
+2026-02-16 21:46:27,719 - loader - INFO - ✅ Interview handler
+2026-02-16 21:46:27,721 - loader - INFO - ✅ Candidates handler
+2026-02-16 21:46:27,721 - loader - INFO - Handlerlar ro'yxatga olinmoqda...
+2026-02-16 21:46:27,721 - loader - INFO -   ✅ Admin handler
+2026-02-16 21:46:27,721 - loader - INFO -   ✅ Post vacancy handler
+2026-02-16 21:46:27,721 - loader - INFO -   ✅ Favorites handler
+2026-02-16 21:46:27,721 - loader - INFO -   ✅ Notifications handler
+2026-02-16 21:46:27,721 - loader - INFO -   ✅ Referral handler
+2026-02-16 21:46:27,721 - loader - INFO -   ✅ Analytics handler
+2026-02-16 21:46:27,721 - loader - INFO -   ✅ Smart matching handler
+2026-02-16 21:46:27,721 - loader - INFO -   ✅ Interview handler
+2026-02-16 21:46:27,725 - loader - INFO -   ✅ AI Assistant handler
+2026-02-16 21:46:27,725 - loader - INFO -   ✅ Candidates handler
+2026-02-16 21:46:27,725 - loader - INFO -   ✅ Start handler
+2026-02-16 21:46:27,725 - loader - INFO -   ✅ Activity Middleware
+2026-02-16 21:46:27,725 - loader - INFO -   ✅ Premium handler
+2026-02-16 21:46:27,729 - loader - INFO -   ✅ Settings handler
+2026-02-16 21:46:27,729 - loader - INFO -   ✅ Vacancies handler
+2026-02-16 21:46:27,733 - loader - INFO - 
+============================================================
+2026-02-16 21:46:27,735 - loader - INFO - BOT ISHGA TUSHMOQDA...
+2026-02-16 21:46:27,735 - loader - INFO - ============================================================
+2026-02-16 21:46:27,736 - loader - INFO - 1. Database'ga ulanish...
+2026-02-16 21:46:27,748 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.100.64:8080
+2026-02-16 21:46:27,748 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-02-16 21:46:27,968 - database - INFO - ✅ Database pool yaratildi (optimized: min=5, max=20)
+2026-02-16 21:46:27,975 - loader - INFO -    ✅ Database ulanish muvaffaqiyatli
+2026-02-16 21:46:27,975 - loader - INFO - 2. Scheduler ishga tushirish...
+2026-02-16 21:46:27,975 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-16 21:46:27,975 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-16 21:46:27,979 - apscheduler.scheduler - INFO - Added job "auto_scrape_and_notify" to job store "default"
+2026-02-16 21:46:27,979 - apscheduler.scheduler - INFO - Added job "send_daily_digests" to job store "default"
+2026-02-16 21:46:27,980 - apscheduler.scheduler - INFO - Scheduler started
+2026-02-16 21:46:27,980 - loader - INFO -    ✅ Scheduler ishga tushdi (interval: 3600s)
+2026-02-16 21:46:27,980 - loader - INFO - 
+============================================================
+2026-02-16 21:46:27,980 - loader - INFO - FAOL FUNKSIYALAR:
+2026-02-16 21:46:27,980 - loader - INFO - ============================================================
+2026-02-16 21:46:27,981 - loader - INFO - ✅ Admin panel
+2026-02-16 21:46:27,981 - loader - INFO - ✅ Premium boshqaruv
+2026-02-16 21:46:27,981 - loader - INFO - ✅ Vakansiya qidirish (hh.uz)
+2026-02-16 21:46:27,981 - loader - INFO - ✅ Filtrlar va sozlamalar
+2026-02-16 21:46:27,981 - loader - INFO - ✅ Referral sistema
+2026-02-16 21:46:27,981 - loader - INFO - ✅ Parallel processing (OPTIMIZED)
+2026-02-16 21:46:27,981 - loader - INFO - ✅ Vakansiya qo'shish (Premium)
+2026-02-16 21:46:27,981 - loader - INFO - ✅ Telegram scraper (Premium)
+2026-02-16 21:46:27,981 - loader - INFO - ============================================================
+2026-02-16 21:46:27,981 - loader - INFO - 🚀 BOT TAYYOR! OPTIMIZED FOR SCALE
+2026-02-16 21:46:27,981 - loader - INFO - ============================================================
+
+2026-02-16 21:46:29,390 - aiogram.dispatcher - INFO - Start polling
+2026-02-16 21:46:29,489 - aiogram.dispatcher - INFO - Run polling for bot @testvacancysaybot id=8466568265 - 'test_vacancy'
+2026-02-16 21:46:33,716 - aiogram.event - INFO - Update id=513367055 is handled. Duration 858 ms by bot id=8466568265
+2026-02-16 21:46:35,022 - handlers.vacancies - INFO - [SEARCH] User 1258119183: keywords=['python'], locations=['Tashkent'], sources=['hh_uz', 'user_post', 'telegram']
+2026-02-16 21:46:35,022 - handlers.vacancies - INFO - [SEARCH] Fetching user-posted vacancies...
+2026-02-16 21:46:35,022 - scraper_api - INFO - Qidiruv boshlandi: keywords='python', area=Tashkent (2759), pages=5
+2026-02-16 21:46:35,022 - handlers.vacancies - INFO - [SEARCH] Fetching Telegram vacancies from DB...
+2026-02-16 21:46:35,025 - handlers.vacancies - INFO - [SEARCH] Fetching from UzJobs...
+2026-02-16 21:46:35,025 - scraper_api - INFO - API request: page=0
+2026-02-16 21:46:35,027 - scraper_api - INFO - API request: page=1
+2026-02-16 21:46:35,029 - scraper_api - INFO - API request: page=2
+2026-02-16 21:46:35,029 - scraper_api - INFO - API request: page=3
+2026-02-16 21:46:35,031 - scraper_api - INFO - API request: page=4
+2026-02-16 21:46:56,074 - uzjobs_scraper - ERROR - UzJobs scraper error (attempt 1): Cannot connect to host uzjobs.com:443 ssl:default [Превышен таймаут семафора]
+2026-02-16 21:46:56,176 - scraper_api - ERROR - API request xatolik (page 4): Cannot connect to host api.hh.uz:443 ssl:default [Превышен таймаут семафора]
+2026-02-16 21:46:56,179 - scraper_api - ERROR - API request xatolik (page 3): Cannot connect to host api.hh.uz:443 ssl:default [Превышен таймаут семафора]
+2026-02-16 21:46:56,180 - scraper_api - ERROR - API request xatolik (page 2): Cannot connect to host api.hh.uz:443 ssl:default [Превышен таймаут семафора]
+2026-02-16 21:46:56,180 - scraper_api - ERROR - API request xatolik (page 1): Cannot connect to host api.hh.uz:443 ssl:default [Превышен таймаут семафора]
+2026-02-16 21:46:56,180 - scraper_api - ERROR - API request xatolik (page 0): Cannot connect to host api.hh.uz:443 ssl:default [Превышен таймаут семафора]
+2026-02-16 21:46:56,180 - scraper_api - INFO - ✅ Jami 0 ta vakansiya topildi va parse qilindi
+2026-02-16 21:47:05,032 - handlers.vacancies - WARNING - [SEARCH] UzJobs timed out after 30s
+2026-02-16 21:47:05,689 - aiogram.event - INFO - Update id=513367056 is not handled. Duration 31032 ms by bot id=8466568265
+2026-02-16 21:47:05,700 - aiogram.event - ERROR - Cause exception while process update id=513367056 by bot id=8466568265
+TelegramBadRequest: Telegram server says - Bad Request: query is too old and response timeout expired or query ID is invalid
+Traceback (most recent call last):
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 320, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 164, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 27, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 58, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\fsm\middleware.py", line 43, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 283, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 189, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 181, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Work\vakansiya\utils\middleware.py", line 24, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Work\vakansiya\handlers\vacancies.py", line 196, in trigger_vacancies_search
+    await callback.answer()
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\methods\base.py", line 82, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\bot.py", line 484, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\aiohttp.py", line 177, in make_request
+    response = self.check_response(
+               ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\base.py", line 121, in check_response
+    raise TelegramBadRequest(method=method, message=description)
+aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-02-16 21:47:12,593 - handlers.settings - INFO - Settings opened by user 1258119183
+2026-02-16 21:47:12,725 - aiogram.event - INFO - Update id=513367057 is handled. Duration 172 ms by bot id=8466568265
+2026-02-16 21:47:14,690 - aiogram.event - INFO - Update id=513367058 is handled. Duration 468 ms by bot id=8466568265
+2026-02-16 21:47:17,193 - aiogram.event - INFO - Update id=513367059 is handled. Duration 327 ms by bot id=8466568265
+2026-02-16 21:47:18,682 - aiogram.event - INFO - Update id=513367060 is handled. Duration 296 ms by bot id=8466568265
+2026-02-16 21:47:22,583 - aiogram.event - INFO - Update id=513367061 is handled. Duration 766 ms by bot id=8466568265
+2026-02-16 21:47:24,457 - aiogram.event - INFO - Update id=513367062 is handled. Duration 547 ms by bot id=8466568265
+2026-02-16 21:47:27,494 - aiogram.event - INFO - Update id=513367063 is handled. Duration 172 ms by bot id=8466568265
+2026-02-16 21:47:30,125 - aiogram.event - INFO - Update id=513367064 is handled. Duration 140 ms by bot id=8466568265
+2026-02-16 21:47:32,319 - aiogram.event - INFO - Update id=513367065 is handled. Duration 467 ms by bot id=8466568265
+2026-02-16 21:47:33,887 - aiogram.event - INFO - Update id=513367066 is handled. Duration 391 ms by bot id=8466568265
+2026-02-16 21:47:35,566 - aiogram.event - INFO - Update id=513367067 is handled. Duration 296 ms by bot id=8466568265
+2026-02-16 21:47:37,070 - aiogram.event - INFO - Update id=513367068 is handled. Duration 281 ms by bot id=8466568265
+2026-02-16 21:47:39,052 - aiogram.event - INFO - Update id=513367069 is handled. Duration 157 ms by bot id=8466568265
+2026-02-16 21:47:40,398 - handlers.vacancies - INFO - [SEARCH] User 1258119183: keywords=['python'], locations=['Toshkent'], sources=['hh_uz', 'user_post', 'telegram']
+2026-02-16 21:47:40,401 - handlers.vacancies - INFO - [SEARCH] Fetching user-posted vacancies...
+2026-02-16 21:47:40,402 - scraper_api - INFO - Qidiruv boshlandi: keywords='python', area=Toshkent (2759), pages=5
+2026-02-16 21:47:40,407 - handlers.vacancies - INFO - [SEARCH] Fetching Telegram vacancies from DB...
+2026-02-16 21:47:40,407 - handlers.vacancies - INFO - [SEARCH] Fetching from UzJobs...
+2026-02-16 21:47:40,409 - scraper_api - INFO - API request: page=0
+2026-02-16 21:47:40,409 - scraper_api - INFO - API request: page=1
+2026-02-16 21:47:40,412 - scraper_api - INFO - API request: page=2
+2026-02-16 21:47:40,412 - scraper_api - INFO - API request: page=3
+2026-02-16 21:47:40,415 - scraper_api - INFO - API request: page=4
+2026-02-16 21:48:01,463 - scraper_api - ERROR - API request xatolik (page 1): Cannot connect to host api.hh.uz:443 ssl:default [Превышен таймаут семафора]
+2026-02-16 21:48:01,465 - scraper_api - ERROR - API request xatolik (page 2): Cannot connect to host api.hh.uz:443 ssl:default [Превышен таймаут семафора]
+2026-02-16 21:48:01,465 - scraper_api - ERROR - API request xatolik (page 3): Cannot connect to host api.hh.uz:443 ssl:default [Превышен таймаут семафора]
+2026-02-16 21:48:01,466 - scraper_api - ERROR - API request xatolik (page 4): Cannot connect to host api.hh.uz:443 ssl:default [Превышен таймаут семафора]
+2026-02-16 21:48:01,468 - scraper_api - ERROR - API request xatolik (page 0): Cannot connect to host api.hh.uz:443 ssl:default [Превышен таймаут семафора]
+2026-02-16 21:48:01,469 - uzjobs_scraper - ERROR - UzJobs scraper error (attempt 1): Cannot connect to host uzjobs.com:443 ssl:default [Превышен таймаут семафора]
+2026-02-16 21:48:01,470 - scraper_api - INFO - ✅ Jami 0 ta vakansiya topildi va parse qilindi
+2026-02-16 21:48:10,413 - handlers.vacancies - WARNING - [SEARCH] UzJobs timed out after 30s
+2026-02-16 21:48:11,382 - aiogram.event - INFO - Update id=513367070 is not handled. Duration 31297 ms by bot id=8466568265
+2026-02-16 21:48:11,384 - aiogram.event - ERROR - Cause exception while process update id=513367070 by bot id=8466568265
+TelegramBadRequest: Telegram server says - Bad Request: query is too old and response timeout expired or query ID is invalid
+Traceback (most recent call last):
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 320, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 164, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 27, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 58, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\fsm\middleware.py", line 43, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 283, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 189, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 181, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Work\vakansiya\utils\middleware.py", line 24, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Work\vakansiya\handlers\vacancies.py", line 196, in trigger_vacancies_search
+    await callback.answer()
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\methods\base.py", line 82, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\bot.py", line 484, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\aiohttp.py", line 177, in make_request
+    response = self.check_response(
+               ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\base.py", line 121, in check_response
+    raise TelegramBadRequest(method=method, message=description)
+aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-02-16 21:50:47,450 - telethon.crypto.libssl - INFO - Failed to load SSL library: <class 'OSError'> (no library called "ssl" found)
+2026-02-16 21:50:47,458 - telethon.crypto.aes - INFO - cryptg module not installed and libssl not found, falling back to (slower) Python encryption
+2026-02-16 21:50:48,037 - telegram_scraper - INFO - ✅ Telethon mavjud
+2026-02-16 21:50:48,039 - telegram_scraper - INFO - ✅ Telegram scraper yaratildi
+2026-02-16 21:50:48,040 - handlers.vacancies - INFO - ✅ Telegram scraper import qilindi
+2026-02-16 21:50:48,084 - loader - INFO - ✅ Post vacancy handler
+2026-02-16 21:50:48,092 - loader - INFO - ✅ Favorites handler
+2026-02-16 21:50:48,106 - loader - INFO - ✅ Notifications handler
+2026-02-16 21:50:48,122 - loader - INFO - ✅ Referral handler
+2026-02-16 21:50:48,139 - loader - INFO - ✅ Analytics handler
+2026-02-16 21:50:48,152 - loader - INFO - ✅ Smart matching handler
+2026-02-16 21:50:48,157 - loader - INFO - ✅ Interview handler
+2026-02-16 21:50:48,171 - loader - INFO - ✅ Candidates handler
+2026-02-16 21:50:48,171 - loader - INFO - Handlerlar ro'yxatga olinmoqda...
+2026-02-16 21:50:48,171 - loader - INFO -   ✅ Admin handler
+2026-02-16 21:50:48,171 - loader - INFO -   ✅ Post vacancy handler
+2026-02-16 21:50:48,175 - loader - INFO -   ✅ Favorites handler
+2026-02-16 21:50:48,175 - loader - INFO -   ✅ Notifications handler
+2026-02-16 21:50:48,175 - loader - INFO -   ✅ Referral handler
+2026-02-16 21:50:48,175 - loader - INFO -   ✅ Analytics handler
+2026-02-16 21:50:48,178 - loader - INFO -   ✅ Smart matching handler
+2026-02-16 21:50:48,184 - loader - INFO -   ✅ Interview handler
+2026-02-16 21:50:48,199 - loader - INFO -   ✅ AI Assistant handler
+2026-02-16 21:50:48,202 - loader - INFO -   ✅ Candidates handler
+2026-02-16 21:50:48,202 - loader - INFO -   ✅ Start handler
+2026-02-16 21:50:48,204 - loader - INFO -   ✅ Activity Middleware
+2026-02-16 21:50:48,204 - loader - INFO -   ✅ Premium handler
+2026-02-16 21:50:48,204 - loader - INFO -   ✅ Settings handler
+2026-02-16 21:50:48,208 - loader - INFO -   ✅ Vacancies handler
+2026-02-16 21:50:48,231 - loader - INFO - 
+============================================================
+2026-02-16 21:50:48,243 - loader - INFO - BOT ISHGA TUSHMOQDA...
+2026-02-16 21:50:48,253 - loader - INFO - ============================================================
+2026-02-16 21:50:48,254 - loader - INFO - 1. Database'ga ulanish...
+2026-02-16 21:50:48,409 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.100.64:8080
+2026-02-16 21:50:48,420 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-02-16 21:50:49,400 - database - INFO - ✅ Database pool yaratildi (optimized: min=5, max=20)
+2026-02-16 21:50:49,419 - loader - INFO -    ✅ Database ulanish muvaffaqiyatli
+2026-02-16 21:50:49,424 - loader - INFO - 2. Scheduler ishga tushirish...
+2026-02-16 21:50:49,426 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-16 21:50:49,430 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-16 21:50:49,439 - apscheduler.scheduler - INFO - Added job "auto_scrape_and_notify" to job store "default"
+2026-02-16 21:50:49,439 - apscheduler.scheduler - INFO - Added job "send_daily_digests" to job store "default"
+2026-02-16 21:50:49,439 - apscheduler.scheduler - INFO - Scheduler started
+2026-02-16 21:50:49,439 - loader - INFO -    ✅ Scheduler ishga tushdi (interval: 3600s)
+2026-02-16 21:50:49,439 - loader - INFO - 
+============================================================
+2026-02-16 21:50:49,441 - loader - INFO - FAOL FUNKSIYALAR:
+2026-02-16 21:50:49,441 - loader - INFO - ============================================================
+2026-02-16 21:50:49,442 - loader - INFO - ✅ Admin panel
+2026-02-16 21:50:49,443 - loader - INFO - ✅ Premium boshqaruv
+2026-02-16 21:50:49,443 - loader - INFO - ✅ Vakansiya qidirish (hh.uz)
+2026-02-16 21:50:49,443 - loader - INFO - ✅ Filtrlar va sozlamalar
+2026-02-16 21:50:49,452 - loader - INFO - ✅ Referral sistema
+2026-02-16 21:50:49,455 - loader - INFO - ✅ Parallel processing (OPTIMIZED)
+2026-02-16 21:50:49,470 - loader - INFO - ✅ Vakansiya qo'shish (Premium)
+2026-02-16 21:50:49,477 - loader - INFO - ✅ Telegram scraper (Premium)
+2026-02-16 21:50:49,491 - loader - INFO - ============================================================
+2026-02-16 21:50:49,524 - loader - INFO - 🚀 BOT TAYYOR! OPTIMIZED FOR SCALE
+2026-02-16 21:50:49,526 - loader - INFO - ============================================================
+
+2026-02-16 21:50:51,144 - aiogram.dispatcher - INFO - Start polling
+2026-02-16 21:50:51,323 - aiogram.dispatcher - INFO - Run polling for bot @testvacancysaybot id=8466568265 - 'test_vacancy'
+2026-02-16 21:51:41,880 - aiogram.event - INFO - Update id=513367072 is handled. Duration 1516 ms by bot id=8466568265
+2026-02-16 21:51:43,914 - aiogram.event - INFO - Update id=513367073 is handled. Duration 530 ms by bot id=8466568265
+2026-02-16 21:51:45,416 - aiogram.event - INFO - Update id=513367074 is handled. Duration 671 ms by bot id=8466568265
+2026-02-16 21:51:46,865 - aiogram.event - INFO - Update id=513367075 is handled. Duration 250 ms by bot id=8466568265
+2026-02-16 21:51:48,477 - handlers.vacancies - INFO - [SEARCH] User 1258119183: keywords=['python'], locations=['Toshkent'], sources=['hh_uz', 'user_post', 'telegram']
+2026-02-16 21:51:48,479 - handlers.vacancies - INFO - [SEARCH] Fetching user-posted vacancies...
+2026-02-16 21:51:48,479 - scraper_api - INFO - Qidiruv boshlandi: keywords='python', area=Toshkent (2759), pages=5
+2026-02-16 21:51:48,479 - handlers.vacancies - INFO - [SEARCH] Fetching Telegram vacancies from DB...
+2026-02-16 21:51:48,481 - handlers.vacancies - INFO - [SEARCH] Fetching from UzJobs...
+2026-02-16 21:51:48,481 - scraper_api - INFO - API request: page=0
+2026-02-16 21:51:48,484 - scraper_api - INFO - API request: page=1
+2026-02-16 21:51:48,493 - scraper_api - INFO - API request: page=2
+2026-02-16 21:51:48,497 - scraper_api - INFO - API request: page=3
+2026-02-16 21:51:48,497 - scraper_api - INFO - API request: page=4
+2026-02-16 21:51:48,515 - handlers.vacancies - INFO - [SEARCH] User-posted: 1 ta
+2026-02-16 21:51:48,559 - handlers.vacancies - INFO - [SEARCH] Telegram DB: 281 ta
+2026-02-16 21:52:09,535 - scraper_api - ERROR - API request xatolik (page 2): Cannot connect to host api.hh.uz:443 ssl:default [Превышен таймаут семафора]
+2026-02-16 21:52:09,541 - scraper_api - ERROR - API request xatolik (page 3): Cannot connect to host api.hh.uz:443 ssl:default [Превышен таймаут семафора]
+2026-02-16 21:52:09,543 - scraper_api - ERROR - API request xatolik (page 4): Cannot connect to host api.hh.uz:443 ssl:default [Превышен таймаут семафора]
+2026-02-16 21:52:09,543 - scraper_api - ERROR - API request xatolik (page 1): Cannot connect to host api.hh.uz:443 ssl:default [Превышен таймаут семафора]
+2026-02-16 21:52:09,543 - scraper_api - ERROR - API request xatolik (page 0): Cannot connect to host api.hh.uz:443 ssl:default [Превышен таймаут семафора]
+2026-02-16 21:52:09,543 - uzjobs_scraper - ERROR - UzJobs scraper error (attempt 1): Cannot connect to host uzjobs.com:443 ssl:default [Превышен таймаут семафора]
+2026-02-16 21:52:09,543 - scraper_api - INFO - ✅ Jami 0 ta vakansiya topildi va parse qilindi
+2026-02-16 21:52:18,493 - handlers.vacancies - WARNING - [SEARCH] UzJobs timed out after 30s
+2026-02-16 21:52:18,494 - handlers.vacancies - INFO - [SEARCH] Filtrlash: 282 ta vakansiya
+2026-02-16 21:52:18,500 - filters - INFO - Filtrlash: 282 -> 2
+2026-02-16 21:52:18,500 - handlers.vacancies - INFO - [SEARCH] Filtrlash natijasi: 2 ta
+2026-02-16 21:52:19,340 - aiogram.event - INFO - Update id=513367076 is not handled. Duration 31233 ms by bot id=8466568265
+2026-02-16 21:52:19,340 - aiogram.event - ERROR - Cause exception while process update id=513367076 by bot id=8466568265
+TelegramBadRequest: Telegram server says - Bad Request: query is too old and response timeout expired or query ID is invalid
+Traceback (most recent call last):
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 320, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 164, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 27, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 58, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\fsm\middleware.py", line 43, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 283, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 189, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 181, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Work\vakansiya\utils\middleware.py", line 24, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Work\vakansiya\handlers\vacancies.py", line 196, in trigger_vacancies_search
+    await callback.answer()
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\methods\base.py", line 82, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\bot.py", line 484, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\aiohttp.py", line 177, in make_request
+    response = self.check_response(
+               ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\base.py", line 121, in check_response
+    raise TelegramBadRequest(method=method, message=description)
+aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: query is too old and response timeout expired or query ID is invalid
+2026-02-16 21:52:50,250 - aiogram.event - INFO - Update id=513367077 is handled. Duration 828 ms by bot id=8466568265
+2026-02-16 21:52:56,171 - aiogram.event - INFO - Update id=513367078 is handled. Duration 280 ms by bot id=8466568265
+2026-02-16 21:52:59,278 - aiogram.event - INFO - Update id=513367079 is handled. Duration 155 ms by bot id=8466568265
+2026-02-16 21:53:01,418 - handlers.vacancies - INFO - [SEARCH] Cache hit for python_Toshkent_hh_uz+telegram+user_post
+2026-02-16 21:53:01,421 - handlers.vacancies - INFO - [SEARCH] Filtrlash: 282 ta vakansiya
+2026-02-16 21:53:01,435 - filters - INFO - Filtrlash: 282 -> 2
+2026-02-16 21:53:01,435 - handlers.vacancies - INFO - [SEARCH] Filtrlash natijasi: 2 ta
+2026-02-16 21:53:02,104 - aiogram.event - INFO - Update id=513367080 is handled. Duration 1000 ms by bot id=8466568265
+2026-02-16 21:54:09,652 - aiogram.event - INFO - Update id=513367081 is handled. Duration 420 ms by bot id=8466568265
+2026-02-16 21:54:11,644 - aiogram.event - INFO - Update id=513367082 is handled. Duration 641 ms by bot id=8466568265
+2026-02-16 21:54:12,910 - aiogram.event - INFO - Update id=513367083 is handled. Duration 467 ms by bot id=8466568265
+2026-02-16 21:54:14,515 - aiogram.event - INFO - Update id=513367084 is handled. Duration 203 ms by bot id=8466568265
+2026-02-16 21:54:16,420 - handlers.vacancies - INFO - [SEARCH] Cache hit for python_Toshkent_hh_uz+telegram+user_post
+2026-02-16 21:54:16,429 - handlers.vacancies - INFO - [SEARCH] Filtrlash: 282 ta vakansiya
+2026-02-16 21:54:16,464 - filters - INFO - Filtrlash: 282 -> 2
+2026-02-16 21:54:16,464 - handlers.vacancies - INFO - [SEARCH] Filtrlash natijasi: 2 ta
+2026-02-16 21:54:17,029 - aiogram.event - INFO - Update id=513367085 is handled. Duration 952 ms by bot id=8466568265
+2026-02-16 21:57:16,260 - telethon.crypto.libssl - INFO - Failed to load SSL library: <class 'OSError'> (no library called "ssl" found)
+2026-02-16 21:57:16,263 - telethon.crypto.aes - INFO - cryptg module not installed and libssl not found, falling back to (slower) Python encryption
+2026-02-16 21:57:16,593 - telegram_scraper - INFO - ✅ Telethon mavjud
+2026-02-16 21:57:16,593 - telegram_scraper - INFO - ✅ Telegram scraper yaratildi
+2026-02-16 21:57:16,595 - handlers.vacancies - INFO - ✅ Telegram scraper import qilindi
+2026-02-16 21:57:16,618 - loader - INFO - ✅ Post vacancy handler
+2026-02-16 21:57:16,624 - loader - INFO - ✅ Favorites handler
+2026-02-16 21:57:16,628 - loader - INFO - ✅ Notifications handler
+2026-02-16 21:57:16,633 - loader - INFO - ✅ Referral handler
+2026-02-16 21:57:16,639 - loader - INFO - ✅ Analytics handler
+2026-02-16 21:57:16,645 - loader - INFO - ✅ Smart matching handler
+2026-02-16 21:57:16,651 - loader - INFO - ✅ Interview handler
+2026-02-16 21:57:16,654 - loader - INFO - ✅ Candidates handler
+2026-02-16 21:57:16,654 - loader - INFO - Handlerlar ro'yxatga olinmoqda...
+2026-02-16 21:57:16,654 - loader - INFO -   ✅ Admin handler
+2026-02-16 21:57:16,654 - loader - INFO -   ✅ Post vacancy handler
+2026-02-16 21:57:16,654 - loader - INFO -   ✅ Favorites handler
+2026-02-16 21:57:16,654 - loader - INFO -   ✅ Notifications handler
+2026-02-16 21:57:16,654 - loader - INFO -   ✅ Referral handler
+2026-02-16 21:57:16,654 - loader - INFO -   ✅ Analytics handler
+2026-02-16 21:57:16,654 - loader - INFO -   ✅ Smart matching handler
+2026-02-16 21:57:16,660 - loader - INFO -   ✅ Interview handler
+2026-02-16 21:57:16,670 - loader - INFO -   ✅ AI Assistant handler
+2026-02-16 21:57:16,671 - loader - INFO -   ✅ Candidates handler
+2026-02-16 21:57:16,671 - loader - INFO -   ✅ Start handler
+2026-02-16 21:57:16,671 - loader - INFO -   ✅ Activity Middleware
+2026-02-16 21:57:16,671 - loader - INFO -   ✅ Premium handler
+2026-02-16 21:57:16,671 - loader - INFO -   ✅ Settings handler
+2026-02-16 21:57:16,671 - loader - INFO -   ✅ Vacancies handler
+2026-02-16 21:57:16,686 - loader - INFO - 
+============================================================
+2026-02-16 21:57:16,686 - loader - INFO - BOT ISHGA TUSHMOQDA...
+2026-02-16 21:57:16,690 - loader - INFO - ============================================================
+2026-02-16 21:57:16,692 - loader - INFO - 1. Database'ga ulanish...
+2026-02-16 21:57:16,731 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.100.64:8080
+2026-02-16 21:57:16,735 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-02-16 21:57:17,560 - database - INFO - ✅ Database pool yaratildi (optimized: min=5, max=20)
+2026-02-16 21:57:17,571 - loader - INFO -    ✅ Database ulanish muvaffaqiyatli
+2026-02-16 21:57:17,571 - loader - INFO - 2. Scheduler ishga tushirish...
+2026-02-16 21:57:17,574 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-16 21:57:17,574 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-16 21:57:17,574 - apscheduler.scheduler - INFO - Added job "auto_scrape_and_notify" to job store "default"
+2026-02-16 21:57:17,574 - apscheduler.scheduler - INFO - Added job "send_daily_digests" to job store "default"
+2026-02-16 21:57:17,574 - apscheduler.scheduler - INFO - Scheduler started
+2026-02-16 21:57:17,574 - loader - INFO -    ✅ Scheduler ishga tushdi (interval: 3600s)
+2026-02-16 21:57:17,574 - loader - INFO - 
+============================================================
+2026-02-16 21:57:17,584 - loader - INFO - FAOL FUNKSIYALAR:
+2026-02-16 21:57:17,584 - loader - INFO - ============================================================
+2026-02-16 21:57:17,584 - loader - INFO - ✅ Admin panel
+2026-02-16 21:57:17,584 - loader - INFO - ✅ Premium boshqaruv
+2026-02-16 21:57:17,586 - loader - INFO - ✅ Vakansiya qidirish (hh.uz)
+2026-02-16 21:57:17,586 - loader - INFO - ✅ Filtrlar va sozlamalar
+2026-02-16 21:57:17,586 - loader - INFO - ✅ Referral sistema
+2026-02-16 21:57:17,586 - loader - INFO - ✅ Parallel processing (OPTIMIZED)
+2026-02-16 21:57:17,586 - loader - INFO - ✅ Vakansiya qo'shish (Premium)
+2026-02-16 21:57:17,586 - loader - INFO - ✅ Telegram scraper (Premium)
+2026-02-16 21:57:17,590 - loader - INFO - ============================================================
+2026-02-16 21:57:17,590 - loader - INFO - 🚀 BOT TAYYOR! OPTIMIZED FOR SCALE
+2026-02-16 21:57:17,590 - loader - INFO - ============================================================
+
+2026-02-16 21:57:18,995 - aiogram.dispatcher - INFO - Start polling
+2026-02-16 21:57:19,101 - aiogram.dispatcher - INFO - Run polling for bot @testvacancysaybot id=8466568265 - 'test_vacancy'
+2026-02-16 22:02:01,903 - aiogram.event - INFO - Update id=513367086 is not handled. Duration 30 ms by bot id=8466568265
+2026-02-16 22:02:06,128 - aiogram.event - INFO - Update id=513367087 is handled. Duration 625 ms by bot id=8466568265
+2026-02-16 22:02:08,266 - aiogram.event - INFO - Update id=513367088 is handled. Duration 422 ms by bot id=8466568265
+2026-02-16 22:02:10,093 - aiogram.event - INFO - Update id=513367089 is handled. Duration 563 ms by bot id=8466568265
+2026-02-16 22:02:11,469 - aiogram.event - INFO - Update id=513367090 is handled. Duration 156 ms by bot id=8466568265
+2026-02-16 22:02:13,357 - handlers.vacancies - INFO - [SEARCH] User 1258119183: keywords=['python'], locations=['Toshkent'], sources=['hh_uz', 'user_post', 'telegram']
+2026-02-16 22:02:13,366 - handlers.vacancies - INFO - [SEARCH] Fetching user-posted vacancies...
+2026-02-16 22:02:13,366 - scraper_api - INFO - Qidiruv boshlandi: keywords='python', area=Toshkent (2759), pages=5
+2026-02-16 22:02:13,370 - handlers.vacancies - INFO - [SEARCH] Fetching Telegram vacancies from DB...
+2026-02-16 22:02:13,372 - handlers.vacancies - INFO - [SEARCH] Fetching from UzJobs...
+2026-02-16 22:02:13,376 - scraper_api - INFO - API request: page=0
+2026-02-16 22:02:13,376 - scraper_api - INFO - API request: page=1
+2026-02-16 22:02:13,378 - scraper_api - INFO - API request: page=2
+2026-02-16 22:02:13,378 - scraper_api - INFO - API request: page=3
+2026-02-16 22:02:13,381 - scraper_api - INFO - API request: page=4
+2026-02-16 22:02:13,395 - handlers.vacancies - INFO - [SEARCH] User-posted: 1 ta
+2026-02-16 22:02:13,399 - handlers.vacancies - INFO - [SEARCH] Telegram DB: 280 ta
+2026-02-16 22:02:18,381 - scraper_api - ERROR - API request xatolik (page 1): Connection timeout to host https://api.hh.uz/vacancies?text=python&area=2759&page=1&per_page=50
+2026-02-16 22:02:18,381 - scraper_api - ERROR - API request xatolik (page 2): Connection timeout to host https://api.hh.uz/vacancies?text=python&area=2759&page=2&per_page=50
+2026-02-16 22:02:18,381 - scraper_api - ERROR - API request xatolik (page 0): Connection timeout to host https://api.hh.uz/vacancies?text=python&area=2759&page=0&per_page=50
+2026-02-16 22:02:18,385 - scraper_api - ERROR - API request xatolik (page 3): Connection timeout to host https://api.hh.uz/vacancies?text=python&area=2759&page=3&per_page=50
+2026-02-16 22:02:18,385 - scraper_api - ERROR - API request xatolik (page 4): Connection timeout to host https://api.hh.uz/vacancies?text=python&area=2759&page=4&per_page=50
+2026-02-16 22:02:18,386 - uzjobs_scraper - ERROR - UzJobs scraper error (attempt 1): Connection timeout to host https://uzjobs.com/ru/vacancy/search?q=python
+2026-02-16 22:02:18,386 - scraper_api - INFO - ✅ Jami 0 ta vakansiya topildi va parse qilindi
+2026-02-16 22:02:25,410 - uzjobs_scraper - ERROR - UzJobs scraper error (attempt 2): Connection timeout to host https://uzjobs.com/ru/vacancy/search?q=python
+2026-02-16 22:02:34,420 - uzjobs_scraper - ERROR - UzJobs scraper error (attempt 3): Connection timeout to host https://uzjobs.com/ru/vacancy/search?q=python
+2026-02-16 22:02:42,418 - handlers.vacancies - INFO - [SEARCH] Filtrlash: 281 ta vakansiya
+2026-02-16 22:02:42,424 - filters - INFO - Filtrlash: 281 -> 1
+2026-02-16 22:02:42,424 - handlers.vacancies - INFO - [SEARCH] Filtrlash natijasi: 1 ta
+2026-02-16 22:02:43,123 - aiogram.event - INFO - Update id=513367091 is handled. Duration 30265 ms by bot id=8466568265
+2026-02-16 22:04:11,186 - aiogram.event - INFO - Update id=513367092 is handled. Duration 2218 ms by bot id=8466568265
+2026-02-16 22:10:48,241 - aiogram.event - INFO - Update id=513367093 is handled. Duration 2358 ms by bot id=8466568265
+2026-02-16 22:10:51,062 - aiogram.event - INFO - Update id=513367094 is handled. Duration 796 ms by bot id=8466568265
+2026-02-16 22:10:52,262 - aiogram.event - INFO - Update id=513367095 is handled. Duration 563 ms by bot id=8466568265
+2026-02-16 22:10:53,793 - aiogram.event - INFO - Update id=513367096 is handled. Duration 186 ms by bot id=8466568265
+2026-02-16 22:10:55,707 - handlers.vacancies - INFO - [SEARCH] User 1258119183: keywords=['python'], locations=['Toshkent'], sources=['hh_uz', 'user_post', 'telegram']
+2026-02-16 22:10:55,709 - handlers.vacancies - INFO - [SEARCH] Fetching user-posted vacancies...
+2026-02-16 22:10:55,710 - scraper_api - INFO - Qidiruv boshlandi: keywords='python', area=Toshkent (2759), pages=5
+2026-02-16 22:10:55,711 - handlers.vacancies - INFO - [SEARCH] Fetching Telegram vacancies from DB...
+2026-02-16 22:10:55,711 - handlers.vacancies - INFO - [SEARCH] Fetching from UzJobs...
+2026-02-16 22:10:55,713 - scraper_api - INFO - API request: page=0
+2026-02-16 22:10:55,713 - scraper_api - INFO - API request: page=1
+2026-02-16 22:10:55,713 - scraper_api - INFO - API request: page=2
+2026-02-16 22:10:55,715 - scraper_api - INFO - API request: page=3
+2026-02-16 22:10:55,716 - scraper_api - INFO - API request: page=4
+2026-02-16 22:10:55,724 - handlers.vacancies - INFO - [SEARCH] User-posted: 1 ta
+2026-02-16 22:10:55,731 - handlers.vacancies - INFO - [SEARCH] Telegram DB: 280 ta
+2026-02-16 22:11:00,714 - scraper_api - ERROR - API request xatolik (page 1): Connection timeout to host https://api.hh.uz/vacancies?text=python&area=2759&page=1&per_page=50
+2026-02-16 22:11:00,716 - scraper_api - ERROR - API request xatolik (page 3): Connection timeout to host https://api.hh.uz/vacancies?text=python&area=2759&page=3&per_page=50
+2026-02-16 22:11:00,716 - scraper_api - ERROR - API request xatolik (page 4): Connection timeout to host https://api.hh.uz/vacancies?text=python&area=2759&page=4&per_page=50
+2026-02-16 22:11:00,718 - scraper_api - ERROR - API request xatolik (page 2): Connection timeout to host https://api.hh.uz/vacancies?text=python&area=2759&page=2&per_page=50
+2026-02-16 22:11:00,720 - scraper_api - ERROR - API request xatolik (page 0): Connection timeout to host https://api.hh.uz/vacancies?text=python&area=2759&page=0&per_page=50
+2026-02-16 22:11:00,721 - uzjobs_scraper - ERROR - UzJobs scraper error (attempt 1): Connection timeout to host https://uzjobs.com/ru/vacancy/search?q=python
+2026-02-16 22:11:00,721 - scraper_api - INFO - ✅ Jami 0 ta vakansiya topildi va parse qilindi
+2026-02-16 22:11:07,743 - uzjobs_scraper - ERROR - UzJobs scraper error (attempt 2): Connection timeout to host https://uzjobs.com/ru/vacancy/search?q=python
+2026-02-16 22:11:16,771 - uzjobs_scraper - ERROR - UzJobs scraper error (attempt 3): Connection timeout to host https://uzjobs.com/ru/vacancy/search?q=python
+2026-02-16 22:11:24,778 - handlers.vacancies - INFO - [SEARCH] Filtrlash: 281 ta vakansiya
+2026-02-16 22:11:24,786 - filters - INFO - Filtrlash: 281 -> 1
+2026-02-16 22:11:24,786 - handlers.vacancies - INFO - [SEARCH] Filtrlash natijasi: 1 ta
+2026-02-16 22:11:25,682 - aiogram.event - INFO - Update id=513367097 is handled. Duration 30452 ms by bot id=8466568265
+2026-02-16 22:11:34,068 - aiogram.event - INFO - Update id=513367098 is handled. Duration 217 ms by bot id=8466568265
+2026-02-16 22:11:35,886 - aiogram.event - INFO - Update id=513367099 is handled. Duration 266 ms by bot id=8466568265
+2026-02-16 22:11:41,662 - handlers.admin - ERROR - Admin stats xatolik: Telegram server says - Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2026-02-16 22:11:41,843 - aiogram.event - INFO - Update id=513367100 is handled. Duration 422 ms by bot id=8466568265
+2026-02-16 22:11:44,703 - aiogram.event - INFO - Update id=513367101 is handled. Duration 452 ms by bot id=8466568265
+2026-02-16 22:11:46,176 - aiogram.event - INFO - Update id=513367102 is handled. Duration 327 ms by bot id=8466568265
+2026-02-16 22:11:48,543 - aiogram.event - INFO - Update id=513367103 is handled. Duration 561 ms by bot id=8466568265
+2026-02-16 22:11:54,656 - aiogram.event - INFO - Update id=513367104 is handled. Duration 264 ms by bot id=8466568265
+2026-02-16 22:11:56,085 - aiogram.event - INFO - Update id=513367105 is handled. Duration 297 ms by bot id=8466568265
+2026-02-16 22:11:57,725 - aiogram.event - INFO - Update id=513367106 is not handled. Duration 125 ms by bot id=8466568265
+2026-02-16 22:11:57,726 - aiogram.event - ERROR - Cause exception while process update id=513367106 by bot id=8466568265
+TelegramBadRequest: Telegram server says - Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+Traceback (most recent call last):
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 320, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 164, in feed_update
+    response = await self.update.wrap_outer_middleware(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\middlewares\error.py", line 27, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\middlewares\user_context.py", line 58, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\fsm\middleware.py", line 43, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\dispatcher.py", line 283, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 189, in _propagate_event
+    response = await router.propagate_event(update_type=update_type, event=event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 161, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 153, in _wrapped
+    return await self._propagate_event(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\router.py", line 181, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\telegram.py", line 126, in trigger
+    return await wrapped_inner(event, kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Work\vakansiya\utils\middleware.py", line 24, in __call__
+    return await handler(event, data)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\dispatcher\event\handler.py", line 71, in call
+    return await wrapped()
+           ^^^^^^^^^^^^^^^
+  File "D:\Work\vakansiya\handlers\admin.py", line 110, in show_admin_panel
+    await callback.message.edit_text(
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\methods\base.py", line 82, in emit
+    return await bot(self)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\bot.py", line 484, in __call__
+    return await self.session(self, method, timeout=request_timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\base.py", line 259, in __call__
+    return cast(TelegramType, await middleware(bot, method))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\aiohttp.py", line 177, in make_request
+    response = self.check_response(
+               ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\aiogram\client\session\base.py", line 121, in check_response
+    raise TelegramBadRequest(method=method, message=description)
+aiogram.exceptions.TelegramBadRequest: Telegram server says - Bad Request: message is not modified: specified new message content and reply markup are exactly the same as a current content and reply markup of the message
+2026-02-16 22:11:59,661 - aiogram.event - INFO - Update id=513367107 is handled. Duration 233 ms by bot id=8466568265
+2026-02-16 22:12:17,584 - apscheduler.executors.default - INFO - Running job "send_daily_digests (trigger: interval[0:15:00], next run at: 2026-02-16 22:27:17 +05)" (scheduled at 2026-02-16 22:12:17.574346+05:00)
+2026-02-16 22:12:17,585 - handlers.notifications - INFO - 📅 Kunlik xulosalar yuborish boshlandi...
+2026-02-16 22:12:17,589 - database - ERROR - get_users_for_digest error: column ns.last_digest_sent does not exist
+2026-02-16 22:12:17,591 - handlers.notifications - INFO -    Hozircha yuboriladigan xulosa yo'q
+2026-02-16 22:12:17,591 - apscheduler.executors.default - INFO - Job "send_daily_digests (trigger: interval[0:15:00], next run at: 2026-02-16 22:27:17 +05)" executed successfully
+2026-02-16 22:22:17,943 - telethon.crypto.libssl - INFO - Failed to load SSL library: <class 'OSError'> (no library called "ssl" found)
+2026-02-16 22:22:17,943 - telethon.crypto.aes - INFO - cryptg module not installed and libssl not found, falling back to (slower) Python encryption
+2026-02-16 22:22:18,173 - telegram_scraper - INFO - ✅ Telethon mavjud
+2026-02-16 22:22:18,173 - telegram_scraper - INFO - ✅ Telegram scraper yaratildi
+2026-02-16 22:22:18,179 - handlers.vacancies - INFO - ✅ Telegram scraper import qilindi
+2026-02-16 22:22:18,191 - loader - INFO - ✅ Post vacancy handler
+2026-02-16 22:22:18,194 - loader - INFO - ✅ Favorites handler
+2026-02-16 22:22:18,197 - loader - INFO - ✅ Notifications handler
+2026-02-16 22:22:18,200 - loader - INFO - ✅ Referral handler
+2026-02-16 22:22:18,202 - loader - INFO - ✅ Analytics handler
+2026-02-16 22:22:18,205 - loader - INFO - ✅ Smart matching handler
+2026-02-16 22:22:18,207 - loader - INFO - ✅ Interview handler
+2026-02-16 22:22:18,209 - loader - INFO - ✅ Candidates handler
+2026-02-16 22:22:18,210 - loader - INFO - Handlerlar ro'yxatga olinmoqda...
+2026-02-16 22:22:18,210 - loader - INFO -   ✅ Admin handler
+2026-02-16 22:22:18,210 - loader - INFO -   ✅ Post vacancy handler
+2026-02-16 22:22:18,210 - loader - INFO -   ✅ Favorites handler
+2026-02-16 22:22:18,211 - loader - INFO -   ✅ Notifications handler
+2026-02-16 22:22:18,211 - loader - INFO -   ✅ Referral handler
+2026-02-16 22:22:18,212 - loader - INFO -   ✅ Analytics handler
+2026-02-16 22:22:18,212 - loader - INFO -   ✅ Smart matching handler
+2026-02-16 22:22:18,212 - loader - INFO -   ✅ Interview handler
+2026-02-16 22:22:18,216 - loader - INFO -   ✅ AI Assistant handler
+2026-02-16 22:22:18,216 - loader - INFO -   ✅ Candidates handler
+2026-02-16 22:22:18,217 - loader - INFO -   ✅ Start handler
+2026-02-16 22:22:18,219 - loader - INFO -   ✅ Activity Middleware
+2026-02-16 22:22:18,219 - loader - INFO -   ✅ Premium handler
+2026-02-16 22:22:18,219 - loader - INFO -   ✅ Settings handler
+2026-02-16 22:22:18,219 - loader - INFO -   ✅ Vacancies handler
+2026-02-16 22:22:18,231 - loader - INFO - 
+============================================================
+2026-02-16 22:22:18,232 - loader - INFO - BOT ISHGA TUSHMOQDA...
+2026-02-16 22:22:18,232 - loader - INFO - ============================================================
+2026-02-16 22:22:18,232 - loader - INFO - 1. Database'ga ulanish...
+2026-02-16 22:22:18,248 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://192.168.100.64:8080
+2026-02-16 22:22:18,248 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-02-16 22:22:18,543 - database - INFO - ✅ Database pool yaratildi (optimized: min=5, max=20)
+2026-02-16 22:22:18,550 - loader - INFO -    ✅ Database ulanish muvaffaqiyatli
+2026-02-16 22:22:18,550 - loader - INFO - 2. Scheduler ishga tushirish...
+2026-02-16 22:22:18,557 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-16 22:22:18,557 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-02-16 22:22:18,557 - apscheduler.scheduler - INFO - Added job "auto_scrape_and_notify" to job store "default"
+2026-02-16 22:22:18,557 - apscheduler.scheduler - INFO - Added job "send_daily_digests" to job store "default"
+2026-02-16 22:22:18,557 - apscheduler.scheduler - INFO - Scheduler started
+2026-02-16 22:22:18,557 - loader - INFO -    ✅ Scheduler ishga tushdi (interval: 3600s)
+2026-02-16 22:22:18,557 - loader - INFO - 
+============================================================
+2026-02-16 22:22:18,557 - loader - INFO - FAOL FUNKSIYALAR:
+2026-02-16 22:22:18,557 - loader - INFO - ============================================================
+2026-02-16 22:22:18,557 - loader - INFO - ✅ Admin panel
+2026-02-16 22:22:18,557 - loader - INFO - ✅ Premium boshqaruv
+2026-02-16 22:22:18,557 - loader - INFO - ✅ Vakansiya qidirish (hh.uz)
+2026-02-16 22:22:18,557 - loader - INFO - ✅ Filtrlar va sozlamalar
+2026-02-16 22:22:18,557 - loader - INFO - ✅ Referral sistema
+2026-02-16 22:22:18,557 - loader - INFO - ✅ Parallel processing (OPTIMIZED)
+2026-02-16 22:22:18,557 - loader - INFO - ✅ Vakansiya qo'shish (Premium)
+2026-02-16 22:22:18,557 - loader - INFO - ✅ Telegram scraper (Premium)
+2026-02-16 22:22:18,557 - loader - INFO - ============================================================
+2026-02-16 22:22:18,563 - loader - INFO - 🚀 BOT TAYYOR! OPTIMIZED FOR SCALE
+2026-02-16 22:22:18,564 - loader - INFO - ============================================================
+
+2026-02-16 22:22:19,996 - aiogram.dispatcher - INFO - Start polling
+2026-02-16 22:22:20,171 - aiogram.dispatcher - INFO - Run polling for bot @testvacancysaybot id=8466568265 - 'test_vacancy'
+2026-02-16 22:22:34,639 - aiogram.event - INFO - Update id=513367108 is handled. Duration 781 ms by bot id=8466568265
+2026-02-16 22:22:39,771 - aiogram.event - INFO - Update id=513367109 is handled. Duration 670 ms by bot id=8466568265
+2026-02-16 22:22:40,884 - aiogram.event - INFO - Update id=513367110 is handled. Duration 485 ms by bot id=8466568265
+2026-02-16 22:22:42,525 - aiogram.event - INFO - Update id=513367111 is handled. Duration 327 ms by bot id=8466568265
+2026-02-16 22:22:44,201 - handlers.vacancies - INFO - [SEARCH] User 1258119183: keywords=['python'], locations=['Toshkent'], sources=['hh_uz', 'user_post', 'telegram']
+2026-02-16 22:22:44,204 - handlers.vacancies - INFO - [SEARCH] Fetching user-posted vacancies...
+2026-02-16 22:22:44,204 - scraper_api - INFO - Qidiruv boshlandi: keywords='python', area=Toshkent (2759), pages=5
+2026-02-16 22:22:44,204 - handlers.vacancies - INFO - [SEARCH] Fetching Telegram vacancies from DB...
+2026-02-16 22:22:44,204 - handlers.vacancies - INFO - [SEARCH] Fetching from UzJobs...
+2026-02-16 22:22:44,211 - handlers.vacancies - INFO - [SEARCH] User-posted: 1 ta
+2026-02-16 22:22:44,216 - handlers.vacancies - INFO - [SEARCH] Telegram DB: 280 ta
+2026-02-16 22:22:49,207 - uzjobs_scraper - ERROR - UzJobs scraper error (attempt 1): Connection timeout to host https://uzjobs.com/ru/vacancy/search?q=python
+2026-02-16 22:22:51,856 - scraper_api - WARNING - API request error (host=https://api.hh.uz, page=0): Connection timeout to host https://api.hh.uz/vacancies?text=python&area=2759&page=0&per_page=50. Retrying...
+2026-02-16 22:22:51,856 - scraper_api - WARNING - API request error (host=https://api.hh.ru, page=1): Connection timeout to host https://api.hh.ru/vacancies?text=python&area=2759&page=1&per_page=50. Retrying...
+2026-02-16 22:22:53,858 - scraper_api - WARNING - API request error (host=https://api.hh.uz, page=4): Connection timeout to host https://api.hh.uz/vacancies?text=python&area=2759&page=4&per_page=50. Retrying...
+2026-02-16 22:22:53,860 - scraper_api - WARNING - API request error (host=https://api.hh.kz, page=2): Connection timeout to host https://api.hh.kz/vacancies?text=python&area=2759&page=2&per_page=50. Retrying...
+2026-02-16 22:22:54,853 - scraper_api - WARNING - API request error (host=https://api.hh.by, page=3): Connection timeout to host https://api.hh.by/vacancies?text=python&area=2759&page=3&per_page=50. Retrying...
+2026-02-16 22:22:56,231 - uzjobs_scraper - ERROR - UzJobs scraper error (attempt 2): Connection timeout to host https://uzjobs.com/ru/vacancy/search?q=python
+2026-02-16 22:22:59,855 - scraper_api - WARNING - API request error (host=https://api.hh.ru, page=0): Connection timeout to host https://api.hh.ru/vacancies?text=python&area=2759&page=0&per_page=50. Retrying...
+2026-02-16 22:23:01,861 - scraper_api - WARNING - API request error (host=https://api.hh.kz, page=1): Connection timeout to host https://api.hh.kz/vacancies?text=python&area=2759&page=1&per_page=50. Retrying...
+2026-02-16 22:23:03,871 - scraper_api - WARNING - API request error (host=https://api.hh.uz, page=2): Connection timeout to host https://api.hh.uz/vacancies?text=python&area=2759&page=2&per_page=50. Retrying...
+2026-02-16 22:23:05,254 - uzjobs_scraper - ERROR - UzJobs scraper error (attempt 3): Connection timeout to host https://uzjobs.com/ru/vacancy/search?q=python
+2026-02-16 22:23:06,871 - scraper_api - WARNING - API request error (host=https://api.hh.ru, page=3): Connection timeout to host https://api.hh.ru/vacancies?text=python&area=2759&page=3&per_page=50. Retrying...
+2026-02-16 22:23:07,864 - scraper_api - WARNING - API request error (host=https://api.hh.by, page=4): Connection timeout to host https://api.hh.by/vacancies?text=python&area=2759&page=4&per_page=50. Retrying...
+2026-02-16 22:23:07,866 - scraper_api - ERROR - API request final error (page 0): Connection timeout to host https://api.hh.kz/vacancies?text=python&area=2759&page=0&per_page=50
+2026-02-16 22:23:11,862 - scraper_api - ERROR - API request final error (page 1): Connection timeout to host https://api.hh.by/vacancies?text=python&area=2759&page=1&per_page=50
+2026-02-16 22:23:13,861 - scraper_api - ERROR - API request final error (page 2): Connection timeout to host https://api.hh.uz/vacancies?text=python&area=2759&page=2&per_page=50
+2026-02-16 22:23:14,222 - handlers.vacancies - WARNING - [SEARCH] hh.uz timed out after 30s
+2026-02-16 22:23:14,225 - handlers.vacancies - INFO - [SEARCH] Filtrlash: 281 ta vakansiya
+2026-02-16 22:23:14,229 - filters - INFO - Filtrlash: 281 -> 1
+2026-02-16 22:23:14,229 - handlers.vacancies - INFO - [SEARCH] Filtrlash natijasi: 1 ta
+2026-02-16 22:23:14,858 - aiogram.event - INFO - Update id=513367112 is handled. Duration 31093 ms by bot id=8466568265
+2026-02-16 22:23:48,693 - aiogram.dispatcher - ERROR - Failed to fetch updates - TelegramNetworkError: HTTP Client says - ClientOSError: [WinError 1236] Подключение к сети было разорвано локальной системой
+2026-02-16 22:23:48,693 - aiogram.dispatcher - WARNING - Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 8466568265)
+2026-02-16 22:24:24,855 - aiogram.dispatcher - INFO - Connection established (tryings = 1, bot id = 8466568265)
+2026-02-16 22:25:36,836 - aiogram.event - INFO - Update id=513367113 is handled. Duration 483 ms by bot id=8466568265
+2026-02-16 22:25:38,944 - handlers.vacancies - INFO - [SEARCH] Cache hit for python_Toshkent_hh_uz+telegram+user_post
+2026-02-16 22:25:38,950 - handlers.vacancies - INFO - [SEARCH] Filtrlash: 281 ta vakansiya
+2026-02-16 22:25:38,965 - filters - INFO - Filtrlash: 281 -> 1
+2026-02-16 22:25:38,965 - handlers.vacancies - INFO - [SEARCH] Filtrlash natijasi: 1 ta
+2026-02-16 22:25:39,830 - aiogram.event - INFO - Update id=513367114 is handled. Duration 1593 ms by bot id=8466568265
+2026-02-16 22:33:27,409 - telethon.crypto.libssl - INFO - Failed to load SSL library: <class 'OSError'> (no library called "ssl" found)
+2026-02-16 22:33:27,409 - telethon.crypto.aes - INFO - cryptg module not installed and libssl not found, falling back to (slower) Python encryption
+2026-02-16 22:33:27,659 - telegram_scraper - INFO - ✅ Telethon mavjud
+2026-02-16 22:33:27,659 - telegram_scraper - INFO - ✅ Telegram scraper yaratildi
+2026-02-16 22:33:27,659 - handlers.vacancies - INFO - ✅ Telegram scraper import qilindi
+2026-02-16 22:33:27,673 - loader - INFO - ✅ Post vacancy handler
+2026-02-16 22:33:27,683 - loader - INFO - ✅ Favorites handler
+2026-02-16 22:33:27,685 - loader - INFO - ✅ Notifications handler
+2026-02-16 22:33:27,689 - loader - INFO - ✅ Referral handler
+2026-02-16 22:33:27,691 - loader - INFO - ✅ Analytics handler
+2026-02-16 22:33:27,696 - loader - INFO - ✅ Smart matching handler
+2026-02-16 22:33:27,698 - loader - INFO - ✅ Interview handler
+2026-02-16 22:33:27,703 - loader - INFO - ✅ Candidates handler
+2026-02-16 22:33:27,703 - loader - INFO - Handlerlar ro'yxatga olinmoqda...
+2026-02-16 22:33:27,703 - loader - INFO -   ✅ Admin handler
+2026-02-16 22:33:27,704 - loader - INFO -   ✅ Post vacancy handler
+2026-02-16 22:33:27,704 - loader - INFO -   ✅ Favorites handler
+2026-02-16 22:33:27,704 - loader - INFO -   ✅ Notifications handler
+2026-02-16 22:33:27,705 - loader - INFO -   ✅ Referral handler
+2026-02-16 22:33:27,705 - loader - INFO -   ✅ Analytics handler
+2026-02-16 22:33:27,705 - loader - INFO -   ✅ Smart matching handler
+2026-02-16 22:33:27,706 - loader - INFO -   ✅ Interview handler
+2026-02-16 22:33:27,710 - loader - INFO -   ✅ AI Assistant handler
+2026-02-16 22:33:27,710 - loader - INFO -   ✅ Candidates handler
+2026-02-16 22:33:27,711 - loader - INFO -   ✅ Start handler
+2026-02-16 22:33:27,713 - loader - INFO -   ✅ Activity Middleware
+2026-02-16 22:33:27,713 - loader - INFO -   ✅ Premium handler
+2026-02-16 22:33:27,714 - loader - INFO -   ✅ Settings handler
+2026-02-16 22:33:27,714 - loader - INFO -   ✅ Vacancies handler
+2026-02-16 22:33:28,090 - database - INFO - ✅ Database pool yaratildi (optimized: min=5, max=20)
+2026-02-16 22:33:28,090 - loader - INFO - Avtomatik scraping boshlandi...
+2026-02-16 22:33:28,090 - telegram_scraper - INFO - Telegram scraper available: d6efb528b1297ab27d8fa11277cb03b6
+2026-02-16 22:33:28,090 - loader - INFO - 📱 Telegram scraping boshlanmoqda...
+2026-02-16 22:33:28,090 - telegram_scraper - INFO - Telegram scraper available: d6efb528b1297ab27d8fa11277cb03b6
+2026-02-16 22:33:28,100 - telegram_scraper - INFO - Telegram ga ulanishga harakat...
+2026-02-16 22:33:28,109 - telethon.network.mtprotosender - INFO - Connecting to 149.154.167.51:443/TcpFull...
+2026-02-16 22:33:28,235 - telethon.network.mtprotosender - INFO - Connection to 149.154.167.51:443/TcpFull complete!
+2026-02-16 22:33:37,771 - telegram_scraper - ERROR - ❌ Telegram ulanish xatolik: 
+Traceback (most recent call last):
+  File "D:\Work\vakansiya\telegram_scraper.py", line 82, in connect
+    await self.client.start(phone=self.phone)
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\telethon\client\auth.py", line 189, in _start
+    value = code_callback()
+            ^^^^^^^^^^^^^^^
+  File "C:\Users\Windows 11\AppData\Local\Programs\Python\Python312\Lib\site-packages\telethon\client\auth.py", line 102, in code_callback
+    return input('Please enter the code you received: ')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+EOFError
+2026-02-16 22:33:37,814 - loader - ERROR - ❌ Telegram scraping error: 
+2026-02-16 22:33:37,964 - database - INFO - Database pool yopildi

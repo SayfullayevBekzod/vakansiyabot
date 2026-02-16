@@ -72,17 +72,23 @@ class TelegramVacancyScraper:
         return available
     
     async def connect(self):
-        """Telegram ga ulanish"""
+        """Telegram ga ulanish (non-interactive)"""
         if not self.is_available():
             raise Exception("Telethon o'rnatilmagan yoki API credentials yo'q")
         
         try:
             logger.info("Telegram ga ulanishga harakat...")
             self.client = TelegramClient('vacancy_bot_session', int(self.api_id), self.api_hash)
-            await self.client.start(phone=self.phone)
+            await self.client.connect()
+            
+            if not await self.client.is_user_authorized():
+                logger.error("❌ Telegram session unauthorized! Re-authentication required.")
+                await self.client.disconnect()
+                raise Exception("Telegram session unauthorized. Please run scripts/reauth_scraper.py")
+                
             logger.info("✅ Telegram ga ulanish muvaffaqiyatli")
         except Exception as e:
-            logger.error(f"❌ Telegram ulanish xatolik: {e}", exc_info=True)
+            logger.error(f"❌ Telegram ulanish xatolik: {e}")
             raise
     
     async def disconnect(self):

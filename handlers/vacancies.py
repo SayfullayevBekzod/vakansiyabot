@@ -6,6 +6,7 @@ from database import db
 import logging
 from uzjobs_scraper import uz_jobs_scraper
 import asyncio
+from typing import List, Dict
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -189,10 +190,10 @@ async def trigger_candidates_search(callback: CallbackQuery):
 
 @router.callback_query(F.data == "start_search_vacancies")
 async def trigger_vacancies_search(callback: CallbackQuery):
+    await callback.answer()
     await callback.message.delete()
     # Call the original search logic
     await perform_vacancy_search(callback.message, callback.from_user.id)
-    await callback.answer()
 
 async def perform_vacancy_search(message: Message, user_id: int):
     """Vakansiya qidirishning asosiy mantiqi"""
@@ -275,6 +276,7 @@ async def perform_vacancy_search(message: Message, user_id: int):
         async def get_user_posted():
             try:
                 logger.info("[SEARCH] Fetching user-posted vacancies...")
+                # Database call usually fast, but let's add timeout just in case
                 async with db.pool.acquire() as conn:
                     db_vacancies = await conn.fetch('''
                         SELECT 
@@ -291,7 +293,7 @@ async def perform_vacancy_search(message: Message, user_id: int):
                             published_date
                         FROM vacancies
                         WHERE source = 'user_post'
-                        AND published_date > NOW() - INTERVAL '30 days'
+                        AND published_date > NOW() - INTERVAL '60 days'
                         ORDER BY published_date DESC
                         LIMIT 50
                     ''')
@@ -306,36 +308,35 @@ async def perform_vacancy_search(message: Message, user_id: int):
                 logger.error(f"[SEARCH] User-posted error: {e}")
                 return None
         
-        tasks.append(get_user_posted())
-        
-        # 2. hh.uz dan scraping (PARALLEL)
-        async def get_hh_uz():
+        # Wrapped tasks with timeouts
+        async def wrap_task(coro, source_name, timeout=15):
+            try:
+                return await asyncio.wait_for(coro, timeout=timeout)
+            except asyncio.TimeoutError:
+                logger.warning(f"[SEARCH] {source_name} timed out after {timeout}s")
+                return None
+            except Exception as e:
+                logger.error(f"[SEARCH] {source_name} unexpected error: {e}")
+                return None
+
+        # Helper to match original tuple format for hh.uz
+        async def get_hh_uz_adapted():
             if 'hh_uz' in sources:
-                try:
-                    logger.info(f"[SEARCH] hh.uz scraping: pages={pages}")
-                    hh_vacancies = await scraper_api.scrape_hh_uz(
-                        keywords=keywords,
-                        location=locations[0] if locations else 'Tashkent',
-                        pages=pages
-                    )
-                    if hh_vacancies:
-                        logger.info(f"[SEARCH] hh.uz: {len(hh_vacancies)} ta")
-                        return (await t("source_hh_uz"), '🌐', hh_vacancies)
-                    return None
-                except Exception as e:
-                    logger.error(f"[SEARCH] hh.uz error: {e}")
-                    return None
+                res = await scraper_api.scrape_hh_uz(
+                    keywords=keywords,
+                    location=locations[0] if locations else 'Tashkent',
+                    pages=pages
+                )
+                if res:
+                    return (await t("source_hh_uz"), '🌐', res)
             return None
-        
-        tasks.append(get_hh_uz())
-        
-        # 3. Telegram kanallaridan (PARALLEL, Premium only)
-        async def get_telegram():
+
+        # Helper for Telegram
+        async def get_telegram_adapted():
             if 'telegram' in sources and is_premium:
                 try:
                     logger.info("[SEARCH] Fetching Telegram vacancies from DB...")
                     async with db.pool.acquire() as conn:
-                        # Bazadan Telegram vakansiyalarni olish
                         tg_db_vacancies = await conn.fetch('''
                             SELECT 
                                 vacancy_id as external_id,
@@ -351,7 +352,7 @@ async def perform_vacancy_search(message: Message, user_id: int):
                                 published_date
                             FROM vacancies
                             WHERE source = 'telegram'
-                            AND published_date > NOW() - INTERVAL '7 days'
+                            AND published_date > NOW() - INTERVAL '60 days'
                             ORDER BY published_date DESC
                             LIMIT 300
                         ''')
@@ -359,11 +360,9 @@ async def perform_vacancy_search(message: Message, user_id: int):
                         tg_vacancies = [dict(row) for row in tg_db_vacancies]
                         
                         if tg_vacancies:
-                            # Telegram kanallarini guruhlashtirish
                             tg_channels = {}
                             for vac in tg_vacancies:
                                 external_id = vac.get('external_id', '')
-                                # Parsing tg_@channel_id format
                                 if external_id.startswith('tg_'):
                                     parts = external_id.split('_')
                                     if len(parts) >= 2:
@@ -372,34 +371,35 @@ async def perform_vacancy_search(message: Message, user_id: int):
                             
                             logger.info(f"[SEARCH] Telegram DB: {len(tg_vacancies)} ta")
                             return (await t("source_telegram"), '📱', tg_vacancies, tg_channels)
-                        return None
                 except Exception as e:
                     logger.error(f"[SEARCH] Telegram DB error: {e}")
-                    return None
             return None
-        
-        tasks.append(get_telegram())
-        
-        # 4. UzJobs (NEW)
-        async def get_uzjobs():
+
+        # Helper for UzJobs
+        async def get_uzjobs_adapted():
             try:
                 logger.info("[SEARCH] Fetching from UzJobs...")
                 res = await uz_jobs_scraper.scrape_uzjobs(keywords)
                 if res:
                     return (await t("source_uzjobs"), '🌐', res)
-                return None
             except Exception as e:
                 logger.error(f"[SEARCH] UzJobs error: {e}")
-                return None
-        
-        tasks.append(get_uzjobs())
+            return None
+
+        # Rebuild tasks list with proper adaptation and timeouts
+        real_tasks = [
+            wrap_task(get_user_posted(), "User-posted", timeout=10),
+            wrap_task(get_hh_uz_adapted(), "hh.uz", timeout=30),
+            wrap_task(get_telegram_adapted(), "Telegram", timeout=15),
+            wrap_task(get_uzjobs_adapted(), "UzJobs", timeout=30)
+        ]
         
         # PARALLEL EXECUTION - HAMMASI BIR VAQTDA!
-        results = await asyncio.gather(*tasks, return_exceptions=True)
+        results = await asyncio.gather(*real_tasks)
         
         # Natijalarni yig'ish
         for result in results:
-            if result and not isinstance(result, Exception):
+            if result:
                 if len(result) == 4:  # Telegram (with channels)
                     name, emoji, vacs, channels = result
                     vacancies.extend(vacs)

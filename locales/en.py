@@ -279,6 +279,7 @@ Invite friends and get Premium bonus.""",
     "msg_new_search_hint": "Select parameters for new search:",
     
     "search_no_results": "🤷‍♂️ <b>Nothing found.</b>\n\nTry changing filters /settings",
+    "search_not_found": "🤷‍♂️ <b>No vacancies found.</b>\n\nPlease check your sources and filters or try again later.",
     "search_filtered_out": "⚠️ <b>Vacancies found but filtered out.</b>\n\nCheck settings: /settings",
     "search_error": "❌ <b>Search error.</b>\n\nPlease try again later.",
     "search_already_running": "⚠️ Search is already running...",

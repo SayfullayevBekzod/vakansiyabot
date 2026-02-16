@@ -99,6 +99,48 @@ class Database:
                 )
             ''')
 
+            # Vacancies jadvali
+            await conn.execute('''
+                CREATE TABLE IF NOT EXISTS vacancies (
+                    id SERIAL PRIMARY KEY,
+                    vacancy_id VARCHAR(255) UNIQUE,
+                    title VARCHAR(255),
+                    company VARCHAR(255),
+                    location VARCHAR(255),
+                    salary_min INTEGER,
+                    salary_max INTEGER,
+                    experience_level VARCHAR(50),
+                    description TEXT,
+                    url TEXT,
+                    source VARCHAR(50),
+                    published_date TIMESTAMPTZ,
+                    created_at TIMESTAMPTZ DEFAULT NOW()
+                )
+            ''')
+            
+            # Indexlar (Search tezlashishi uchun)
+            await conn.execute('CREATE INDEX IF NOT EXISTS idx_vacancies_published_date ON vacancies(published_date DESC)')
+            await conn.execute('CREATE INDEX IF NOT EXISTS idx_vacancies_source ON vacancies(source)')
+            await conn.execute('CREATE INDEX IF NOT EXISTS idx_vacancies_location ON vacancies(location)')
+
+            # User Filters jadvali
+            await conn.execute('''
+                CREATE TABLE IF NOT EXISTS user_filters (
+                    user_id BIGINT PRIMARY KEY REFERENCES users(user_id),
+                    keywords TEXT[],
+                    locations TEXT[],
+                    regions TEXT[],
+                    categories TEXT[],
+                    salary_min INTEGER,
+                    salary_max INTEGER,
+                    employment_types TEXT[],
+                    experience_level VARCHAR(50),
+                    sources TEXT[],
+                    created_at TIMESTAMPTZ DEFAULT NOW(),
+                    updated_at TIMESTAMPTZ DEFAULT NOW()
+                )
+            ''')
+
     async def add_user(self, user_id: int, username: str = None, 
                       first_name: str = None, last_name: str = None, language: str = 'uz'):
         """Yangi foydalanuvchi qo'shish - OPTIMIZED"""

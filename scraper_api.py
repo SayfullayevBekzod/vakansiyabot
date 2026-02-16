@@ -11,10 +11,28 @@ class VacancyScraperAPI:
     
     def __init__(self):
         self.base_url = 'https://api.hh.uz'
+        self.hosts = [
+            'api.hh.uz',
+            'api.hh.ru',
+            'api.hh.kz',
+            'api.hh.by'
+        ]
+        self.current_host_idx = 0
+        
+        self.user_agents = [
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0',
+            'Mozilla/5.0 (iPhone; CPU iPhone OS 17_2_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Mobile/15E148 Safari/604.1'
+        ]
+        
         self.headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Accept': 'application/json',
-            'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7'
+            'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Connection': 'keep-alive',
+            'Cache-Control': 'max-age=0'
         }
         # Connection pooling uchun session
         self.session = None
@@ -37,10 +55,24 @@ class VacancyScraperAPI:
             'kokand': '2772'
         }
 
+    def get_random_headers(self):
+        """Random User-Agent bilan headerlarni olish"""
+        headers = self.headers.copy()
+        import random
+        headers['User-Agent'] = random.choice(self.user_agents)
+        return headers
+
+    def get_next_host(self):
+        """Keyingi hostni olish (rotation)"""
+        host = self.hosts[self.current_host_idx]
+        self.current_host_idx = (self.current_host_idx + 1) % len(self.hosts)
+        return f"https://{host}"
+
     async def get_session(self):
         """Shared session yaratish yoki qaytarish"""
         if self.session is None or self.session.closed:
-            self.session = aiohttp.ClientSession(headers=self.headers)
+            timeout = aiohttp.ClientTimeout(total=60, connect=10)
+            self.session = aiohttp.ClientSession(headers=self.headers, timeout=timeout)
         return self.session
 
     async def close(self):
@@ -65,57 +97,68 @@ class VacancyScraperAPI:
         
         session = await self.get_session()
         
-        for page in range(pages):
-            url = f"{self.base_url}/vacancies"
+        async def fetch_page(page, attempt=0):
+            from config import PROXY_URL
+            import random
+            
+            # Har bir so'rov uchun yangi host va headerlar
+            base_url = self.get_next_host()
+            url = f"{base_url}/vacancies"
+            
             params = {
                 'text': search_text,
                 'area': area_id,
                 'page': page,
-                'per_page': 50  # 50 ta
+                'per_page': 50
             }
             
-            logger.info(f"API request: page={page}")
+            # Jitter - parallel so'rovlarni biroz kechiktirish
+            await asyncio.sleep(random.uniform(0.1, 1.5) * page)
             
             try:
-                async with session.get(url, params=params, timeout=30) as response:
+                # Har safar random User-Agent
+                headers = self.get_random_headers()
+                session = await self.get_session()
+                
+                async with session.get(
+                    url, 
+                    params=params, 
+                    headers=headers,
+                    proxy=PROXY_URL,
+                    timeout=aiohttp.ClientTimeout(total=20, connect=7)
+                ) as response:
                     if response.status == 200:
                         data = await response.json()
-                        items = data.get('items', [])
-                        found = data.get('found', 0)
-                        
-                        logger.info(f"Page {page}: topildi {len(items)} ta, jami mavjud {found} ta")
-                        
-                        if not items:
-                            logger.warning("Items bo'sh, to'xtatilmoqda")
-                            break
-                        
-                        for item in items:
-                            try:
-                                vacancy = self.parse_vacancy(item)
-                                if vacancy:
-                                    vacancies.append(vacancy)
-                            except Exception as e:
-                                logger.error(f"Item parse xatolik: {e}")
-                                continue
-                        
-                        # Agar oxirgi sahifa bo'lsa
-                        total_pages = data.get('pages', 0)
-                        if page >= total_pages - 1:
-                            logger.info(f"Oxirgi sahifa ({page + 1}/{total_pages})")
-                            break
+                        return data.get('items', [])
+                    elif response.status in [403, 429] and attempt < 2:
+                        # Blok yoki limit bo'lsa, boshqa host bilan harakat qilish
+                        logger.warning(f"HH API {response.status} (host={base_url}). Retrying...")
+                        await asyncio.sleep(2 * (attempt + 1))
+                        return await fetch_page(page, attempt + 1)
                     else:
-                        logger.error(f"API xatolik: Status {response.status}")
-                        break
-            
-            except asyncio.TimeoutError:
-                logger.error(f"Timeout: page {page}")
-                break
+                        logger.error(f"API xatolik: Status {response.status}, host={base_url}, page={page}")
+                        return []
             except Exception as e:
-                logger.error(f"API request xatolik: {e}", exc_info=True)
-                break
-            
-            # API rate limiting uchun kutish
-            await asyncio.sleep(0.5)
+                if attempt < 2:
+                    logger.warning(f"API request error (host={base_url}, page={page}): {e}. Retrying...")
+                    await asyncio.sleep(1)
+                    return await fetch_page(page, attempt + 1)
+                logger.error(f"API request final error (page {page}): {e}")
+                return []
+
+        # Parallel fetching
+        tasks = [fetch_page(p) for p in range(pages)]
+        pages_data = await asyncio.gather(*tasks)
+        
+        for items in pages_data:
+            for item in items:
+                try:
+                    vacancy = self.parse_vacancy(item)
+                    if vacancy:
+                        vacancies.append(vacancy)
+                except Exception as e:
+                    logger.error(f"Item parse xatolik: {e}")
+                    continue
         
         logger.info(f"✅ Jami {len(vacancies)} ta vakansiya topildi va parse qilindi")
         return vacancies

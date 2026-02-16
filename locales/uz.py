@@ -274,6 +274,7 @@ Cheksiz imkoniyatlarga ega bo‘lish uchun obuna bo‘ling.""",
     "msg_new_search_hint": "Yangi qidiruv uchun parametrlarni tanlang:",
     
     "search_no_results": "🤷‍♂️ <b>Hech narsa topilmadi.</b>\n\nFiltrlarni o‘zgartirib ko‘ring /settings",
+    "search_not_found": "🤷‍♂️ <b>Hech qanday vakansiya topilmadi.</b>\n\nBarcha manbalar va filtrlarni tekshirib ko'ring yoki birozdan so'ng qayta urinib ko'ring.",
     "search_filtered_out": "⚠️ <b>Vakansiyalar topildi, lekin filtringizga to‘g‘ri kelmadi.</b>\n\nSozlamalarni tekshiring: /settings",
     "search_error": "❌ <b>Qidiruv vaqtida xatolik yuz berdi.</b>\n\nIltimos, keyinroq urinib ko‘ring.",
     "search_already_running": "⚠️ Qidiruv allaqachon ketmoqda...",

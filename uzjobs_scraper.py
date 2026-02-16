@@ -15,7 +15,11 @@ class UzJobsScraper:
     def __init__(self):
         self.base_url = 'https://uzjobs.com'
         self.headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+            'Accept-Language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Connection': 'keep-alive'
         }
         # Global semaphore to ensure only one request happens at a time across all instances
         self.semaphore = asyncio.Semaphore(1)
@@ -30,13 +34,13 @@ class UzJobsScraper:
             url = f"{self.base_url}/ru/vacancy/search"
             params = {'q': search_query}
             
-            retries = 7  # Increased retries
-            delay = 10   # Increased initial delay (UzJobs is sensitive)
+            retries = 3
+            delay = 2
     
             for attempt in range(retries):
                 try:
                     async with aiohttp.ClientSession(headers=self.headers) as session:
-                        async with session.get(url, params=params, timeout=30) as response:
+                        async with session.get(url, params=params, timeout=aiohttp.ClientTimeout(total=15, connect=5)) as response:
                             if response.status == 200:
                                 html = await response.text()
                                 soup = BeautifulSoup(html, 'lxml')

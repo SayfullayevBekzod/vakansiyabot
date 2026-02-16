@@ -345,8 +345,17 @@ async def on_startup():
     # Scheduler ishga tushirish
     logger.info("2. Scheduler ishga tushirish...")
     # Avtomatik scraping
+    async def auto_scrape_with_timeout():
+        try:
+            # Max 15 minutes per scraping task
+            await asyncio.wait_for(auto_scrape_and_notify(), timeout=900)
+        except asyncio.TimeoutError:
+            logger.error("⌛ Auto-scraping task timed out (>15 min)")
+        except Exception as e:
+            logger.error(f"❌ Auto-scraping error: {e}")
+
     scheduler.add_job(
-        auto_scrape_and_notify,
+        auto_scrape_with_timeout,
         'interval',
         seconds=SCRAPING_INTERVAL,
         id='auto_scraping',
