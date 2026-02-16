@@ -118,8 +118,9 @@ async def show_admin_panel(callback: CallbackQuery):
 @router.callback_query(F.data == "admin_stats")
 async def admin_stats(callback: CallbackQuery):
     """Bot statistikasi"""
+    await callback.answer()
     if not is_admin(callback.from_user.id):
-        await callback.answer("⛔️ Admin emas!", show_alert=True)
+        # await callback.answer("⛔️ Admin emas!", show_alert=True)
         return
     
     try:
@@ -167,7 +168,6 @@ async def admin_stats(callback: CallbackQuery):
             ),
             parse_mode='HTML'
         )
-        await callback.answer("✅ Statistika yangilandi")
         
     except Exception as e:
         logger.error(f"Admin stats xatolik: {e}")
@@ -177,8 +177,9 @@ async def admin_stats(callback: CallbackQuery):
 @router.callback_query(F.data == "admin_users")
 async def admin_users(callback: CallbackQuery):
     """Foydalanuvchilar ro'yxati"""
+    await callback.answer()
     if not is_admin(callback.from_user.id):
-        await callback.answer("⛔️ Admin emas!", show_alert=True)
+        # await callback.answer("⛔️ Admin emas!", show_alert=True)
         return
     
     try:
@@ -219,7 +220,6 @@ async def admin_users(callback: CallbackQuery):
             ),
             parse_mode='HTML'
         )
-        await callback.answer()
         
     except Exception as e:
         logger.error(f"Admin users xatolik: {e}")
@@ -229,8 +229,9 @@ async def admin_users(callback: CallbackQuery):
 @router.callback_query(F.data == "admin_active_users")
 async def admin_active_users(callback: CallbackQuery):
     """Oxirgi faol foydalanuvchilar"""
+    await callback.answer()
     if not is_admin(callback.from_user.id):
-        await callback.answer("⛔️ Admin emas!", show_alert=True)
+        # await callback.answer("⛔️ Admin emas!", show_alert=True)
         return
     
     try:
@@ -273,7 +274,6 @@ async def admin_active_users(callback: CallbackQuery):
             ),
             parse_mode='HTML'
         )
-        await callback.answer()
         
     except Exception as e:
         logger.error(f"admin_active_users xatolik: {e}")

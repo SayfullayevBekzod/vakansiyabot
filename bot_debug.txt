@@ -1397,3 +1397,21 @@ Traceback (most recent call last):
 EOFError
 2026-02-16 22:33:37,814 - loader - ERROR - ❌ Telegram scraping error: 
 2026-02-16 22:33:37,964 - database - INFO - Database pool yopildi
+2026-02-16 22:35:30,853 - aiogram.event - INFO - Update id=513367115 is handled. Duration 2343 ms by bot id=8466568265
+2026-02-16 22:35:33,602 - aiogram.event - INFO - Update id=513367116 is handled. Duration 609 ms by bot id=8466568265
+2026-02-16 22:35:35,107 - aiogram.event - INFO - Update id=513367117 is handled. Duration 546 ms by bot id=8466568265
+2026-02-16 22:35:36,334 - aiogram.event - INFO - Update id=513367118 is handled. Duration 202 ms by bot id=8466568265
+2026-02-16 22:35:37,841 - handlers.vacancies - INFO - [SEARCH] User 1258119183: keywords=['python'], locations=['Toshkent'], sources=['hh_uz', 'user_post', 'telegram']
+2026-02-16 22:35:37,842 - handlers.vacancies - INFO - [SEARCH] Fetching user-posted vacancies...
+2026-02-16 22:35:37,843 - scraper_api - INFO - Qidiruv boshlandi: keywords='python', area=Toshkent (2759), pages=5
+2026-02-16 22:35:37,843 - handlers.vacancies - INFO - [SEARCH] Fetching Telegram vacancies from DB...
+2026-02-16 22:35:37,844 - handlers.vacancies - INFO - [SEARCH] Fetching from UzJobs...
+2026-02-16 22:35:37,858 - handlers.vacancies - INFO - [SEARCH] User-posted: 1 ta
+2026-02-16 22:35:37,867 - handlers.vacancies - INFO - [SEARCH] Telegram DB: 280 ta
+2026-02-16 22:35:39,293 - scraper_api - ERROR - API xatolik: Status 406, host=https://api.hh.by, page=0
+2026-02-16 22:35:43,395 - scraper_api - ERROR - API xatolik: Status 406, host=https://api.hh.by, page=4
+2026-02-16 22:35:43,400 - scraper_api - INFO - ✅ Jami 139 ta vakansiya topildi va parse qilindi
+2026-02-16 22:35:43,402 - handlers.vacancies - INFO - [SEARCH] Filtrlash: 420 ta vakansiya
+2026-02-16 22:35:43,411 - filters - INFO - Filtrlash: 420 -> 47
+2026-02-16 22:35:43,413 - handlers.vacancies - INFO - [SEARCH] Filtrlash natijasi: 47 ta
+2026-02-16 22:35:43,926 - aiogram.event - INFO - Update id=513367119 is handled. Duration 6672 ms by bot id=8466568265
